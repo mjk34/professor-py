@@ -1,0 +1,10 @@
+I will recognizes commands with a **>** prefix
+
+Here are a list of commands I can perform:
+
+    **>ping**            *pong*
+    **>playlist**      *show playlists*
+    **>mal**             *show my anime list*
+    **>anichart**    *show airing anime*
+
+Q^Q sadge 

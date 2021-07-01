@@ -1,46 +1,52 @@
 import os
-
 import discord
 from dotenv import load_dotenv
 
-import random
+from cmd import pong, halp, playlist, mal, anichart
 
 load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')
 GUILD = os.getenv('DISCORD_GUILD')
 
 client = discord.Client()
-
-START_CMD_WITH = '>'
+MESSAGE_TOKEN = '>'
 
 @client.event
 async def on_ready():
+    
     guild = discord.utils.get(client.guilds, name=GUILD)
     print(
         f'{client.user} is connected to the following guild:\n'
         f'{guild.name}(id: {guild.id})'
     )
 
+    await client.change_presence(activity=discord.Game('>help'))
+
+
 @client.event
 async def on_message(message):
-    if message.author.guild.name != GUILD:
-        return
-    if message.author == client.user:
-        return
-
-    # Check if first character does bot stuff
-    message_string = message.content.lower()
-    if message_string[0] != START_CMD_WITH:
-        return
+    if message.author == client.user: return        # checks if the message sender is not a bot
+    if message.author.guild.name != GUILD: return   # checks if it's from UwUversity
+    if message.channel.name != "bot-cmd": return    # checks if it comes from the bot channel
+    if message.content[0] != MESSAGE_TOKEN:return   # checks if the leading token is correct
 
     # Get the rest of the message
-    message_string = message_string[1:]
+    message_string = message.content.lower()[1:]
 
-    if 'ping' in message_string:
-        num = random.randint(1, 23)
-        filename = f'./pong/{num}.jpg'
-        f = open(filename, 'rb')
-        await message.channel.send('Pong!', file=discord.File(f))
-        f.close()
+    # List of message commands
+    if 'ping' in message_string: 
+        await pong(message)
+
+    if 'help' in message_string:
+        await halp(message)
+
+    if 'playlist' in message_string:
+        await playlist(message)
+
+    if 'mal' in message_string:
+        await mal(message)
+
+    if 'anichart' in message_string:
+        await anichart(message)
+        
 client.run(TOKEN)
-
