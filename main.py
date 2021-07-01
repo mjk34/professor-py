@@ -38,15 +38,15 @@ async def on_message(message):
         await pong(message)
 
     if 'help' in message_string:
-        await halp(message)
+        await halp(message, message_string)
 
     if 'playlist' in message_string:
-        await playlist(message)
+        await playlist(message, message_string)
 
     if 'mal' in message_string:
-        await mal(message)
+        await mal(message, message_string)
 
     if 'anichart' in message_string:
-        await anichart(message)
+        await anichart(message, message_string)
         
 client.run(TOKEN)

@@ -1,29 +1,27 @@
 import random
 import discord
+import requests
 
 async def pong(message):
     num = random.randint(1, 23)
-
     filename = f'./pong/{num}.jpg'
     f = open(filename, 'rb')
 
     await message.channel.send('Pong!', file=discord.File(f))
     f.close()
 
-async def halp(message):
+async def halp(message, command):
     author = message.author
+    fetchMessage(command)
+    content, f = fetchTemp(True)
 
-    filename = f'./messages/help.txt'
-    f = open(filename, 'r')
-    help_message = f.read()
-
-    await author.send(help_message)
+    await author.send(content)
     f.close()
 
-async def playlist(message):
+async def playlist(message, command):
     message_size = 2000
-    filename = f'./messages/music.txt'
-    f = open(filename, 'r')
+    fetchMessage(command)
+    f = fetchTemp(False)
 
     while True:
         message_chunk = f.read(message_size)
@@ -32,18 +30,33 @@ async def playlist(message):
         await message.channel.send(message_chunk)  
     f.close()
 
-async def mal (message):
-    filename = f'./messages/mal.txt'
-    f = open(filename, 'r')
-    message_txt = f.read()
+async def mal (message, command):
+    fetchMessage(command)
+    content, f = fetchTemp(True)
 
-    await message.channel.send(message_txt)
+    await message.channel.send(content)
     f.close()
 
-async def anichart (message):
-    filename = f'./messages/aniChart.txt'
-    f = open(filename, 'r')
-    message_txt = f.read()
+async def anichart (message, command):
+    fetchMessage(command)
+    content, f = fetchTemp(True)
 
-    await message.channel.send(message_txt)
+    await message.channel.send(content)
     f.close()
+
+def fetchMessage (filename):
+    print('\n' + filename + '\n')
+    url = f'https://raw.githubusercontent.com/Mkadzis23/uwuBot/main/messages/{filename}.txt'
+    page = requests.get(url)
+    content = page.text
+    
+    filename = f'./messages/temp.txt'
+    with open(filename, 'w') as temp:
+        temp.write(content)
+
+def fetchTemp (read):
+    filename = f'./messages/temp.txt'
+    f = open(filename, 'r')
+
+    if read: return f.read(), f
+    else: return f
