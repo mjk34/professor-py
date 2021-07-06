@@ -2,14 +2,16 @@ import os
 import discord
 from dotenv import load_dotenv
 
-from cmd import pong, halp, playlist, mal, anichart
+from cmd import pong, halp, playlist, fetchMSG
+from creds import daily, getCreds, clearDatabase
+from creds import purchase, give, setBirthday, checkBirthday
 
 load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')
 GUILD = os.getenv('DISCORD_GUILD')
 
 client = discord.Client()
-MESSAGE_TOKEN = '>'
+MESSAGE_TOKEN = '<'
 
 @client.event
 async def on_ready():
@@ -20,7 +22,8 @@ async def on_ready():
         f'{guild.name}(id: {guild.id})'
     )
 
-    await client.change_presence(activity=discord.Game('>help'))
+    await client.change_presence(activity=discord.Game('<help'))
+    await checkBirthday(guild, client)
 
 
 @client.event
@@ -44,9 +47,39 @@ async def on_message(message):
         await playlist(message, message_string)
 
     if 'mal' in message_string:
-        await mal(message, message_string)
+        await fetchMSG(message, message_string)
 
     if 'anichart' in message_string:
-        await anichart(message, message_string)
-        
+        await fetchMSG(message, message_string)
+
+    if 'setbd' in message_string:
+        await setBirthday(message)
+
+    if 'rewards' in message_string:
+        await fetchMSG(message, message_string)  
+
+    if 'bronze' in message_string:
+        await purchase(message, message_string)
+
+    if 'silver' in message_string:
+        await purchase(message, message_string)
+
+    if 'gold' in message_string:
+        await purchase(message, message_string)
+
+    if 'platinum' in message_string:
+        await purchase(message, message_string)
+
+    if 'uwu' in message_string:
+        await daily (message)
+
+    if 'creds' in message_string:
+        await getCreds (message)
+
+    if 'clear' in message_string:
+        await clearDatabase (message)
+
+    if 'give' in message_string:
+        await give (message, message_string)
+  
 client.run(TOKEN)

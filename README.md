@@ -6,3 +6,4 @@ It is custom designed to retrieve specific messages like playlists and useful li
 
 ## Current Development Branches:
   - [ ] main
+  - [x] feature/uwuCreds   # users can earn creds to use
