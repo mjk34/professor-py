@@ -1,7 +1,10 @@
+import os
+from dotenv import load_dotenv
 from pymongo import MongoClient
 mongo_connection = None
 
-MONGO_CONNECTION_KEY = 'mongodb+srv://Dat1Weeaboo:5394@cluster0.itwoc.mongodb.net/users'
+load_dotenv()
+MONGO_CONNECTION_KEY = os.getenv('CONNECTION_KEY')
 def getMongo_connection():
     global mongo_connection
     if not mongo_connection:

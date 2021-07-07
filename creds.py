@@ -4,12 +4,14 @@ import API.API
 import os
 import threading
 
-api = API.API
-ADMIN = 158593623632379904
-
+from dotenv import load_dotenv
 from datetime import date, timedelta, datetime
 from dateutil import parser
 from discord.utils import get
+
+api = API.API
+load_dotenv()
+ADMIN = int(os.getenv('ADMIN_ID'))
 
 async def checkBirthday(guild, client):
     hour_time = 3600
@@ -97,6 +99,11 @@ async def getCreds (message):
 
 async def purchase (message, tier):
     id = message.author.id
+    name = message.author.name
+    today, yesterday = getTime()
+
+    user = api.fetchUser(id)
+    if len(user) == 0: api.createAccount(id, name, yesterday)
     
     cred_cost = 0
     if tier == 'bronze': cred_cost = 1000
@@ -118,7 +125,9 @@ async def purchase (message, tier):
             f'The **{tier}** tier requires **{cred_cost}** uwuCreds...   (you have: {user_creds})'
         )
 
-async def give (message, msg_str):
+async def give (message, msg_str, client):
+    today, yesterday = getTime()
+
     filler = ['<', '>', '!', '@']
     message_content = msg_str.split(' ')
 
@@ -129,6 +138,23 @@ async def give (message, msg_str):
     for ch in filler:
         reciever_id = reciever_id.replace(ch, '')
     reciever_id = int(reciever_id)
+
+    giver_db = api.fetchUser(giver_id)
+    giver_name = message.author.name
+    if len(giver_db) == 0: api.createAccount(giver_id, giver_name, yesterday)
+    
+    giver_creds = api.fetchCreds(giver_id)
+    if giver_creds < amount:
+        await message.reply(
+            f'You do not have that much uwuCreds to give.   (total: {giver_creds})'
+        )
+        return
+
+    reciever_db = api.fetchUser(reciever_id)
+    if len(reciever_db) == 0:
+        reciever_object = await client.fetch_user(reciever_id)
+        reciever_name = reciever_object.name
+        api.createAccount(reciever_id, reciever_name, yesterday)
 
     if amount > 0:
         api.subCreds(giver_id, amount)
@@ -148,6 +174,12 @@ async def clearDatabase (message):
 
 async def setBirthday(message):
     id = message.author.id
+    name = message.author.name
+    today, yesterday = getTime()
+
+    user = api.fetchUser(id)
+    if len(user) == 0: api.createAccount(id, name, yesterday)
+
     birthday = message.content.lower()[7:]
     birthday = parser.parse(birthday)
     birthday = birthday.strftime('%m-%d')

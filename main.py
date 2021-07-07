@@ -11,7 +11,7 @@ TOKEN = os.getenv('DISCORD_TOKEN')
 GUILD = os.getenv('DISCORD_GUILD')
 
 client = discord.Client()
-MESSAGE_TOKEN = '<'
+MESSAGE_TOKEN = '>'
 
 @client.event
 async def on_ready():
@@ -80,6 +80,6 @@ async def on_message(message):
         await clearDatabase (message)
 
     if 'give' in message_string:
-        await give (message, message_string)
+        await give (message, message_string, client)
   
 client.run(TOKEN)
