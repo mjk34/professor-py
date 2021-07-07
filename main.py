@@ -22,7 +22,7 @@ async def on_ready():
         f'{guild.name}(id: {guild.id})'
     )
 
-    await client.change_presence(activity=discord.Game('<help'))
+    await client.change_presence(activity=discord.Game('>help'))
     await checkBirthday(guild, client)
 
 
