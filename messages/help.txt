@@ -2,9 +2,19 @@ I will recognizes commands with a **>** prefix
 
 Here are a list of commands I can perform:
 
+  General:
     **>ping**            *pong*
     **>playlist**      *show playlists*
     **>mal**             *show my anime list*
     **>anichart**    *show airing anime*
+  
+  uwuCreds:
+    **>uwu**             *collect your daily uwuCreds*
+    **>creds**          *check your total uwuCreds*
+    **>rewards**      *see how you can spend your uwucreds*
+
+    **>give            *reward someone with your uwuCreds*
+                       *TEMPLATE: >give @<name> <amount*
+    
 
 Q^Q sadge, that's not a lot of commands

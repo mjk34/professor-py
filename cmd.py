@@ -30,14 +30,7 @@ async def playlist(message, command):
         await message.channel.send(message_chunk)  
     f.close()
 
-async def mal (message, command):
-    fetchMessage(command)
-    content, f = fetchTemp(True)
-
-    await message.channel.send(content)
-    f.close()
-
-async def anichart (message, command):
+async def fetchMSG (message, command):
     fetchMessage(command)
     content, f = fetchTemp(True)
 
