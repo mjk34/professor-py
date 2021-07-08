@@ -40,7 +40,11 @@ async def fetchMSG (message, command):
 def fetchMessage (filename):
     print('\n' + filename + '\n')
     url = f'https://raw.githubusercontent.com/Mkadzis23/uwuBot/main/messages/{filename}.txt'
-    page = requests.get(url)
+    h = {
+        "Cache-Control": "no-cache",
+        "Pragma": "no-cache"
+    }
+    page = requests.get(url, headers=h)
     content = page.text
     
     filename = f'./messages/temp.txt'
