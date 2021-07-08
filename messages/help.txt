@@ -13,7 +13,7 @@ Here are a list of commands I can perform:
     **>creds**          *check your total uwuCreds*
     **>rewards**      *see how you can spend your uwucreds*
 
-    **>give            *reward someone with your uwuCreds*
+    **>give**            *reward someone with your uwuCreds*
                        *TEMPLATE: >give @<name> <amount*
     
 

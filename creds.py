@@ -55,7 +55,7 @@ async def daily (message):
     daily_parse = parser.parse(user_daily)
 
     time_diff = today_parse - daily_parse
-    wait = timedelta(hours=24) - time_diff
+    wait = timedelta(hours=20) - time_diff
 
     if time_diff < timedelta(hours= 20):
         await message.reply(f'Next >uwu resets in **{wait}**')
