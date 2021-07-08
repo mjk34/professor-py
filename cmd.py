@@ -41,8 +41,8 @@ def fetchMessage (filename):
     print('\n' + filename + '\n')
     url = f'https://raw.githubusercontent.com/Mkadzis23/uwuBot/main/messages/{filename}.txt'
     h = {
-        "Cache-Control": "no-cache",
-        "Pragma": "no-cache"
+        'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/44.0.2403.155 Safari/537.36',
+        'cache-control': 'private, max-age=0, no-cache'
     }
     page = requests.get(url, headers=h)
     content = page.text
