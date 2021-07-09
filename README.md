@@ -10,4 +10,6 @@ pip3 install -r requirements.txt
 
 ## Current Development Branches:
   - [ ] main
-  - [x] feature/uwuCreds   # users can earn creds to use
+  - [x] feature/uwuCreds   # users can earn uwuCredits daily
+  - [x] feature/slashcmd   # upgrade commands to discord-slash-commands
+
