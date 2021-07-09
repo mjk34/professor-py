@@ -18,4 +18,4 @@ Here are a list of commands I can perform:
                           *TEMPLATE: >give @<name> <amount>*
     
 
-Q^Q sadge, that's not a lot of commands
+Q^Q happy, that's not a lot of commands
