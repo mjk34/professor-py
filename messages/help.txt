@@ -1,19 +1,20 @@
-I will recognizes commands with a **>** prefix
+I will recognizes commands with a **/** prefix
+Just make sure to execute the slash command with my icon
 
 Here are a list of commands I can perform:
 
   General:
-    **>ping**            *pong*
-    **>playlist**      *show playlists*
-    **>mal**             *show my anime list*
-    **>anichart**    *show airing anime*
+    **/ping**            *pong*
+    **/playlist**      *show playlists*
+    **/mal**             *show my anime list*
+    **/anichart**    *show airing anime*
   
   uwuCreds:
-    **>uwu**             *collect your daily uwuCreds*
-    **>creds**          *check your total uwuCreds*
-    **>rewards**     *see how you can spend your uwucreds*
+    **/uwu**             *collect your daily uwuCreds*
+    **/creds**          *check your total uwuCreds*
+    **/rewards**     *see how you can spend your uwucreds*
 
-    **>give**            *reward someone with your uwuCreds*
+    **/give**            *reward someone with your uwuCreds*
                           *TEMPLATE: >give @<name> <amount>*
     
 

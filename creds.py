@@ -97,6 +97,25 @@ async def getCreds (ctx):
         f'You have a total of **{user_creds}** uwuCreds!'
     )
 
+async def getBd (ctx):
+    id = ctx.author.id
+    name = ctx.author.name
+    today, yesterday = getTime()
+
+    user = api.fetchUser(id)
+    if len(user) == 0: api.createAccount(id, name, yesterday)
+
+    user_bd = api.fetchBirthday(id)
+    if user_bd == '':
+        await ctx.send(
+            f'You have not registered your birthday! Use **/setbd** to assign one'
+        )
+    else:
+        await ctx.send(
+            f'The saved birthday date is: **{user_bd}**'
+        )
+    
+
 async def purchase (ctx):
     id = ctx.author.id
     name = ctx.author.name
@@ -184,7 +203,7 @@ async def setBirthday(ctx, birth_date):
     role = get(ctx.guild.roles, name='uwuCelebrate')
 
     await ctx.author.add_roles(role)
-    await ctx.send(f'Birthday is set to: {birthday}')
+    await ctx.send(f'Birthday is set to: **{birthday}**')
 
 def getTime():
     today = datetime.now()

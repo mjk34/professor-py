@@ -13,6 +13,9 @@ def fetchCreds (id):
 def fetchDaily (id):
     return user_services.fetchDaily(id)
 
+def fetchBirthday (id):
+    return user_services.fetchBirthday(id)
+
 def birthdayToday (date):
     return user_services.birthdayToday(date)
 

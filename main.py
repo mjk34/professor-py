@@ -7,7 +7,7 @@ from discord_slash import SlashCommand, SlashContext
 from discord_slash.utils.manage_commands import create_choice, create_option
 
 from cmd import pong, halp, playlist, fetchMSG
-from creds import daily, getCreds, clearDatabase
+from creds import daily, getCreds, clearDatabase, getBd
 from creds import purchase, give, setBirthday, checkBirthday
 
 load_dotenv()
@@ -38,6 +38,7 @@ CMD_DESC = [
     'Feeling generous? Give your uwuCreds',                         # 15
     '[@<user name>] | EXAMPLES: @Dat1Weeaboo   @GreenRobotPanda',   # 16
     'How many uwuCreds will spare?',                                # 17
+    'Check the registered birthday date',                           # 18
 ]
 
 @client.event
@@ -50,7 +51,7 @@ async def on_ready():
 
     print(len(CMD_DESC))
 
-    await client.change_presence(activity=discord.Game('testing birthday tracker'))
+    await client.change_presence(activity=discord.Game('/help'))
     await checkBirthday(guild, client)
 
 @slash.slash(name='ping', description=CMD_DESC[0], guild_ids=[GUILD_ID])
@@ -104,5 +105,8 @@ async def _clear(ctx:SlashContext): await clearDatabase(ctx)
              create_option(name='amount', description=CMD_DESC[17], option_type=4, required=True)])
 async def _give(ctx:SlashContext, reciever: str, amount: int): 
     await give(ctx, reciever, amount, client)
+
+@slash.slash(name='getbd', description=CMD_DESC[18], guild_ids=[GUILD_ID])
+async def _getbd(ctx:SlashContext): await getBd(ctx)
 
 client.run(TOKEN)
