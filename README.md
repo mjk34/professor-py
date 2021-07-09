@@ -6,4 +6,6 @@ It is custom designed to retrieve specific messages like playlists and useful li
 
 ## Current Development Branches:
   - [ ] main
-  - [x] feature/uwuCreds   # users can earn creds to use
+  - [x] feature/uwuCreds   # users can earn uwuCredits daily
+  - [x] feature/slashcmd   # upgrade commands to discord-slash-commands
+

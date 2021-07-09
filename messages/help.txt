@@ -11,10 +11,10 @@ Here are a list of commands I can perform:
   uwuCreds:
     **>uwu**             *collect your daily uwuCreds*
     **>creds**          *check your total uwuCreds*
-    **>rewards**      *see how you can spend your uwucreds*
+    **>rewards**     *see how you can spend your uwucreds*
 
     **>give**            *reward someone with your uwuCreds*
-                       *TEMPLATE: >give @<name> <amount*
+                          *TEMPLATE: >give @<name> <amount>*
     
 
 Q^Q sadge, that's not a lot of commands

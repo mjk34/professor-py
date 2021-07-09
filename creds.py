@@ -42,9 +42,9 @@ async def checkBirthday(guild, client):
             )
             f.close()
 
-async def daily (message):
-    id = message.author.id
-    name = message.author.name
+async def daily (ctx):
+    id = ctx.author.id
+    name = ctx.author.name
     today, yesterday = getTime()
     
     user = api.fetchUser(id)
@@ -58,7 +58,7 @@ async def daily (message):
     wait = timedelta(hours=20) - time_diff
 
     if time_diff < timedelta(hours= 20):
-        await message.reply(f'Next >uwu resets in **{wait}**')
+        await ctx.send(f'Next >uwu resets in **{wait}**')
         return
 
     luck = random.randint(1, 100)
@@ -80,72 +80,69 @@ async def daily (message):
     api.addCreds(id, cred_amount)
     api.updateDaily(id, today)
     
-    await message.reply(
+    await ctx.send(
         f'{cred_status} **+{cred_amount}** creds were added to your collection'
     )
 
-async def getCreds (message):
-    id = message.author.id
-    name = message.author.name
+async def getCreds (ctx):
+    id = ctx.author.id
+    name = ctx.author.name
     today, yesterday = getTime()
     
     user = api.fetchUser(id)
     if len(user) == 0: api.createAccount(id, name, yesterday)
 
     user_creds = api.fetchCreds(id)
-    await message.reply(
+    await ctx.send(
         f'You have a total of **{user_creds}** uwuCreds!'
     )
 
-async def purchase (message, tier):
-    id = message.author.id
-    name = message.author.name
+async def purchase (ctx):
+    id = ctx.author.id
+    name = ctx.author.name
     today, yesterday = getTime()
 
     user = api.fetchUser(id)
     if len(user) == 0: api.createAccount(id, name, yesterday)
     
     cred_cost = 0
-    if tier == 'bronze': cred_cost = 1000
-    if tier == 'silver': cred_cost = 2000
-    if tier == 'gold': cred_cost = 5000
-    if tier == 'platinum': cred_cost = 10000
+    if ctx.name == 'bronze': cred_cost = 1000
+    if ctx.name == 'silver': cred_cost = 2000
+    if ctx.name == 'gold': cred_cost = 5000
+    if ctx.name == 'platinum': cred_cost = 10000
 
     user_creds = api.fetchCreds(id)
     if user_creds - cred_cost > 0:
         api.subCreds(id, cred_cost)
         user_creds = api.fetchCreds(id)
 
-        message_to_pin = await message.reply(
-            f'You have purchased the **{tier}** tier reward!   (total: {user_creds})'
+        message_to_pin = await ctx.send(
+            f'You have purchased the **{ctx.name}** tier reward!   (total: {user_creds})'
         )
         await message_to_pin.pin()
     else:
-        await message.reply(
-            f'The **{tier}** tier requires **{cred_cost}** uwuCreds...   (you have: {user_creds})'
+        await ctx.send(
+            f'The **{ctx.name}** tier requires **{cred_cost}** uwuCreds...   (you have: {user_creds})'
         )
 
-async def give (message, msg_str, client):
+async def give (ctx, reciever, amount, client):
     today, yesterday = getTime()
 
     filler = ['<', '>', '!', '@']
-    message_content = msg_str.split(' ')
 
-    giver_id = message.author.id
-    amount = int(message_content[2])
-
-    reciever_id = message_content[1]
+    giver_id = ctx.author.id
+    reciever_id = reciever
     for ch in filler:
         reciever_id = reciever_id.replace(ch, '')
     reciever_id = int(reciever_id)
 
     giver_db = api.fetchUser(giver_id)
-    giver_name = message.author.name
+    giver_name = ctx.author.name
     if len(giver_db) == 0: api.createAccount(giver_id, giver_name, yesterday)
     
     giver_creds = api.fetchCreds(giver_id)
     if giver_creds < amount:
-        await message.reply(
+        await ctx.send(
             f'You do not have that much uwuCreds to give.   (total: {giver_creds})'
         )
         return
@@ -160,35 +157,34 @@ async def give (message, msg_str, client):
         api.subCreds(giver_id, amount)
         api.addCreds(reciever_id, amount)
     
-    await message.reply(
+    await ctx.send(
         f'**{amount}** uwuCreds was given to <@{reciever_id}>!'
     )
 
-async def clearDatabase (message):
-    id = message.author.id
+async def clearDatabase (ctx):
+    id = ctx.author.id
 
     if id == ADMIN: 
         remove = api.removeUsers()
-        await message.reply(f'All users have been cleared')
-    else: await message.reply(f'YoU aRe NoT pOwErFuL eNoUgH1!1!')
+        await ctx.send(f'All users have been cleared')
+    else: await ctx.send(f'YoU aRe NoT pOwErFuL eNoUgH1!1!')
 
-async def setBirthday(message):
-    id = message.author.id
-    name = message.author.name
+async def setBirthday(ctx, birth_date):
+    id = ctx.author.id
+    name = ctx.author.name
     today, yesterday = getTime()
 
     user = api.fetchUser(id)
     if len(user) == 0: api.createAccount(id, name, yesterday)
 
-    birthday = message.content.lower()[7:]
-    birthday = parser.parse(birthday)
+    birthday = parser.parse(birth_date)
     birthday = birthday.strftime('%m-%d')
 
     api.updateBirthday(id, birthday)
-    role = get(message.guild.roles, name='uwuCelebrate')
+    role = get(ctx.guild.roles, name='uwuCelebrate')
 
-    await message.author.add_roles(role)
-    await message.reply(f'Birthday is set to: {birthday}')
+    await ctx.author.add_roles(role)
+    await ctx.send(f'Birthday is set to: {birthday}')
 
 def getTime():
     today = datetime.now()
