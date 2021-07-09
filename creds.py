@@ -58,7 +58,7 @@ async def daily (ctx):
     wait = timedelta(hours=20) - time_diff
 
     if time_diff < timedelta(hours= 20):
-        await ctx.send(f'Next >uwu resets in **{wait}**')
+        await ctx.send(f'Next **/uwu** resets in **{wait}**')
         return
 
     luck = random.randint(1, 100)
