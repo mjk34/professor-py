@@ -125,6 +125,8 @@ async def purchase (ctx):
     if len(user) == 0: api.createAccount(id, name, yesterday)
     
     cred_cost = 0
+    if ctx.name == 'paper': cred_cost = 300
+    if ctx.name == 'iron': cred_cost = 500
     if ctx.name == 'bronze': cred_cost = 1000
     if ctx.name == 'silver': cred_cost = 2000
     if ctx.name == 'gold': cred_cost = 5000

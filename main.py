@@ -28,17 +28,19 @@ CMD_DESC = [
     'Show a list of rewards you can purchase using uwuCreds',       # 5
     'Set your birthday, wait and see what happens',                 # 6
     '[MONTH DAY] | EXAMPLES: JAN 1   01/01   01-01',                # 7
-    'Spend 1000 uwuCreds for that coding or math tutoring',         # 8
-    'Spend 2000 uwuCreds for that valorant coaching or RR boost',   # 9
-    'Spend 5000 uwuCreds for that custom profile icon',             # 10
-    'Spend 10000 uwuCreds for that full body character design',     # 11
-    'Collect your daily uwuCreds',                                  # 12
-    'Check how many uwuCreds you have',                             # 13
-    'DANGEROUS, WILL SNAP EVERYTHING',                              # 14
-    'Feeling generous? Give your uwuCreds',                         # 15
-    '[@<user name>] | EXAMPLES: @Dat1Weeaboo   @GreenRobotPanda',   # 16
-    'How many uwuCreds will spare?',                                # 17
-    'Check the registered birthday date',                           # 18
+    'Spend 300 uwuCreds to submit an emoji to add to the server',   # 8
+    'Spend 500 uwuCreds to submit a playlist to the /playlist list',# 9
+    'Spend 1000 uwuCreds for help in code/valorant/study',          # 10
+    'Spend 3000 uwuCreds for a custom painted profile icon',        # 11
+    'Spend 7000 uwuCreds to apply for Moderator position',          # 12
+    'Spend 10000 uwuCreds to request a small code or art project',  # 13
+    'Collect your daily uwuCreds',                                  # 14
+    'Check how many uwuCreds you have',                             # 15
+    'DANGEROUS, WILL SNAP EVERYTHING',                              # 16
+    'Feeling generous? Give your uwuCreds',                         # 17
+    '[@<user name>] | EXAMPLES: @Dat1Weeaboo   @GreenRobotPanda',   # 18
+    'How many uwuCreds will spare?',                                # 19
+    'Check the registered birthday date',                           # 20
 ]
 
 @client.event
@@ -79,34 +81,40 @@ async def _mal(ctx:SlashContext): await fetchMSG(ctx)
 async def _setbd(ctx:SlashContext, birth_date: str):
     await setBirthday(ctx, birth_date)
 
-@slash.slash(name='bronze', description=CMD_DESC[8], guild_ids=[GUILD_ID])
+@slash.slash(name='paper', description=CMD_DESC[8], guild_ids=[GUILD_ID])
+async def _paper(ctx:SlashContext): await purchase(ctx)
+
+@slash.slash(name='iron', description=CMD_DESC[9], guild_ids=[GUILD_ID])
+async def _iron(ctx:SlashContext): await purchase(ctx)
+
+@slash.slash(name='bronze', description=CMD_DESC[10], guild_ids=[GUILD_ID])
 async def _bronze(ctx:SlashContext): await purchase(ctx)
 
-@slash.slash(name='silver', description=CMD_DESC[9], guild_ids=[GUILD_ID])
+@slash.slash(name='silver', description=CMD_DESC[11], guild_ids=[GUILD_ID])
 async def _silver(ctx:SlashContext): await purchase(ctx)
 
-@slash.slash(name='gold', description=CMD_DESC[10], guild_ids=[GUILD_ID])
+@slash.slash(name='gold', description=CMD_DESC[12], guild_ids=[GUILD_ID])
 async def _gold(ctx:SlashContext): await purchase(ctx)
 
-@slash.slash(name='platinum', description=CMD_DESC[11], guild_ids=[GUILD_ID])
+@slash.slash(name='platinum', description=CMD_DESC[13], guild_ids=[GUILD_ID])
 async def platinum(ctx:SlashContext): await purchase(ctx)
 
-@slash.slash(name='uwu', description=CMD_DESC[12], guild_ids=[GUILD_ID])
+@slash.slash(name='uwu', description=CMD_DESC[14], guild_ids=[GUILD_ID])
 async def _uwu(ctx:SlashContext): await daily(ctx)
 
-@slash.slash(name='creds', description=CMD_DESC[13], guild_ids=[GUILD_ID])
+@slash.slash(name='creds', description=CMD_DESC[15], guild_ids=[GUILD_ID])
 async def _creds(ctx:SlashContext): await getCreds(ctx)
 
-@slash.slash(name='clear', description=CMD_DESC[14], guild_ids=[GUILD_ID])
+@slash.slash(name='clear', description=CMD_DESC[16], guild_ids=[GUILD_ID])
 async def _clear(ctx:SlashContext): await clearDatabase(ctx)
 
-@slash.slash(name='give', description=CMD_DESC[15], guild_ids=[GUILD_ID],
-             options=[create_option(name='reciever', description=CMD_DESC[16], option_type=3, required=True),
-             create_option(name='amount', description=CMD_DESC[17], option_type=4, required=True)])
+@slash.slash(name='give', description=CMD_DESC[17], guild_ids=[GUILD_ID],
+             options=[create_option(name='reciever', description=CMD_DESC[18], option_type=3, required=True),
+             create_option(name='amount', description=CMD_DESC[19], option_type=4, required=True)])
 async def _give(ctx:SlashContext, reciever: str, amount: int): 
     await give(ctx, reciever, amount, client)
 
-@slash.slash(name='getbd', description=CMD_DESC[18], guild_ids=[GUILD_ID])
+@slash.slash(name='getbd', description=CMD_DESC[20], guild_ids=[GUILD_ID])
 async def _getbd(ctx:SlashContext): await getBd(ctx)
 
 client.run(TOKEN)
