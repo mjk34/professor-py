@@ -16,6 +16,10 @@ Here are a list of commands I can perform:
 
     **/give**            *reward someone with your uwuCreds*
                           *TEMPLATE: >give @<name> <amount>*
-    
+
+  Birthday Tracker:
+    **/getbd**          *see your registered birthday date*
+    **/setbd**          *set your birthday date*
+
 
 Q^Q happy, that's not a lot of commands

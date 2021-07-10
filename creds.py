@@ -111,9 +111,11 @@ async def getBd (ctx):
             f'You have not registered your birthday! Use **/setbd** to assign one'
         )
     else:
-        await ctx.send(
+        await ctx.author.send(
             f'The saved birthday date is: **{user_bd}**'
         )
+        await ctx.send(f'*uwu*')
+        await ctx.message.delete()
     
 
 async def purchase (ctx):
@@ -205,7 +207,10 @@ async def setBirthday(ctx, birth_date):
     role = get(ctx.guild.roles, name='uwuCelebrate')
 
     await ctx.author.add_roles(role)
-    await ctx.send(f'Birthday is set to: **{birthday}**')
+    await ctx.author.send(f'Birthday is set to: **{birthday}**')
+
+    await ctx.send(f'*uwu*')
+    await ctx.message.delete()
 
 def getTime():
     today = datetime.now()
