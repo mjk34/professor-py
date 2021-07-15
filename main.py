@@ -1,4 +1,5 @@
 import os
+import random
 import discord
 from dotenv import load_dotenv
 
@@ -10,7 +11,7 @@ from cmd import pong, halp, playlist, fetchMSG
 from creds import daily, getCreds, clearDatabase, getBd
 from creds import purchase, give, setBirthday, checkBirthday
 
-from uwuify import do_uwu
+from uwuify import uwuify
 
 load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')
@@ -62,8 +63,9 @@ async def on_ready():
 async def on_message(message):
     if message.author == client.user: return
     if message.author.guild.name != GUILD: return
-
-    message.channel.send(do_uwu(message, 0.7))
+    if random.random() < 0.05:
+        replace_message = uwuify(message.content)
+        await message.edit(content=replace_message)
 
     
 

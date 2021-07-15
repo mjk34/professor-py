@@ -1,10 +1,3 @@
-import random
-import discord
-
-def do_uwu(message: discord.Message, prob: float):
-    if random.random() < prob:
-        return uwuify(message.content)
-
 def uwuify(text: str):
     output_text = ''
 
