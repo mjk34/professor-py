@@ -63,10 +63,10 @@ async def on_ready():
 async def on_message(message):
     if message.author == client.user: return
     if message.author.guild.name != GUILD: return
+    # 5% change of get an uwu reply
     if random.random() < 0.05:
         replace_message = uwuify(message.content)
-        await message.delete()
-        await message.channel.send(replace_message)
+        await message.reply(replace_message)
 
     
 
