@@ -65,7 +65,8 @@ async def on_message(message):
     if message.author.guild.name != GUILD: return
     if random.random() < 0.05:
         replace_message = uwuify(message.content)
-        await message.edit(content=replace_message)
+        await message.delete()
+        await message.channel.send(replace_message)
 
     
 
