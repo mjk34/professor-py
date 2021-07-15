@@ -10,6 +10,8 @@ from cmd import pong, halp, playlist, fetchMSG
 from creds import daily, getCreds, clearDatabase, getBd
 from creds import purchase, give, setBirthday, checkBirthday
 
+from uwuify import do_uwu
+
 load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')
 GUILD = os.getenv('DISCORD_GUILD')
@@ -55,6 +57,15 @@ async def on_ready():
 
     await client.change_presence(activity=discord.Game('/help'))
     await checkBirthday(guild, client)
+
+@client.event
+async def on_message(message):
+    if message.author == client.user: return
+    if message.author.guild.name != GUILD: return
+
+    message.channel.send(do_uwu(message, 0.7))
+
+    
 
 @slash.slash(name='ping', description=CMD_DESC[0], guild_ids=[GUILD_ID])
 async def _hello(ctx:SlashContext): await pong(ctx)
