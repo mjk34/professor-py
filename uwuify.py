@@ -3,6 +3,7 @@ def uwuify(text: str):
 
     length = len(text)
 
+    # rework the algorithm and glorify the weeb speak
     for i in range(length):
         c_char = text[i]
         p_char = text[i-1] if i > 0 else None
@@ -27,11 +28,8 @@ def uwuify(text: str):
 
 
 if __name__ == "__main__":
-    test1 = "The quick brown fox jumps over the lazy dog."
+    test1 = "/The quick brown fox jumps over the lazy dog."
     test2 = "Oh! Nooo! I was late for work!"
 
-    print(uwuify(test1))
-    print(uwuify(test2))
-
-    
-
+    print(uwuify(test1).encode('utf-8').decode('ascii', 'ignore'))
+    print(uwuify(test2).encode('utf-8').decode('ascii', 'ignore'))

@@ -61,21 +61,24 @@ async def daily (ctx):
         await ctx.send(f'Next **/uwu** resets in **{wait}**')
         return
 
-    luck = random.randint(1, 100)
+    luck = random.randint(1, 1001)
     cred_amount, cred_status = 0, ''
 
-    if luck <= 75: 
-        cred_amount = random.randint(50, 250)
+    if luck <= 550: 
+        cred_amount = random.randint(50, 200)
         cred_status = 'Meh,'
-    if luck > 75 and luck <= 90: 
-        cred_amount = random.randint(150, 350)
+    if luck > 550 and luck <= 850: 
+        cred_amount = random.randint(250, 350)
         cred_status = 'Feeling good,'
-    if luck > 90 and luck <= 99: 
-        cred_amount = random.randint(300, 450)
-        cred_status = 'Rare find,'
-    if luck == 100:
+    if luck > 850 and luck <= 950: 
         cred_amount = random.randint(400, 500)
+        cred_status = 'Rare find,'
+    if luck > 950 and luck <= 1000:
+        cred_amount = random.randint(501, 600)
         cred_status = 'You\'re super lucky,'
+    if luck == 1001:
+        cred_amount = 1000
+        cred_status = 'RNJesus has blessed you, '
 
     api.addCreds(id, cred_amount)
     api.updateDaily(id, today)

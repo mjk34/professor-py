@@ -18,6 +18,7 @@ TOKEN = os.getenv('DISCORD_TOKEN')
 GUILD = os.getenv('DISCORD_GUILD')
 GUILD_ID = int(os.getenv('GUILD_ID'))
 CHANNEL = int(os.getenv('BOT_CMD'))
+GROOVY_ID = int(os.getenv('GROOVY'))
 
 client = commands.Bot(command_prefix='!')
 slash = SlashCommand(client, sync_commands=True)
@@ -61,13 +62,19 @@ async def on_ready():
 
 @client.event
 async def on_message(message):
-    if message.author == client.user: return
-    if message.author.guild.name != GUILD: return
-    # 5% change of get an uwu reply
-    if random.random() < 0.05:
-        replace_message = uwuify(message.content)
-        await message.reply(replace_message)
+    if message.author == client.user: return        # checks if the message sender is not itself bot
+    if message.author.id != GROOVY_ID: return       # checks if the sender is groovy
+    if message.author.guild.name != GUILD: return   # checks if it's from UwUversity
+    if message.channel.id != CHANNEL: return        # checks if it comes from the bot channel
+    if message.content[0] == '/':return             # checks if the message is a slash command
 
+    # 3% change of get an uwu reply
+    if random.random() < 0.50:
+        replace_message = uwuify(message.content)
+        resend_message = f'{message.author.name}: ' + replace_message
+
+        await message.delete()
+        await client.get_channel(CHANNEL).send(resend_message)
     
 
 @slash.slash(name='ping', description=CMD_DESC[0], guild_ids=[GUILD_ID])
