@@ -57,19 +57,17 @@ async def on_ready():
 
     print(len(CMD_DESC))
 
-    await client.change_presence(activity=discord.Game('/help'))
-    await checkBirthday(guild, client)
+    await client.change_presence(activity=discord.Game('uwufy'))
+    #await checkBirthday(guild, client)
 
 @client.event
 async def on_message(message):
-    if message.author == client.user: return        # checks if the message sender is not itself bot
-    if message.author.id != GROOVY_ID: return       # checks if the sender is groovy
-    if message.author.guild.name != GUILD: return   # checks if it's from UwUversity
+    if message.author == client.user: return        # checks if the sender is professor
+    if message.author.id == GROOVY_ID: return       # checks if the sender is groovy
     if message.channel.id != CHANNEL: return        # checks if it comes from the bot channel
-    if message.content[0] == '/':return             # checks if the message is a slash command
 
     # 3% change of get an uwu reply
-    if random.random() < 0.50:
+    if random.random() < 0.90:
         replace_message = uwuify(message.content)
         resend_message = f'{message.author.name}: ' + replace_message
 
