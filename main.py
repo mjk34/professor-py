@@ -31,7 +31,7 @@ CMD_DESC = [
     'Show Seasonal anime airing right now',                         # 4
     'Show a list of rewards you can purchase using uwuCreds',       # 5
     'Set your birthday, wait and see what happens',                 # 6
-    '[MONTH DAY] | EXAMPLES: JAN 1   01/01   01-01',                # 7
+    '[MONTH DAY] | EXAMPLES: [JAN 1]   [01/01]   [01-01]',                # 7
     'Spend 300 uwuCreds to submit an emoji to add to the server',   # 8
     'Spend 500 uwuCreds to submit a playlist to the /playlist list',# 9
     'Spend 1000 uwuCreds for help in code/valorant/study',          # 10
@@ -57,7 +57,7 @@ async def on_ready():
 
     print(len(CMD_DESC))
 
-    await client.change_presence(activity=discord.Game('uwufy'))
+    await client.change_presence(activity=discord.Game('UwU Try /help'))
     #await checkBirthday(guild, client)
 
 @client.event
@@ -67,7 +67,7 @@ async def on_message(message):
     if message.channel.id != CHANNEL: return        # checks if it comes from the bot channel
 
     # 3% change of get an uwu reply
-    if random.random() < 0.90:
+    if random.random() < 0.03:
         replace_message = uwuify(message.content)
         resend_message = f'{message.author.name}: ' + replace_message
 
