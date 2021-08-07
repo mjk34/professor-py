@@ -2,7 +2,7 @@ uwuRewards can be cashed in with uwuCreds! Use **>uwu** to collect creds daily.
 Here are a list of rewards that can be obtained:
 
     **/paper**                 Submit an emoji to add to the server   *(300 creds)*
-    **/iron**                    Submit a music playlist to add to /playlist   *(500 creds)*
+    **/iron**                    Disconnect someone from the current channel   *(500 creds)*
     **/bronze**               Tech/Valorant/Academic Support   *(1,000 creds)*
     **/silver**                 Custom Profile Icon/Suggest an event   *(3,000 creds)*
     **/gold**                    Moderator Application   *(7,000 creds)*

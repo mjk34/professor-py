@@ -151,16 +151,16 @@ async def purchase (ctx):
             f'The **{ctx.name}** tier requires **{cred_cost}** uwuCreds...   (you have: {user_creds})'
         )
 
-async def give (ctx, reciever, amount, client):
+async def give (ctx, receive, amount, client):
     today, yesterday = getTime()
 
     filler = ['<', '>', '!', '@']
 
     giver_id = ctx.author.id
-    reciever_id = reciever
+    receive_id = receive
     for ch in filler:
-        reciever_id = reciever_id.replace(ch, '')
-    reciever_id = int(reciever_id)
+        receive_id = receive_id.replace(ch, '')
+    receive_id = int(receive_id)
 
     giver_db = api.fetchUser(giver_id)
     giver_name = ctx.author.name
@@ -173,18 +173,18 @@ async def give (ctx, reciever, amount, client):
         )
         return
 
-    reciever_db = api.fetchUser(reciever_id)
-    if len(reciever_db) == 0:
-        reciever_object = await client.fetch_user(reciever_id)
-        reciever_name = reciever_object.name
-        api.createAccount(reciever_id, reciever_name, yesterday)
+    receive_db = api.fetchUser(receive_id)
+    if len(receive_db) == 0:
+        receive_object = await client.fetch_user(receive_id)
+        receive_name = receive_object.name
+        api.createAccount(receive_id, receive_name, yesterday)
 
     if amount > 0:
         api.subCreds(giver_id, amount)
-        api.addCreds(reciever_id, amount)
+        api.addCreds(receive_id, amount)
     
     await ctx.send(
-        f'**{amount}** uwuCreds was given to <@{reciever_id}>!'
+        f'**{amount}** uwuCreds was given to <@{receive_id}>!'
     )
 
 async def clearDatabase (ctx):
@@ -223,3 +223,33 @@ def getTime():
     yesterday = yesterday.strftime('%m-%d-%y %H:%M')
 
     return today, yesterday
+
+async def handout(ctx, receiver, amount, client):
+    today, yesterday = getTime()
+
+    filler = ['<', '>', '!', '@']
+
+    giver_id = ctx.author.id
+    receive_id = receiver
+    for ch in filler:
+        receive_id = receive_id.replace(ch, '')
+    receive_id = int(receive_id)
+
+    giver_db = api.fetchUser(giver_id)
+    giver_name = ctx.author.name
+    if len(giver_db) == 0: 
+        api.createAccount(giver_id, giver_name, yesterday)
+        await ctx.send(f'YoU aRe NoT pOwErFuL eNoUgH1!1!')
+        return 
+
+    # check if user is a moderator
+    role = get(ctx.guild.roles, name='Moderator')
+    if role.id in [y.id for y in ctx.author.roles]:
+        await ctx.send(f'<@{giver_id}> is a Moderator')
+
+        receive_db = api.fetchUser(receive_id)
+        if len(receive_db) == 0:
+            receive_object = await client.fetch_user(receive_id)
+            receive_name = receive_object.name
+            api.createAccount(receive_id, receive_name, yesterday)
+    else: await ctx.send(f'YoU aRe NoT pOwErFuL eNoUgH1!1!')

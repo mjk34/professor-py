@@ -8,8 +8,9 @@ from discord_slash import SlashCommand, SlashContext
 from discord_slash.utils.manage_commands import create_choice, create_option
 
 from cmd import pong, halp, playlist, fetchMSG
-from creds import daily, getCreds, clearDatabase, getBd
+from creds import daily, getCreds, clearDatabase, getBd, handout
 from creds import purchase, give, setBirthday, checkBirthday
+from mischief import dc
 
 from uwuify import uwuify
 
@@ -43,8 +44,9 @@ CMD_DESC = [
     'DANGEROUS, WILL SNAP EVERYTHING',                              # 16
     'Feeling generous? Give your uwuCreds',                         # 17
     '[@<user name>] | EXAMPLES: @Dat1Weeaboo   @GreenRobotPanda',   # 18
-    'How many uwuCreds will spare?',                                # 19
+    'How many uwuCreds will you spare?',                            # 19
     'Check the registered birthday date',                           # 20
+    'Reward an user with uwuCreds, new creds'                       # 21
 ]
 
 @client.event
@@ -55,10 +57,8 @@ async def on_ready():
         f'{guild.name}(id: {guild.id})'
     )
 
-    print(len(CMD_DESC))
-
-    await client.change_presence(activity=discord.Game('UwU Try /help'))
-    #await checkBirthday(guild, client)
+    await client.change_presence(activity=discord.Game('disconnect 7'))#'UwU Try /help'))
+    await checkBirthday(guild, client)
 
 @client.event
 async def on_message(message):
@@ -96,15 +96,17 @@ async def _mal(ctx:SlashContext): await fetchMSG(ctx)
 # uwuCreds commands that uses the database
 @slash.slash(name='setbd', description=CMD_DESC[6], guild_ids=[GUILD_ID],
              options=[create_option(name='birth_date', description=CMD_DESC[7], option_type=3, required=True)])
-
 async def _setbd(ctx:SlashContext, birth_date: str):
     await setBirthday(ctx, birth_date)
 
 @slash.slash(name='paper', description=CMD_DESC[8], guild_ids=[GUILD_ID])
 async def _paper(ctx:SlashContext): await purchase(ctx)
 
-@slash.slash(name='iron', description=CMD_DESC[9], guild_ids=[GUILD_ID])
-async def _iron(ctx:SlashContext): await purchase(ctx)
+@slash.slash(name='iron', description=CMD_DESC[9], guild_ids=[GUILD_ID])#,
+            # options=[create_option(name='victim', description=CMD_DESC[18], option_type=3, required=True)])
+async def _iron(ctx:SlashContext, victim:str): 
+    #await dc(ctx, victim, client)
+    await purchase(ctx)
 
 @slash.slash(name='bronze', description=CMD_DESC[10], guild_ids=[GUILD_ID])
 async def _bronze(ctx:SlashContext): await purchase(ctx)
@@ -128,12 +130,18 @@ async def _creds(ctx:SlashContext): await getCreds(ctx)
 async def _clear(ctx:SlashContext): await clearDatabase(ctx)
 
 @slash.slash(name='give', description=CMD_DESC[17], guild_ids=[GUILD_ID],
-             options=[create_option(name='reciever', description=CMD_DESC[18], option_type=3, required=True),
+             options=[create_option(name='receiver', description=CMD_DESC[18], option_type=3, required=True),
              create_option(name='amount', description=CMD_DESC[19], option_type=4, required=True)])
-async def _give(ctx:SlashContext, reciever: str, amount: int): 
-    await give(ctx, reciever, amount, client)
+async def _give(ctx:SlashContext, receiver: str, amount: int): 
+    await give(ctx, receiver, amount, client)
 
 @slash.slash(name='getbd', description=CMD_DESC[20], guild_ids=[GUILD_ID])
 async def _getbd(ctx:SlashContext): await getBd(ctx)
+
+@slash.slash(name='handout', description=CMD_DESC[21], guild_ids=[GUILD_ID],
+             options=[create_option(name='receiver', description=CMD_DESC[18], option_type=3, required=True),
+             create_option(name='amount', description=CMD_DESC[19], option_type=4, required=True)])
+async def _handout(ctx:SlashContext, receiver: str, amount: int): 
+    await handout(ctx, receiver, amount, client)
 
 client.run(TOKEN)
