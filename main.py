@@ -126,8 +126,8 @@ async def _uwu(ctx:SlashContext): await daily(ctx)
 @slash.slash(name='creds', description=CMD_DESC[15], guild_ids=[GUILD_ID])
 async def _creds(ctx:SlashContext): await getCreds(ctx)
 
-@slash.slash(name='clear', description=CMD_DESC[16], guild_ids=[GUILD_ID])
-async def _clear(ctx:SlashContext): await clearDatabase(ctx)
+#@slash.slash(name='clear', description=CMD_DESC[16], guild_ids=[GUILD_ID])
+#sync def _clear(ctx:SlashContext): await clearDatabase(ctx)
 
 @slash.slash(name='give', description=CMD_DESC[17], guild_ids=[GUILD_ID],
              options=[create_option(name='receiver', description=CMD_DESC[18], option_type=3, required=True),
