@@ -9,7 +9,7 @@ from discord_slash.utils.manage_commands import create_choice, create_option
 
 from cmd import pong, halp, playlist, fetchMSG
 from creds import daily, getCreds, clearDatabase, getBd, handout
-from creds import purchase, give, setBirthday, checkBirthday
+from creds import purchase, give, setBirthday, checkBirthday, spy, uwuTax
 from mischief import dc
 
 from uwuify import uwuify
@@ -46,7 +46,9 @@ CMD_DESC = [
     '[@<user name>] | EXAMPLES: @Dat1Weeaboo   @GreenRobotPanda',   # 18
     'How many uwuCreds will you spare?',                            # 19
     'Check the registered birthday date',                           # 20
-    'Reward an user with uwuCreds, new creds'                       # 21
+    'Reward an user with uwuCreds, new creds',                      # 21
+    'Peek at another memeber\'s uwuCred amount',                    # 22   
+    'Take some creds from a specific misdemeanor'                   # 23
 ]
 
 @client.event
@@ -143,5 +145,16 @@ async def _getbd(ctx:SlashContext): await getBd(ctx)
              create_option(name='amount', description=CMD_DESC[19], option_type=4, required=True)])
 async def _handout(ctx:SlashContext, receiver: str, amount: int): 
     await handout(ctx, receiver, amount, client)
+
+@slash.slash(name='spy', description=CMD_DESC[22], guild_ids=[GUILD_ID],
+             options=[create_option(name='target', description=CMD_DESC[18], option_type=3, required=True)])
+async def _spy(ctx:SlashContext, target: str):
+    await spy(ctx, target)
+
+@slash.slash(name='uwutax', description=CMD_DESC[23], guild_ids=[GUILD_ID],
+             options=[create_option(name='victim', description=CMD_DESC[18], option_type=3, required=True),
+             create_option(name='amount', description=CMD_DESC[19], option_type=4, required=True)])
+async def _uwutax(ctx:SlashContext, victim: str, amount: int):
+    await uwuTax(ctx, victim, amount, client)
 
 client.run(TOKEN)

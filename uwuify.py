@@ -9,7 +9,7 @@ def uwuify(text: str):
 
     output_text = '`*:･ﾟ✧ '
 
-    if random.random() < 0.1:
+    if random.random() < 0.15:
         num = random.randint(0, 8)
         output_text += uwu_emojis[num] + ' '
 

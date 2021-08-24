@@ -12,6 +12,7 @@ from discord.utils import get
 api = API.API
 load_dotenv()
 ADMIN = int(os.getenv('ADMIN_ID'))
+MODERATOR1 = int(os.getenv('VHCHENG'))
 
 async def checkBirthday(guild, client):
     hour_time = 3600
@@ -225,8 +226,11 @@ def getTime():
     return today, yesterday
 
 async def handout(ctx, receiver, amount, client):
-    today, yesterday = getTime()
+    if amount > 1000:
+        await ctx.send(f'dO nOt AbUsE tHy PoWeR1!1!')
+        return
 
+    today, yesterday = getTime()
     filler = ['<', '>', '!', '@']
 
     giver_id = ctx.author.id
@@ -234,6 +238,11 @@ async def handout(ctx, receiver, amount, client):
     for ch in filler:
         receive_id = receive_id.replace(ch, '')
     receive_id = int(receive_id)
+
+    if receive_id == MODERATOR1:
+        if ctx.author.id != ADMIN:
+            await ctx.send(f'The all seeing eye has noticed your selfish deeds.')
+            return
 
     giver_db = api.fetchUser(giver_id)
     giver_name = ctx.author.name
@@ -245,11 +254,68 @@ async def handout(ctx, receiver, amount, client):
     # check if user is a moderator
     role = get(ctx.guild.roles, name='Moderator')
     if role.id in [y.id for y in ctx.author.roles]:
-        await ctx.send(f'<@{giver_id}> is a Moderator')
-
         receive_db = api.fetchUser(receive_id)
         if len(receive_db) == 0:
             receive_object = await client.fetch_user(receive_id)
             receive_name = receive_object.name
             api.createAccount(receive_id, receive_name, yesterday)
+        api.addCreds(receive_id, amount)
+        newUwU = api.fetchCreds(receive_id)
+        await ctx.send(f'Moderator <@{giver_id}> has graced <@{receive_id}> with {amount} uwuCreds!' +
+                       f'\n<@{receive_id}> now has {newUwU}')
+        await ctx.send()
     else: await ctx.send(f'YoU aRe NoT pOwErFuL eNoUgH1!1!')
+
+async def uwuTax(ctx, victim, amount, client):
+    if amount > 1000:
+        await ctx.send(f'dO nOt AbUsE tHy PoWeR1!1!')
+        return
+
+    today, yesterday = getTime()
+    filler = ['<', '>', '!', '@']
+
+    mod_id = ctx.author.id
+    victim_id = victim
+    for ch in filler:
+        victim_id = victim_id.replace(ch, '')
+    victim_id = int(victim_id)
+
+    mod_db = api.fetchUser(mod_id)
+    mod_name = ctx.author.name
+    if len(mod_db) == 0: 
+        api.createAccount(mod_id, mod_name, yesterday)
+        await ctx.send(f'YoU aRe NoT pOwErFuL eNoUgH1!1!')
+        return 
+
+    # check if user is a moderator
+    role = get(ctx.guild.roles, name='Moderator')
+    if role.id in [y.id for y in ctx.author.roles]:
+        victim_db = api.fetchUser(victim_id)
+        if len(victim_db) == 0:
+            victim_object = await client.fetch_user(victim_id)
+            victim_name = victim_object.name
+            api.createAccount(victim_id, victim_name, yesterday)
+        api.subCreds(victim_id, amount)
+        newUwU = api.fetchCreds(victim_id)
+        await ctx.send(f'Moderator <@{mod_id}> has taken {amount} uwuCreds! from <@{victim_id}>' +
+                       f'\n<@{victim_id}> now has {newUwU}')
+        await ctx.send()
+    else: await ctx.send(f'YoU aRe NoT pOwErFuL eNoUgH1!1!')
+
+async def spy (ctx, target):
+    today, yesterday = getTime()
+
+    filler = ['<', '>', '!', '@']
+
+    target_id = target
+    for ch in filler:
+        target_id = target_id.replace(ch, '')
+    target_id = int(target_id)
+    
+    user = api.fetchUser(target_id)
+    if len(user) == 0: ctx.reply(f'Target does not exist or has not UwUed')
+
+    user_creds = api.fetchCreds(target_id)
+    await ctx.send(
+        f'The target has a total of **{user_creds}** uwuCreds'
+    )
