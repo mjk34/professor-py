@@ -70,8 +70,8 @@ async def on_ready():
         f'{guild.name}(id: {guild.id})'
     )
 
-    await client.change_presence(activity=discord.Game('testing submit'))#UwU Try /help'))
-    #await checkBirthday(guild, client)
+    await client.change_presence(activity=discord.Game('UwU Try /help'))
+    await checkBirthday(guild, client)
 
 @client.event
 async def on_message(message):
