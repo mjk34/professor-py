@@ -3,10 +3,10 @@ Here are a list of rewards that can be obtained:
 
     **/paper**                 Submit an emoji to add to the server   *(500 creds)*
     **/iron**                    Tech/Valorant/Academic Support   *(1000 creds)*
-    **/bronze**               Custom Profile Icon   *(3,000 creds)*
-    **/silver**                 Initiate a server event   *(5,000 creds)*
-    **/gold**                    Moderator Application   *(7,000 creds)*
-    **/platinum**           Freelance Code/Art Request   *(10,000 creds)*
+    **/bronze**               Custom Profile Icon   *(5,000 creds)*
+    **/silver**                 Initiate a server event   *(7,000 creds)*
+    **/gold**                    Moderator Application   *(12,000 creds)*
+    **/platinum**           Freelance Code/Art Request   *(20,000 creds)*
 
     ---------------------------------------------------------------------------
     **/ticket**                 Purchase a ticket for the battle pass raffle   *(2000 + 400n)*

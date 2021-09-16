@@ -132,10 +132,10 @@ async def purchase (ctx):
     cred_cost = 0
     if ctx.name == 'paper': cred_cost = 500
     if ctx.name == 'iron': cred_cost = 1000
-    if ctx.name == 'bronze': cred_cost = 3000
-    if ctx.name == 'silver': cred_cost = 5000
-    if ctx.name == 'gold': cred_cost = 7000
-    if ctx.name == 'platinum': cred_cost = 10000
+    if ctx.name == 'bronze': cred_cost = 5000
+    if ctx.name == 'silver': cred_cost = 7000
+    if ctx.name == 'gold': cred_cost = 12000
+    if ctx.name == 'platinum': cred_cost = 20000
     if ctx.name == 'ticket':
         user_tickets = api.fetchTicket(id)
         user_cost = 2000 + 400*(user_tickets)
