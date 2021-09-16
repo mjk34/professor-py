@@ -12,6 +12,7 @@ from discord.utils import get
 api = API.API
 load_dotenv()
 ADMIN = int(os.getenv('ADMIN_ID'))
+MODERATOR1 = int(os.getenv('VHCHENG'))
 
 async def checkBirthday(guild, client):
     hour_time = 3600
@@ -61,21 +62,24 @@ async def daily (ctx):
         await ctx.send(f'Next **/uwu** resets in **{wait}**')
         return
 
-    luck = random.randint(1, 100)
+    luck = random.randint(1, 1001)
     cred_amount, cred_status = 0, ''
 
-    if luck <= 75: 
-        cred_amount = random.randint(50, 250)
-        cred_status = 'Meh,'
-    if luck > 75 and luck <= 90: 
-        cred_amount = random.randint(150, 350)
-        cred_status = 'Feeling good,'
-    if luck > 90 and luck <= 99: 
-        cred_amount = random.randint(300, 450)
-        cred_status = 'Rare find,'
-    if luck == 100:
+    if luck <= 550: 
+        cred_amount = random.randint(50, 200)
+        cred_status = 'Rising Fortune,'
+    if luck > 550 and luck <= 850: 
+        cred_amount = random.randint(250, 350)
+        cred_status = 'Modest Fortune,'
+    if luck > 850 and luck <= 950: 
         cred_amount = random.randint(400, 500)
-        cred_status = 'You\'re super lucky,'
+        cred_status = 'Good Fortune,'
+    if luck > 950 and luck <= 1000:
+        cred_amount = random.randint(501, 600)
+        cred_status = 'Great Fortune,'
+    if luck == 1001:
+        cred_amount = 1000
+        cred_status = 'RNJesus has blessed you, '
 
     api.addCreds(id, cred_amount)
     api.updateDaily(id, today)
@@ -116,7 +120,6 @@ async def getBd (ctx):
         )
         await ctx.send(f'*uwu*')
         await ctx.message.delete()
-    
 
 async def purchase (ctx):
     id = ctx.author.id
@@ -125,19 +128,30 @@ async def purchase (ctx):
 
     user = api.fetchUser(id)
     if len(user) == 0: api.createAccount(id, name, yesterday)
-    
+
     cred_cost = 0
-    if ctx.name == 'paper': cred_cost = 300
-    if ctx.name == 'iron': cred_cost = 500
-    if ctx.name == 'bronze': cred_cost = 1000
-    if ctx.name == 'silver': cred_cost = 2000
-    if ctx.name == 'gold': cred_cost = 5000
+    if ctx.name == 'paper': cred_cost = 500
+    if ctx.name == 'iron': cred_cost = 1000
+    if ctx.name == 'bronze': cred_cost = 3000
+    if ctx.name == 'silver': cred_cost = 5000
+    if ctx.name == 'gold': cred_cost = 7000
     if ctx.name == 'platinum': cred_cost = 10000
+    if ctx.name == 'ticket':
+        user_tickets = api.fetchTicket(id)
+        user_cost = 2000 + 400*(user_tickets)
 
     user_creds = api.fetchCreds(id)
     if user_creds - cred_cost > 0:
         api.subCreds(id, cred_cost)
         user_creds = api.fetchCreds(id)
+
+        if ctx.name == 'ticket':
+            user_tickets = api.fetchTicket(id)
+            message_to_pin = await ctx.send(
+                f'You have purchased the a raffle **{ctx.name}** for {cred_cost}!   (remaining: {user_creds})' +
+                f'\n You now have {user_tickets} ticket(s)'
+            )
+            return
 
         message_to_pin = await ctx.send(
             f'You have purchased the **{ctx.name}** tier reward!   (total: {user_creds})'
@@ -148,16 +162,16 @@ async def purchase (ctx):
             f'The **{ctx.name}** tier requires **{cred_cost}** uwuCreds...   (you have: {user_creds})'
         )
 
-async def give (ctx, reciever, amount, client):
+async def give (ctx, receive, amount, client):
     today, yesterday = getTime()
 
     filler = ['<', '>', '!', '@']
 
     giver_id = ctx.author.id
-    reciever_id = reciever
+    receive_id = receive
     for ch in filler:
-        reciever_id = reciever_id.replace(ch, '')
-    reciever_id = int(reciever_id)
+        receive_id = receive_id.replace(ch, '')
+    receive_id = int(receive_id)
 
     giver_db = api.fetchUser(giver_id)
     giver_name = ctx.author.name
@@ -170,27 +184,19 @@ async def give (ctx, reciever, amount, client):
         )
         return
 
-    reciever_db = api.fetchUser(reciever_id)
-    if len(reciever_db) == 0:
-        reciever_object = await client.fetch_user(reciever_id)
-        reciever_name = reciever_object.name
-        api.createAccount(reciever_id, reciever_name, yesterday)
+    receive_db = api.fetchUser(receive_id)
+    if len(receive_db) == 0:
+        receive_object = await client.fetch_user(receive_id)
+        receive_name = receive_object.name
+        api.createAccount(receive_id, receive_name, yesterday)
 
     if amount > 0:
         api.subCreds(giver_id, amount)
-        api.addCreds(reciever_id, amount)
+        api.addCreds(receive_id, amount)
     
     await ctx.send(
-        f'**{amount}** uwuCreds was given to <@{reciever_id}>!'
+        f'**{amount}** uwuCreds was given to <@{receive_id}>!'
     )
-
-async def clearDatabase (ctx):
-    id = ctx.author.id
-
-    if id == ADMIN: 
-        remove = api.removeUsers()
-        await ctx.send(f'All users have been cleared')
-    else: await ctx.send(f'YoU aRe NoT pOwErFuL eNoUgH1!1!')
 
 async def setBirthday(ctx, birth_date):
     id = ctx.author.id
@@ -220,3 +226,106 @@ def getTime():
     yesterday = yesterday.strftime('%m-%d-%y %H:%M')
 
     return today, yesterday
+
+async def handout(ctx, receiver, amount, client):
+    if amount > 3000:
+        await ctx.send(f'dO nOt AbUsE tHy PoWeR1!1!')
+        return
+
+    today, yesterday = getTime()
+    filler = ['<', '>', '!', '@']
+
+    giver_id = ctx.author.id
+    receive_id = receiver
+    for ch in filler:
+        receive_id = receive_id.replace(ch, '')
+    receive_id = int(receive_id)
+
+    if receive_id == MODERATOR1:
+        if ctx.author.id != ADMIN:
+            await ctx.send(f'The all seeing eye has noticed your selfish deeds.')
+            return
+
+    giver_db = api.fetchUser(giver_id)
+    giver_name = ctx.author.name
+    if len(giver_db) == 0: 
+        api.createAccount(giver_id, giver_name, yesterday)
+        await ctx.send(f'YoU aRe NoT pOwErFuL eNoUgH1!1!')
+        return 
+
+    # check if user is a moderator
+    role = get(ctx.guild.roles, name='Moderator')
+    if role.id in [y.id for y in ctx.author.roles]:
+        receive_db = api.fetchUser(receive_id)
+        if len(receive_db) == 0:
+            receive_object = await client.fetch_user(receive_id)
+            receive_name = receive_object.name
+            api.createAccount(receive_id, receive_name, yesterday)
+        api.addCreds(receive_id, amount)
+        newUwU = api.fetchCreds(receive_id)
+        await ctx.send(f'Moderator <@{giver_id}> has graced <@{receive_id}> with {amount} uwuCreds!' +
+                       f'\n<@{receive_id}> now has {newUwU}')
+        await ctx.send()
+    else: await ctx.send(f'YoU aRe NoT pOwErFuL eNoUgH1!1!')
+
+async def uwuTax(ctx, victim, amount, client):
+    if amount > 1000:
+        await ctx.send(f'dO nOt AbUsE tHy PoWeR1!1!')
+        return
+
+    today, yesterday = getTime()
+    filler = ['<', '>', '!', '@']
+
+    mod_id = ctx.author.id
+    victim_id = victim
+    for ch in filler:
+        victim_id = victim_id.replace(ch, '')
+    victim_id = int(victim_id)
+
+    mod_db = api.fetchUser(mod_id)
+    mod_name = ctx.author.name
+    if len(mod_db) == 0: 
+        api.createAccount(mod_id, mod_name, yesterday)
+        await ctx.send(f'YoU aRe NoT pOwErFuL eNoUgH1!1!')
+        return 
+
+    # check if user is a moderator
+    role = get(ctx.guild.roles, name='Moderator')
+    if role.id in [y.id for y in ctx.author.roles]:
+        victim_db = api.fetchUser(victim_id)
+        if len(victim_db) == 0:
+            victim_object = await client.fetch_user(victim_id)
+            victim_name = victim_object.name
+            api.createAccount(victim_id, victim_name, yesterday)
+        api.subCreds(victim_id, amount)
+        newUwU = api.fetchCreds(victim_id)
+        await ctx.send(f'Moderator <@{mod_id}> has taken {amount} uwuCreds! from <@{victim_id}>' +
+                       f'\n<@{victim_id}> now has {newUwU}')
+        await ctx.send()
+    else: await ctx.send(f'YoU aRe NoT pOwErFuL eNoUgH1!1!')
+
+async def spy (ctx, target):
+    today, yesterday = getTime()
+
+    filler = ['<', '>', '!', '@']
+
+    target_id = target
+    for ch in filler:
+        target_id = target_id.replace(ch, '')
+    target_id = int(target_id)
+    
+    user = api.fetchUser(target_id)
+    if len(user) == 0: ctx.reply(f'Target does not exist or has not UwUed')
+
+    user_creds = api.fetchCreds(target_id)
+    await ctx.send(
+        f'The target has a total of **{user_creds}** uwuCreds'
+    )
+
+async def clearDatabase (ctx):
+    id = ctx.author.id
+
+    if id == ADMIN: 
+        remove = api.removeUsers()
+        await ctx.send(f'All users have been cleared')
+    else: await ctx.send(f'YoU aRe NoT pOwErFuL eNoUgH1!1!')

@@ -10,12 +10,6 @@ collection = db.users
 def fetchUser (id):
     return list(collection.find({'_id': id}))
 
-def removeUsers ():
-    users = list(collection.find({}))
-    for user_data in users:
-        myQuery = {'_id': user_data['_id']}
-        collection.delete_one(myQuery)
-
 def fetchCreds (id):
     user_data = fetchUser(id)
     return user_data[0]['creds']
@@ -23,6 +17,14 @@ def fetchCreds (id):
 def fetchDaily (id):
     user_data = fetchUser(id)
     return user_data[0]['daily']
+
+def fetchSubmit (id):
+    user_data = fetchUser(id)
+    return user_data[0]['val_submit']
+
+def fetchTicket (id):
+    user_data = fetchUser(id)
+    return user_data[0]['tickets']
 
 def fetchBirthday (id):
     user_data = fetchUser(id)
@@ -41,7 +43,9 @@ def createAccount (id, name, time):
         'name': name,
         'creds': 0,
         'daily': time,
-        'birthday': ''
+        'birthday': '',
+        'val_submit': 2,
+        'tickets': 0
     }
 
     collection.insert_one(newUser)
@@ -49,7 +53,6 @@ def createAccount (id, name, time):
 def addCreds (id, amount):
     user_data = fetchUser(id)
     user_creds = user_data[0]['creds']
-
     user_creds = user_creds + amount
 
     collection.find_one_and_update(
@@ -59,7 +62,6 @@ def addCreds (id, amount):
 def subCreds (id, amount):
     user_data = fetchUser(id)
     user_creds = user_data[0]['creds']
-
     user_creds = user_creds - amount
 
     collection.find_one_and_update(
@@ -68,9 +70,29 @@ def subCreds (id, amount):
 
 def updateDaily (id, time):
     user_daily = time
-
     collection.find_one_and_update(
         {'_id': id}, {'$set': {'daily': user_daily}}
+    )
+    collection.find_one_and_update(
+        {'_id': id}, {'$set': {'val_submit': 0}}
+    )
+
+def incrementSubmit (id):
+    user_data = fetchUser(id)
+    user_submit = user_data[0]['val_submit']
+    user_submit = user_submit + 1
+
+    collection.find_one_and_update(
+        {'_id': id}, {'$set': {'val_submit': user_submit}}
+    )
+
+def buyTicket (id):
+    user_data = fetchUser(id)
+    user_tickets = user_data[0]['ticket']
+    user_tickets = user_tickets + 1
+
+    collection.find_one_and_update(
+        {'_id': id}, {'$set': {'tickets': user_tickets}}
     )
 
 def updateBirthday (id, date):
@@ -79,3 +101,9 @@ def updateBirthday (id, date):
     collection.find_one_and_update(
         {'_id': id}, {'$set': {'birthday': user_birthday}}
     )
+
+def removeUsers ():
+    users = list(collection.find({}))
+    for user_data in users:
+        myQuery = {'_id': user_data['_id']}
+        collection.delete_one(myQuery)

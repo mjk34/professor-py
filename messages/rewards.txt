@@ -1,12 +1,15 @@
 uwuRewards can be cashed in with uwuCreds! Use **>uwu** to collect creds daily.
 Here are a list of rewards that can be obtained:
 
-    **/paper**                 Submit an emoji to add to the server   *(300 creds)*
-    **/iron**                    Submit a music playlist to add to /playlist   *(500 creds)*
-    **/bronze**               Tech/Valorant/Academic Support   *(1,000 creds)*
-    **/silver**                 Custom Profile Icon/Suggest an event   *(3,000 creds)*
+    **/paper**                 Submit an emoji to add to the server   *(500 creds)*
+    **/iron**                    Tech/Valorant/Academic Support   *(1000 creds)*
+    **/bronze**               Custom Profile Icon   *(3,000 creds)*
+    **/silver**                 Initiate a server event   *(5,000 creds)*
     **/gold**                    Moderator Application   *(7,000 creds)*
     **/platinum**           Freelance Code/Art Request   *(10,000 creds)*
+
+    ---------------------------------------------------------------------------
+    **/ticket**                 Purchase a ticket for the battle pass raffle   *(2000 + 400n)*
 
 *NOTE: Suggest rewards you would like to see on this list, we're continuously trying to
               improve the uwuCreds system to make it more meaningful*
