@@ -13,6 +13,12 @@ def fetchCreds (id):
 def fetchDaily (id):
     return user_services.fetchDaily(id)
 
+def fetchSubmit (id):
+    return user_services.fetchSubmit(id)
+
+def fetchTicket (id):
+    return user_services.fetchTicket(id)
+
 def fetchBirthday (id):
     return user_services.fetchBirthday(id)
 
@@ -31,5 +37,14 @@ def subCreds (id, amount):
 def updateDaily (id, time):
     return user_services.updateDaily(id, time)
 
+def incrementSubmit (id):
+    return user_services.incrementSubmit(id)
+
+def buyTicket (id):
+    return user_services.buyTicket(id)
+
 def updateBirthday (id, date):
     return user_services.updateBirthday(id, date)
+
+def removeUsers ():
+    return user_services.removeUsers()

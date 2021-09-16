@@ -67,16 +67,16 @@ async def daily (ctx):
 
     if luck <= 550: 
         cred_amount = random.randint(50, 200)
-        cred_status = 'Meh,'
+        cred_status = 'Rising Fortune,'
     if luck > 550 and luck <= 850: 
         cred_amount = random.randint(250, 350)
-        cred_status = 'Feeling good,'
+        cred_status = 'Modest Fortune,'
     if luck > 850 and luck <= 950: 
         cred_amount = random.randint(400, 500)
-        cred_status = 'Rare find,'
+        cred_status = 'Good Fortune,'
     if luck > 950 and luck <= 1000:
         cred_amount = random.randint(501, 600)
-        cred_status = 'You\'re super lucky,'
+        cred_status = 'Great Fortune,'
     if luck == 1001:
         cred_amount = 1000
         cred_status = 'RNJesus has blessed you, '
@@ -120,7 +120,6 @@ async def getBd (ctx):
         )
         await ctx.send(f'*uwu*')
         await ctx.message.delete()
-    
 
 async def purchase (ctx):
     id = ctx.author.id
@@ -129,19 +128,30 @@ async def purchase (ctx):
 
     user = api.fetchUser(id)
     if len(user) == 0: api.createAccount(id, name, yesterday)
-    
+
     cred_cost = 0
-    if ctx.name == 'paper': cred_cost = 300
-    if ctx.name == 'iron': cred_cost = 500
-    if ctx.name == 'bronze': cred_cost = 1000
-    if ctx.name == 'silver': cred_cost = 2000
-    if ctx.name == 'gold': cred_cost = 5000
+    if ctx.name == 'paper': cred_cost = 500
+    if ctx.name == 'iron': cred_cost = 1000
+    if ctx.name == 'bronze': cred_cost = 3000
+    if ctx.name == 'silver': cred_cost = 5000
+    if ctx.name == 'gold': cred_cost = 7000
     if ctx.name == 'platinum': cred_cost = 10000
+    if ctx.name == 'ticket':
+        user_tickets = api.fetchTicket(id)
+        user_cost = 2000 + 400*(user_tickets)
 
     user_creds = api.fetchCreds(id)
     if user_creds - cred_cost > 0:
         api.subCreds(id, cred_cost)
         user_creds = api.fetchCreds(id)
+
+        if ctx.name == 'ticket':
+            user_tickets = api.fetchTicket(id)
+            message_to_pin = await ctx.send(
+                f'You have purchased the a raffle **{ctx.name}** for {cred_cost}!   (remaining: {user_creds})' +
+                f'\n You now have {user_tickets} ticket(s)'
+            )
+            return
 
         message_to_pin = await ctx.send(
             f'You have purchased the **{ctx.name}** tier reward!   (total: {user_creds})'
@@ -188,14 +198,6 @@ async def give (ctx, receive, amount, client):
         f'**{amount}** uwuCreds was given to <@{receive_id}>!'
     )
 
-async def clearDatabase (ctx):
-    id = ctx.author.id
-
-    if id == ADMIN: 
-        remove = api.removeUsers()
-        await ctx.send(f'All users have been cleared')
-    else: await ctx.send(f'YoU aRe NoT pOwErFuL eNoUgH1!1!')
-
 async def setBirthday(ctx, birth_date):
     id = ctx.author.id
     name = ctx.author.name
@@ -226,7 +228,7 @@ def getTime():
     return today, yesterday
 
 async def handout(ctx, receiver, amount, client):
-    if amount > 1000:
+    if amount > 3000:
         await ctx.send(f'dO nOt AbUsE tHy PoWeR1!1!')
         return
 
@@ -319,3 +321,11 @@ async def spy (ctx, target):
     await ctx.send(
         f'The target has a total of **{user_creds}** uwuCreds'
     )
+
+async def clearDatabase (ctx):
+    id = ctx.author.id
+
+    if id == ADMIN: 
+        remove = api.removeUsers()
+        await ctx.send(f'All users have been cleared')
+    else: await ctx.send(f'YoU aRe NoT pOwErFuL eNoUgH1!1!')
