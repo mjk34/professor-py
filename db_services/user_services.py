@@ -14,6 +14,10 @@ def fetchCreds (id):
     user_data = fetchUser(id)
     return user_data[0]['creds']
 
+def fetchName (id):
+    user_data = fetchUser(id)
+    return user_data[0]['name']
+
 def fetchDaily (id):
     user_data = fetchUser(id)
     return user_data[0]['daily']
@@ -107,3 +111,42 @@ def removeUsers ():
     for user_data in users:
         myQuery = {'_id': user_data['_id']}
         collection.delete_one(myQuery)
+
+def getTopCreds ():
+    users = list(collection.find({}))
+    allUsers = []
+
+    for user_data in users:
+        user_name = user_data['name']
+        user_creds = user_data['creds']
+        user_ticket = user_data['tickets']
+
+        user = [user_name, user_creds, user_ticket]
+        allUsers.append(user)
+
+
+    for i in range(len(allUsers)):
+        min_index = i
+        for j in range(i+1, len(allUsers)):
+            if allUsers[min_index][1] < allUsers[j][1]:
+                min_index = j
+        allUsers[i], allUsers[min_index] = allUsers[min_index], allUsers[i]
+
+    topUsers = []
+    topSize = 0
+    if len(allUsers) < 10:
+        topSize = len(allUsers)
+    else: topSize = 10
+
+    for i in range(topSize):
+        topUsers.append(allUsers[i])
+    
+    return topUsers
+
+def updateName (id, name):
+    user_name = name
+
+    collection.find_one_and_update(
+        {'_id': id}, {'$set': {'name': user_name}}
+    )
+        

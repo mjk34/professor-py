@@ -10,7 +10,7 @@ from discord_slash.utils.manage_commands import create_choice, create_option
 from cmd import pong, halp, playlist, fetchMSG
 from creds import daily, getCreds, getBd, handout, clearDatabase
 from creds import purchase, give, setBirthday, checkBirthday, spy, uwuTax
-from valorant import getScore, getSubmit, raffle
+from valorant import getScore, getSubmit, raffle, leaderboard
 from mischief import dc
 
 from uwuify import uwuify
@@ -59,7 +59,8 @@ CMD_DESC = [
     'Number of total rounds played',                                # 30
     'Check how many val-submits you have left',                     # 31
     'Spend 2000 + 400n uwuCreds to buy a raffle ticket',            # 32
-    'Check your tickets for the current BP raffle'                  # 33
+    'Check your tickets for the current BP raffle',                 # 33
+    'Show the top wealthiest people in the server'                  # 34    
 ]
 
 @client.event
@@ -70,8 +71,8 @@ async def on_ready():
         f'{guild.name}(id: {guild.id})'
     )
 
-    await client.change_presence(activity=discord.Game('UwU Try /help'))
-    await checkBirthday(guild, client)
+    await client.change_presence(activity=discord.Game('Testing LeaderBoard'))#UwU Try /help'))
+    #await checkBirthday(guild, client)
 
 @client.event
 async def on_message(message):
@@ -188,5 +189,9 @@ async def _clear(ctx:SlashContext): await clearDatabase(ctx)
 @slash.slash(name='raffle', description=CMD_DESC[33], guild_ids=[GUILD_ID])
 async def _raffle(ctx:SlashContext):
     await raffle(ctx)
+
+@slash.slash(name='leaderboard', description=CMD_DESC[34], guild_ids=[GUILD_ID])
+async def _leaderboard(ctx:SlashContext):
+    await leaderboard(ctx)
 
 client.run(TOKEN)

@@ -70,6 +70,16 @@ async def raffle(ctx):
         f'\nTickets can be bought using **/ticket** with uwuCreds, 2000 + 400n'
     )
 
+async def leaderboard(ctx):
+    top_users = api.getTopUsers()
+    user_list = 'TOP SERVER\n-----------------------------------------\n'
+    count = 1
+    for user in top_users:
+        user_list += f'** #{count} ** {user[0]:-<20}  ({user[1]}/{user[2]})\n'
+        count += 1
+
+    await ctx.send(user_list)
+
 def getTime():
     today = datetime.now()
     yesterday = today - timedelta(days=1)

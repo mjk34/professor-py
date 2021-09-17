@@ -83,7 +83,11 @@ async def daily (ctx):
 
     api.addCreds(id, cred_amount)
     api.updateDaily(id, today)
-    
+
+    user_name = api.fetchName(id)
+    if user_name != name:
+        api.updateName(id, name)
+   
     await ctx.send(
         f'{cred_status} **+{cred_amount}** creds were added to your collection'
     )
@@ -95,6 +99,10 @@ async def getCreds (ctx):
     
     user = api.fetchUser(id)
     if len(user) == 0: api.createAccount(id, name, yesterday)
+
+    user_name = api.fetchName(id)
+    if user_name != name:
+        api.updateName(id, name)
 
     user_creds = api.fetchCreds(id)
     await ctx.send(
@@ -147,7 +155,13 @@ async def purchase (ctx):
 
         if ctx.name == 'ticket':
             user_tickets = api.fetchTicket(id)
-            message_to_pin = await ctx.send(
+            if user_tickets == 10:
+                await ctx.send(
+                    f'You already have reached the max amount of tickets! (10/10)'
+            )
+            return
+
+            await ctx.send(
                 f'You have purchased the a raffle **{ctx.name}** for {cred_cost}!   (remaining: {user_creds})' +
                 f'\n You now have {user_tickets} ticket(s)'
             )

@@ -10,6 +10,9 @@ def removeUsers ():
 def fetchCreds (id):
     return user_services.fetchCreds(id)
 
+def fetchName (id):
+    return user_services.fetchName(id)
+
 def fetchDaily (id):
     return user_services.fetchDaily(id)
 
@@ -48,3 +51,9 @@ def updateBirthday (id, date):
 
 def removeUsers ():
     return user_services.removeUsers()
+
+def getTopUsers ():
+    return user_services.getTopCreds()
+
+def updateName (id, name):
+    return user_services.updateName(id, name)
