@@ -71,7 +71,7 @@ async def on_ready():
         f'{guild.name}(id: {guild.id})'
     )
 
-    await client.change_presence(activity=discord.Game('Testing LeaderBoard'))#UwU Try /help'))
+    await client.change_presence(activity=discord.Game('#UwU Try /help'))
     #await checkBirthday(guild, client)
 
 @client.event
