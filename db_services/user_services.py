@@ -92,7 +92,7 @@ def incrementSubmit (id):
 
 def buyTicket (id):
     user_data = fetchUser(id)
-    user_tickets = user_data[0]['ticket']
+    user_tickets = user_data[0]['tickets']
     user_tickets = user_tickets + 1
 
     collection.find_one_and_update(

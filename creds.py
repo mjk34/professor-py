@@ -14,35 +14,6 @@ load_dotenv()
 ADMIN = int(os.getenv('ADMIN_ID'))
 MODERATOR1 = int(os.getenv('VHCHENG'))
 
-async def checkBirthday(guild, client):
-    hour_time = 3600
-    threading.Timer(hour_time, checkBirthday, guild).start()
-
-    now = datetime.now()
-    current_time = now.strftime("%H")
-
-    if current_time == '08':
-        today = datetime.now()
-        today = today.strftime('%m-%d')
-
-        birthday_id = api.birthdayToday(today)
-        if birthday_id != None:
-
-            channels = guild.channels
-            msg_channel = None
-            for ch in channels:
-                msg_channel = ch
-                if msg_channel.name == 'bot-cmd': break
-            
-            num = random.randint(1, 23)
-            filename = f'./birthday/{num}.jpg'
-            f = open(filename, 'rb')
-
-            await client.get_channel(msg_channel.id).send(
-                f'We don\'t grow old. When we cease to grow, we become old. Happy Birthday <@{birthday_id}>!', file=discord.File(f)
-            )
-            f.close()
-
 async def daily (ctx):
     id = ctx.author.id
     name = ctx.author.name
@@ -67,16 +38,16 @@ async def daily (ctx):
 
     if luck <= 550: 
         cred_amount = random.randint(50, 200)
-        cred_status = 'Rising Fortune,'
+        cred_status = 'oof...'
     if luck > 550 and luck <= 850: 
         cred_amount = random.randint(250, 350)
-        cred_status = 'Modest Fortune,'
+        cred_status = 'Ok not bad,'
     if luck > 850 and luck <= 950: 
         cred_amount = random.randint(400, 500)
-        cred_status = 'Good Fortune,'
+        cred_status = 'Super Pog,'
     if luck > 950 and luck <= 1000:
         cred_amount = random.randint(501, 600)
-        cred_status = 'Great Fortune,'
+        cred_status = 'p-Pog master,'
     if luck == 1001:
         cred_amount = 1000
         cred_status = 'RNJesus has blessed you, '
@@ -109,25 +80,6 @@ async def getCreds (ctx):
         f'You have a total of **{user_creds}** uwuCreds!'
     )
 
-async def getBd (ctx):
-    id = ctx.author.id
-    name = ctx.author.name
-    today, yesterday = getTime()
-
-    user = api.fetchUser(id)
-    if len(user) == 0: api.createAccount(id, name, yesterday)
-
-    user_bd = api.fetchBirthday(id)
-    if user_bd == '':
-        await ctx.send(
-            f'You have not registered your birthday! Use **/setbd** to assign one'
-        )
-    else:
-        await ctx.author.send(
-            f'The saved birthday date is: **{user_bd}**'
-        )
-        await ctx.send(f'*uwu*')
-        await ctx.message.delete()
 
 async def purchase (ctx):
     id = ctx.author.id
@@ -145,8 +97,16 @@ async def purchase (ctx):
     if ctx.name == 'gold': cred_cost = 12000
     if ctx.name == 'platinum': cred_cost = 20000
     if ctx.name == 'ticket':
+        user_tickets = int(api.fetchTicket(id))
+        cred_cost = 2000 + 400*(user_tickets)
+
+    if ctx.name == 'ticket':
         user_tickets = api.fetchTicket(id)
-        user_cost = 2000 + 400*(user_tickets)
+        if int(user_tickets) == 10:
+            await ctx.send(
+                f'You already have reached the max amount of tickets! (10/10)'
+            )
+            return
 
     user_creds = api.fetchCreds(id)
     if user_creds - cred_cost > 0:
@@ -154,13 +114,8 @@ async def purchase (ctx):
         user_creds = api.fetchCreds(id)
 
         if ctx.name == 'ticket':
+            api.buyTicket(id)
             user_tickets = api.fetchTicket(id)
-            if user_tickets == 10:
-                await ctx.send(
-                    f'You already have reached the max amount of tickets! (10/10)'
-            )
-            return
-
             await ctx.send(
                 f'You have purchased the a raffle **{ctx.name}** for {cred_cost}!   (remaining: {user_creds})' +
                 f'\n You now have {user_tickets} ticket(s)'
@@ -212,26 +167,6 @@ async def give (ctx, receive, amount, client):
         f'**{amount}** uwuCreds was given to <@{receive_id}>!'
     )
 
-async def setBirthday(ctx, birth_date):
-    id = ctx.author.id
-    name = ctx.author.name
-    today, yesterday = getTime()
-
-    user = api.fetchUser(id)
-    if len(user) == 0: api.createAccount(id, name, yesterday)
-
-    birthday = parser.parse(birth_date)
-    birthday = birthday.strftime('%m-%d')
-
-    api.updateBirthday(id, birthday)
-    role = get(ctx.guild.roles, name='uwuCelebrate')
-
-    await ctx.author.add_roles(role)
-    await ctx.author.send(f'Birthday is set to: **{birthday}**')
-
-    await ctx.send(f'*uwu*')
-    await ctx.message.delete()
-
 def getTime():
     today = datetime.now()
     yesterday = today - timedelta(days=1)
@@ -254,11 +189,6 @@ async def handout(ctx, receiver, amount, client):
     for ch in filler:
         receive_id = receive_id.replace(ch, '')
     receive_id = int(receive_id)
-
-    if receive_id == MODERATOR1:
-        if ctx.author.id != ADMIN:
-            await ctx.send(f'The all seeing eye has noticed your selfish deeds.')
-            return
 
     giver_db = api.fetchUser(giver_id)
     giver_name = ctx.author.name

@@ -8,8 +8,8 @@ from discord_slash import SlashCommand, SlashContext
 from discord_slash.utils.manage_commands import create_choice, create_option
 
 from cmd import pong, halp, playlist, fetchMSG
-from creds import daily, getCreds, getBd, handout, clearDatabase
-from creds import purchase, give, setBirthday, checkBirthday, spy, uwuTax
+from creds import daily, getCreds, handout, clearDatabase
+from creds import purchase, give, spy, uwuTax
 from valorant import getScore, getSubmit, raffle, leaderboard
 from mischief import dc
 
@@ -108,11 +108,6 @@ async def _anichart(ctx:SlashContext): await fetchMSG(ctx)
 async def _mal(ctx:SlashContext): await fetchMSG(ctx)
 
 # uwuCreds commands that uses the database
-@slash.slash(name='setbd', description=CMD_DESC[6], guild_ids=[GUILD_ID],
-             options=[create_option(name='birth_date', description=CMD_DESC[7], option_type=3, required=True)])
-async def _setbd(ctx:SlashContext, birth_date: str):
-    await setBirthday(ctx, birth_date)
-
 @slash.slash(name='paper', description=CMD_DESC[8], guild_ids=[GUILD_ID])
 async def _paper(ctx:SlashContext): await purchase(ctx)
 
@@ -148,9 +143,6 @@ async def _creds(ctx:SlashContext): await getCreds(ctx)
                       create_option(name='amount', description=CMD_DESC[19], option_type=4, required=True)])
 async def _give(ctx:SlashContext, receiver: str, amount: int): 
     await give(ctx, receiver, amount, client)
-
-@slash.slash(name='getbd', description=CMD_DESC[20], guild_ids=[GUILD_ID])
-async def _getbd(ctx:SlashContext): await getBd(ctx)
 
 @slash.slash(name='handout', description=CMD_DESC[21], guild_ids=[GUILD_ID],
              options=[create_option(name='receiver', description=CMD_DESC[18], option_type=3, required=True),

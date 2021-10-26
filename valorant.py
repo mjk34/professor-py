@@ -28,6 +28,8 @@ async def getScore(ctx, k, d, a, multi, head, rounds):
         )
         return
     
+    if d == 0: d = 1 # prevent divide by zero
+
     kda = (k + a) / d
     game = rounds / 25
 
@@ -64,10 +66,11 @@ async def raffle(ctx):
     if len(user) == 0: api.createAccount(id, name, yesterday)
 
     user_tickets = api.fetchTicket(id)
+    cost = 2000 + 400*(int(user_tickets))
     await ctx.send(
         f'<@{id}>, you have {user_tickets} ticket(s)' +
         f'\nRaffle tickets are used to compete for a free valorant battle pass' +
-        f'\nTickets can be bought using **/ticket** with uwuCreds, 2000 + 400n'
+        f'\nTickets can be bought using **/ticket** with uwuCreds, your next ticket costs: {cost}'
     )
 
 async def leaderboard(ctx):
