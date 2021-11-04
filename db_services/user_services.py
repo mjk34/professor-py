@@ -47,9 +47,11 @@ def createAccount (id, name, time):
         'name': name,
         'creds': 0,
         'daily': time,
-        'birthday': '',
-        'val_submit': 2,
-        'tickets': 0
+        'val_submit': 3,
+        'tickets': 0,
+        'burp_history': [],
+        'val_history': [],
+        'mood_history': []
     }
 
     collection.insert_one(newUser)
