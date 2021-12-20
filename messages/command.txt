@@ -1,0 +1,35 @@
+Pitch a ping
+Get a list of my commands
+Show a list of music playlists
+Show Dat1Weeaboo\'s MyAnimeList
+Show Seasonal anime airing right now
+Show a list of rewards you can purchase using uwuCreds
+Set your birthday, wait and see what happens
+[MONTH DAY] | EXAMPLES: [JAN 1]   [01/01]   [01-01]
+Spend 500 uwuCreds to submit an emoji to add to the server
+Spend 1000 uwuCreds to get Tech/Valorant/Academic Support
+Spend 5000 uwuCreds for a custom profile icon
+Spend 7000 uwuCreds to initiate a server event
+Spend 12000 uwuCreds to apply for Moderator application
+Spend 20000 uwuCreds to request for freelance code/art project
+Collect your daily uwuCreds
+Check how many uwuCreds you have
+DANGEROUS, WILL SNAP EVERYTHING
+Feeling generous? Give your uwuCreds
+[@<user name>] | EXAMPLES: @Dat1Weeaboo   @GreenRobotPanda
+How many uwuCreds will you spare?
+Check the registered birthday date
+Reward an user with uwuCreds, new creds
+Peek at another memeber\'s uwuCred amount
+Take some creds from a specific misdemeanor
+Calculate your Valorant game score and earn uwuCreds
+Number of kills you got in the game
+Number of deaths you got in the game
+Number of assists you got in the game
+Number of multi kills you got in the game
+Percent of head shot accuracy, use whole number
+Number of total rounds played
+Check how many val-submits you have left
+Spend uwuCreds to buy a raffle ticket',            # 32
+Check your tickets for the current BP raffle
+Show the top wealthiest people in the server

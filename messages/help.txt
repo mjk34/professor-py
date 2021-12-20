@@ -6,7 +6,6 @@ Here are a list of commands I can perform:
   General:
     **/ping**            *pong*
     **/playlist**      *show playlists*
-    **/mal**             *show my anime list*
     **/anichart**    *show airing anime*
   
   uwuCreds:
@@ -17,9 +16,10 @@ Here are a list of commands I can perform:
     **/give**            *reward someone with your uwuCreds*
                           *TEMPLATE: >give @<name> <amount>*
 
-  Birthday Tracker:
-    **/getbd**          *see your registered birthday date*
-    **/setbd**          *set your birthday date*
+  Valorant:
+    **/getsubmit**   *check daily submission count*
+    **/getscore**    *check game score to uwuScore conversion*
+    **/submitscore** *submit game score to earn uwuCreds
 
 
 Q^Q happy, that's not a lot of commands

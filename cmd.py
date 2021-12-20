@@ -1,6 +1,5 @@
 import random
 import discord
-import requests
 
 async def pong(ctx):
     num = random.randint(1, 23)
