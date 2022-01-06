@@ -102,14 +102,14 @@ async def purchase (ctx):
             f'This tier requires **{cred_cost}** uwuCreds   (you have: {user_creds})'
         )
 
-async def give (ctx, receive, amount, client):
+async def give (ctx, reciever, amount, client):
     """allow the user to share their own creds with another user"""
-    yesterday = getTime(False)
+    yesterday = getTime(True)
 
-    """parses the receiver id from discord <@id> format"""
-    giver_id, receive_id = ctx.author.id, receive
-    for ch in filler: receive_id = receive_id.replace(ch, '')
-    receive_id = int(receive_id)
+    """parses the recieverr id from discord <@id> format"""
+    giver_id, reciever_id = ctx.author.id, reciever
+    for ch in filler: reciever_id = reciever_id.replace(ch, '')
+    reciever_id = int(reciever_id)
 
     """check if the user exists in uwuDB"""
     giver_db, giver_name = api.fetchUser(giver_id), ctx.author.name
@@ -124,22 +124,22 @@ async def give (ctx, receive, amount, client):
         return
 
     """check if the reciever exists in uwuDB"""
-    receive_db = api.fetchUser(receive_id)
-    if len(receive_db) == 0:
-        receive_object = await client.fetch_user(receive_id)
-        receive_name = receive_object.name
-        api.createAccount(receive_id, receive_name, yesterday)
+    reciever_db = api.fetchUser(reciever_id)
+    if len(reciever_db) == 0:
+        reciever_object = await client.fetch_user(reciever_id)
+        reciever_name = reciever_object.name
+        api.createAccount(reciever_id, reciever_name, yesterday)
 
     """update uwuDB"""
     if amount > 0:
         api.subCreds(giver_id, amount)
-        api.addCreds(receive_id, amount)
+        api.addCreds(reciever_id, amount)
     
     await ctx.send(
-        f'**{amount}** uwuCreds was given to <@{receive_id}>!'
+        f'**{amount}** uwuCreds was given to <@{reciever_id}>!'
     )
 
-async def handout(ctx, receiver, amount, client):
+async def handout(ctx, recieverr, amount, client):
     """allow moderator user to give new creds to another user, mod
        cannot give more than 3000 creds in a single command
     """
@@ -147,12 +147,12 @@ async def handout(ctx, receiver, amount, client):
         await ctx.send(f'dO nOt AbUsE tHy PoWeR1!1!')
         return
 
-    yesterday = getTime()
+    yesterday = getTime(True)
     
-    """parse the receiver id from discord <@id> format"""
-    giver_id, receive_id = ctx.author.id, receiver
-    for ch in filler: receive_id = receive_id.replace(ch, '')
-    receive_id = int(receive_id)
+    """parse the recieverr id from discord <@id> format"""
+    giver_id, reciever_id = ctx.author.id, recieverr
+    for ch in filler: reciever_id = reciever_id.replace(ch, '')
+    reciever_id = int(reciever_id)
 
     """check if the user exists in uwuDB"""
     giver_db = api.fetchUser(giver_id)
@@ -167,17 +167,17 @@ async def handout(ctx, receiver, amount, client):
     if role.id in [y.id for y in ctx.author.roles]:
         
         """check if the reciever exists in uwuDB"""
-        receive_db = api.fetchUser(receive_id)
-        if len(receive_db) == 0:
-            receive_object = await client.fetch_user(receive_id)
-            receive_name = receive_object.name
-            api.createAccount(receive_id, receive_name, yesterday)
+        reciever_db = api.fetchUser(reciever_id)
+        if len(reciever_db) == 0:
+            reciever_object = await client.fetch_user(reciever_id)
+            reciever_name = reciever_object.name
+            api.createAccount(reciever_id, reciever_name, yesterday)
         
         """update uwuDB"""
-        api.addCreds(receive_id, amount)
-        newUwU = api.fetchCreds(receive_id)
-        await ctx.send(f'Moderator <@{giver_id}> has graced <@{receive_id}> with {amount} uwuCreds!' +
-                       f'\n<@{receive_id}> now has {newUwU}')
+        api.addCreds(reciever_id, amount)
+        newUwU = api.fetchCreds(reciever_id)
+        await ctx.send(f'Moderator <@{giver_id}> has graced <@{reciever_id}> with {amount} uwuCreds!' +
+                       f'\n<@{reciever_id}> now has {newUwU}')
         await ctx.send()
     else: await ctx.send(f'YoU aRe NoT pOwErFuL eNoUgH1!1!')
 
@@ -189,7 +189,7 @@ async def uwuTax(ctx, victim, amount, client):
         await ctx.send(f'dO nOt AbUsE tHy PoWeR1!1!')
         return
 
-    yesterday = getTime()
+    yesterday = getTime(True)
     
     """parse the victim id from discord <@id> format"""
     mod_id, victim_id = ctx.author.id, victim

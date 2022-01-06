@@ -72,11 +72,14 @@ def rewardCost (tier:str, num_tickets:int) -> int:
         int: [the total cost of the purchase]
     """
     cred_cost = 0
-    if tier == 'paper':     cred_cost = 500
-    if tier == 'iron':      cred_cost = 1000
-    if tier == 'bronze':    cred_cost = 5000
-    if tier == 'silver':    cred_cost = 7000
-    if tier == 'gold':      cred_cost = 12000
-    if tier == 'platinum':  cred_cost = 20000
     if tier == 'ticket':    cred_cost = 2000 + 400*(num_tickets)
     return cred_cost
+
+def getAverage(history):
+    sum = 0
+    for i in range(len(history)):
+        sum += history[i]
+    return int(sum/len(history))
+
+def getWeight(average, score):
+    return (average - score) / (average + score)

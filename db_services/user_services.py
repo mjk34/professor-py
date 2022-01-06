@@ -30,16 +30,9 @@ def fetchTicket (id):
     user_data = fetchUser(id)
     return user_data[0]['tickets']
 
-def fetchBirthday (id):
+def fetchValHistory(id):
     user_data = fetchUser(id)
-    return user_data[0]['birthday']
-
-def birthdayToday (date):
-    users = list(collection.find({}))
-    for user_data in users:
-        if user_data['birthday'] == date:
-            return user_data['_id']
-    return None
+    return user_data[0]['val_history']
 
 def createAccount (id, name, time):
     newUser = {
@@ -91,6 +84,15 @@ def incrementSubmit (id):
     collection.find_one_and_update(
         {'_id': id}, {'$set': {'val_submit': user_submit}}
     )
+    
+def decrementSubmit (id):
+    user_data = fetchUser(id)
+    user_submit = user_data[0]['val_submit']
+    user_submit = user_submit - 1
+
+    collection.find_one_and_update(
+        {'_id': id}, {'$set': {'val_submit': user_submit}}
+    )
 
 def buyTicket (id):
     user_data = fetchUser(id)
@@ -99,13 +101,6 @@ def buyTicket (id):
 
     collection.find_one_and_update(
         {'_id': id}, {'$set': {'tickets': user_tickets}}
-    )
-
-def updateBirthday (id, date):
-    user_birthday = date
-
-    collection.find_one_and_update(
-        {'_id': id}, {'$set': {'birthday': user_birthday}}
     )
 
 def removeUsers ():
@@ -145,10 +140,12 @@ def getTopCreds ():
     
     return topUsers
 
-def updateName (id, name):
-    user_name = name
-
+def updateName (id, user_name):
     collection.find_one_and_update(
         {'_id': id}, {'$set': {'name': user_name}}
     )
-        
+    
+def updateValHistory (id, user_history):
+    collection.find_one_and_update(
+        {'_id': id}, {'$set': {'val_history': user_history}}
+    )

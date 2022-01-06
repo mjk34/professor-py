@@ -11,8 +11,6 @@ Here are a list of commands I can perform:
   uwuCreds:
     **/uwu**             *collect your daily uwuCreds*
     **/creds**          *check your total uwuCreds*
-    **/rewards**     *see how you can spend your uwucreds*
-
     **/give**            *reward someone with your uwuCreds*
                           *TEMPLATE: >give @<name> <amount>*
 
@@ -20,6 +18,3 @@ Here are a list of commands I can perform:
     **/getsubmit**   *check daily submission count*
     **/getscore**    *check game score to uwuScore conversion*
     **/submitscore** *submit game score to earn uwuCreds
-
-
-Q^Q happy, that's not a lot of commands

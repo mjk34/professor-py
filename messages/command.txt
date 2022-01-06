@@ -26,10 +26,11 @@ Calculate your Valorant game score and earn uwuCreds
 Number of kills you got in the game
 Number of deaths you got in the game
 Number of assists you got in the game
-Number of multi kills you got in the game
+Average Damage Per Round you got in the game
 Percent of head shot accuracy, use whole number
 Number of total rounds played
 Check how many val-submits you have left
-Spend uwuCreds to buy a raffle ticket',            # 32
+Spend uwuCreds to buy a raffle ticket',           
 Check your tickets for the current BP raffle
 Show the top wealthiest people in the server
+Give an user another submission slot

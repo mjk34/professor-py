@@ -8,7 +8,7 @@ from discord_slash.utils.manage_commands import create_option
 from cmd    import pong, halp, playlist, fetchMSG
 from creds  import daily, getCreds, handout, clearDatabase
 from creds  import purchase, give, spy, uwuTax
-from valsub import getScore, getSubmit, raffle, leaderboard
+from valsub import getScore, getSubmit, raffle, leaderboard, restoreSubmit
 from uwuify import uwuify
 from helper import fetchCMD
 
@@ -24,7 +24,7 @@ client = commands.Bot(command_prefix='!')
 slash = SlashCommand(client, sync_commands=True)
 
 @client.event
-async def on_ready(): await client.change_presence(activity=discord.Game('Padoru Padoru!'))
+async def on_ready(): await client.change_presence(activity=discord.Game('#UwU /help'))
 
 @client.event
 async def on_message(message):
@@ -50,29 +50,7 @@ async def _playlist(ctx:SlashContext): await playlist(ctx)
 @slash.slash(name='anichart', description=CMD_DESC[4], guild_ids=[GUILD_ID])
 async def _anichart(ctx:SlashContext): await fetchMSG(ctx)
 
-@slash.slash(name='rewards', description=CMD_DESC[5], guild_ids=[GUILD_ID])
-async def _mal(ctx:SlashContext): await fetchMSG(ctx)
-
 # uwuCreds commands that uses the database
-@slash.slash(name='paper', description=CMD_DESC[8], guild_ids=[GUILD_ID])
-async def _paper(ctx:SlashContext): await purchase(ctx)
-
-@slash.slash(name='iron', description=CMD_DESC[9], guild_ids=[GUILD_ID])
-async def _iron(ctx:SlashContext, victim:str): 
-    await purchase(ctx)
-
-@slash.slash(name='bronze', description=CMD_DESC[10], guild_ids=[GUILD_ID])
-async def _bronze(ctx:SlashContext): await purchase(ctx)
-
-@slash.slash(name='silver', description=CMD_DESC[11], guild_ids=[GUILD_ID])
-async def _silver(ctx:SlashContext): await purchase(ctx)
-
-@slash.slash(name='gold', description=CMD_DESC[12], guild_ids=[GUILD_ID])
-async def _gold(ctx:SlashContext): await purchase(ctx)
-
-@slash.slash(name='platinum', description=CMD_DESC[13], guild_ids=[GUILD_ID])
-async def _platinum(ctx:SlashContext): await purchase(ctx)
-
 @slash.slash(name='ticket', description=CMD_DESC[32], guild_ids=[GUILD_ID])
 async def _ticket(ctx:SlashContext): await purchase(ctx)
 
@@ -105,15 +83,25 @@ async def _spy(ctx:SlashContext, target: str):
 async def _uwutax(ctx:SlashContext, victim: str, amount: int):
     await uwuTax(ctx, victim, amount, client)
 
-@slash.slash(name='getscore', description=CMD_DESC[24], guild_ids=[GUILD_ID],
+@slash.slash(name='submitGame', description=CMD_DESC[24], guild_ids=[GUILD_ID],
              options=[create_option(name='kill', description=CMD_DESC[25], option_type=4, required=True),
                       create_option(name='death', description=CMD_DESC[26], option_type=4, required=True),
                       create_option(name='assist', description=CMD_DESC[27], option_type=4, required=True),
-                      create_option(name='multi', description=CMD_DESC[28], option_type=4, required=True),
+                      create_option(name='adr', description=CMD_DESC[28], option_type=4, required=True),
                       create_option(name='head', description=CMD_DESC[29], option_type=4, required=True),
                       create_option(name='rounds', description=CMD_DESC[30], option_type=4, required=True)])
-async def _getscore(ctx:SlashContext, kill: int, death: int, assist: int, multi: int, head: int, rounds: int):
-    await getScore(ctx, kill, death, assist, multi, head, rounds)
+async def _submitGame(ctx:SlashContext, kill: int, death: int, assist: int, adr: int, head: int, rounds: int):
+    await getScore(ctx, kill, death, assist, adr, head, rounds, True)
+    
+@slash.slash(name='viewGame', description=CMD_DESC[24], guild_ids=[GUILD_ID],
+             options=[create_option(name='kill', description=CMD_DESC[25], option_type=4, required=True),
+                      create_option(name='death', description=CMD_DESC[26], option_type=4, required=True),
+                      create_option(name='assist', description=CMD_DESC[27], option_type=4, required=True),
+                      create_option(name='adr', description=CMD_DESC[28], option_type=4, required=True),
+                      create_option(name='head', description=CMD_DESC[29], option_type=4, required=True),
+                      create_option(name='rounds', description=CMD_DESC[30], option_type=4, required=True)])
+async def _viewGame(ctx:SlashContext, kill: int, death: int, assist: int, adr: int, head: int, rounds: int):
+    await getScore(ctx, kill, death, assist, adr, head, rounds, False)
 
 @slash.slash(name='getsubmit', description=CMD_DESC[31], guild_ids=[GUILD_ID])
 async def _getSubmit(ctx:SlashContext):
@@ -129,5 +117,10 @@ async def _raffle(ctx:SlashContext):
 @slash.slash(name='leaderboard', description=CMD_DESC[34], guild_ids=[GUILD_ID])
 async def _leaderboard(ctx:SlashContext):
     await leaderboard(ctx)
+    
+@slash.slash(name='restoreSubmit', description=CMD_DESC[35], guild_ids=[GUILD_ID],
+            options=[create_option(name='reciever', description=CMD_DESC[18], option_type=3, required=True)])
+async def _restoreSubmit(ctx:SlashContext, reciever: str): 
+    await restoreSubmit(ctx, reciever, client)
 
 client.run(TOKEN)
