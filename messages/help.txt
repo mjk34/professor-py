@@ -4,17 +4,18 @@ Just make sure to execute the slash command with my icon
 Here are a list of commands I can perform:
 
   General:
-    **/ping**            *pong*
-    **/playlist**      *show playlists*
-    **/anichart**    *show airing anime*
+    **/ping**                 *pong*
+    **/playlist**           *show playlists*
+    **/anichart**         *show airing anime*
   
   uwuCreds:
-    **/uwu**             *collect your daily uwuCreds*
-    **/creds**          *check your total uwuCreds*
-    **/give**            *reward someone with your uwuCreds*
-                          *TEMPLATE: >give @<name> <amount>*
+    **/uwu**                  *collect your daily uwuCreds*
+    **/creds**                *check your total uwuCreds*
+    **/give**                  *reward someone with your uwuCreds*
+                                *TEMPLATE: >give @<name> <amount>*
 
   Valorant:
-    **/getsubmit**   *check daily submission count*
-    **/getscore**    *check game score to uwuScore conversion*
-    **/submitscore** *submit game score to earn uwuCreds
+    **/getsubmit**        *check daily submission count*
+    **/viewgame**        *check game score to uwuScore conversion*
+    **/submitgame**    *submit game score to uwuScore conversion*
+    **/submitscore**    *submit game score to earn uwuCreds*
