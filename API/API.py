@@ -10,6 +10,9 @@ def removeUsers ():
 def fetchCreds (id):
     return user_services.fetchCreds(id)
 
+def fetchName (id):
+    return user_services.fetchName(id)
+
 def fetchDaily (id):
     return user_services.fetchDaily(id)
 
@@ -18,12 +21,6 @@ def fetchSubmit (id):
 
 def fetchTicket (id):
     return user_services.fetchTicket(id)
-
-def fetchBirthday (id):
-    return user_services.fetchBirthday(id)
-
-def birthdayToday (date):
-    return user_services.birthdayToday(date)
 
 def createAccount (id, name, time):
     return user_services.createAccount(id, name, time)
@@ -40,11 +37,23 @@ def updateDaily (id, time):
 def incrementSubmit (id):
     return user_services.incrementSubmit(id)
 
+def decrementSubmit (id):
+    return user_services.decrementSubmit(id)
+
 def buyTicket (id):
     return user_services.buyTicket(id)
 
-def updateBirthday (id, date):
-    return user_services.updateBirthday(id, date)
-
 def removeUsers ():
     return user_services.removeUsers()
+
+def getTopUsers ():
+    return user_services.getTopCreds()
+
+def updateName (id, name):
+    return user_services.updateName(id, name)
+
+def fetchValHistory(id):
+    return user_services.fetchValHistory(id)
+
+def updateValHistory(id, history):
+    return user_services.updateValHistory(id, history)
