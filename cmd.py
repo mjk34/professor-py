@@ -1,24 +1,30 @@
-import random
-import discord
+import random, discord
+from helper import fetchContentList, fetchContent
 
+"""Checks uwuBot's response to see if it is available"""
 async def ping(ctx):
-    num = random.randint(1, 23)
-    filename = f'./pong/{num}.jpg'
-    f = open(filename, 'rb')
-    await ctx.send('Pong!', file=discord.File(f))
+    images = fetchContentList('pong.txt')
+    num = random.randint(0, 22)
+    embed = discord.Embed(
+        title = f'Pong!',
+        color = 16251130
+    ).set_image(url= images[num])
+    await ctx.send(embed=embed)
+
+"""Requests for a link to Anichart to see the in season running anime"""
+async def anime (ctx):
+    content, f = fetchContent('anichart.txt')
+    embed = discord.Embed(
+        title = f'{ctx.name}',
+        url = 'https://anilist.co/search/anime/this-season',
+        description = content,
+        color = 6943230
+    ).set_thumbnail(url = 'https://pbs.twimg.com/profile_images/1236103622636834816/5TFL-AFz_400x400.png')
+
+    await ctx.send(embed=embed)
     f.close()
 
-async def fetchMSG (ctx):
-    content, f = fetchContent(ctx.name, True)
-    await ctx.send(content)
-    f.close()
-
-def fetchContent (filename, read):
-    filename = f'./messages/{filename}.txt'
-    f = open(filename, 'r')
-    if read: return f.read(), f
-    else: return f
-
+"""Converts input text with u and o syllabols and sprinkle in text emojis"""
 def uwuify(text: str):
     uwu_emojis = [
         'ಇ( ꈍᴗꈍ)ಇ', '( ͡o ꒳ ͡o )', '(ó ꒳ ò✿)',
@@ -33,7 +39,6 @@ def uwuify(text: str):
         output_text += uwu_emojis[num] + ' '
 
     length = len(text)
-    # rework the algorithm and glorify the weeb speak
     for i in range(length):
         c_char = text[i]
         p_char = text[i-1] if i > 0 else None

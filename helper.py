@@ -1,40 +1,37 @@
 import random
 from datetime import timedelta, datetime
-from typing import Iterable, List, Union
+from typing import Iterable, Union
 from dateutil import parser
 
+"""Replaces a character in all string of a list"""
 def replaceList (list_of_strings:list, old:str, new:str) -> list:
-    """replaces a character throught a list of strings"""
     for i in range(len(list_of_strings)):
         list_of_strings[i] = list_of_strings[i].replace(old, new)
     return list_of_strings
 
-def getTime (yesterday:bool) -> str:
-    """fetches either todays or yesterdays date and time"""
+"""Fetches each line of a text file in a list"""
+def fetchContentList (filename) -> list:
+    lines = []
+    with open(f'./messages/{filename}', 'r') as file:
+        lines = file.readlines()
+    return replaceList(lines, '\n', '')
+
+"""Fetches the contents of a text file"""
+def fetchContent (filename) -> str:
+    filename = f'./messages/{filename}'
+    f = open(filename, 'r')
+    return f.read(), f
+
+"""fetches today's date"""
+def today () -> str:
     time = datetime.now()
-    if yesterday: time = time - timedelta(days=1)
-    return time.strftime('%m-%d-%y %H:%M')  
+    return time.strftime('%m-%d-%y') 
 
-def timeDiff (time1 :str, time2:str):
-    """finds the difference in time between time1 and time2"""
-    time1 = parser.parse(time1)
-    time2 = parser.parse(time2)
-    return time2 - time1
-
-def lessThan24HRs (time_diff) -> bool:
-    """checks if time difference is less than a day"""
-    return {True:True, False:False}[time_diff < timedelta(hours=20)]
-
-def timeWait (time_diff):
-    """finds the wait time till next daily"""
-    return timedelta(hours=20) - time_diff
-    
-def fetchCMD () -> list:
-    """fetches a list of slash command descriptions"""
-    command_lines = []
-    with open('./messages/command.txt', 'r') as file:
-        command_lines = file.readlines()
-    return replaceList(command_lines, '\n', '')
+"""fetches yesterdays date"""
+def yesterday () -> str:
+    time = datetime.now()
+    time = time - timedelta(days=1)
+    return time.strftime('%m-%d-%y %H:%M') 
 
 def dailyLuck () -> Iterable[Union[int, str]]:
     """randomly generates a number from 1 to 10001 and
@@ -59,27 +56,3 @@ def dailyLuck () -> Iterable[Union[int, str]]:
         cred_amount = 5000
         cred_status = 'RNJesus has blessed you, '
     return cred_amount, cred_status
-
-def rewardCost (tier:str, num_tickets:int) -> int:
-    """return cost depending on tier string, for the ticket
-       tier- scale cost on the number of tickets already obtained
-
-    Args:
-        tier (str): [reward levels shown in /help]
-        num_tickets (int): [existing ticket in userDB]
-
-    Returns:
-        int: [the total cost of the purchase]
-    """
-    cred_cost = 0
-    if tier == 'ticket':    cred_cost = 2000 + 400*(num_tickets)
-    return cred_cost
-
-def getAverage(history):
-    sum = 0
-    for i in range(len(history)):
-        sum += history[i]
-    return int(sum/len(history))
-
-def getWeight(average, score):
-    return (average - score) / (average + score)

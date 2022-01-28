@@ -1,4 +1,4 @@
-from helper import getTime
+from helper import today
 from block import *
 
 import pickle, os
@@ -12,7 +12,7 @@ class Blockchain:
         else: self.chain = [self.createGenesisBlock()]
 
     def createGenesisBlock(self):
-        return Block(-1, getTime(False), 'Genisis Block', 0, '0')
+        return Block(-1, today(), 'Genisis Block', 0, '0')
 
     def getLatestBlock(self):
         return self.chain[-1]
@@ -24,6 +24,7 @@ class Blockchain:
         self.chain.append(newBlock)
     
     def isChainValid(self):
+        if len(self.chain) == 1: return True
         for i in range(len(self.chain)):
             if i == 0: continue
             currentBlock = self.chain[i]
