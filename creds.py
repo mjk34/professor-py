@@ -223,23 +223,6 @@ async def uwuTax(ctx, victim, amount, client):
         await ctx.send()
     else: await ctx.send(f'YoU aRe NoT pOwErFuL eNoUgH1!1!')
 
-async def spy (ctx, victim):
-    """allow the user to check another user's uwuCred amount"""
-    victim_id = victim
-    
-    """parse the victim id from discord <@id> format"""
-    for ch in filler: victim_id = victim_id.replace(ch, '')
-    victim_id = int(victim_id)
-    
-    """check if the victim exists in uwuDB"""
-    victimDB = api.fetchUser(victim_id)
-    if len(victimDB) == 0: ctx.reply(f'Target does not exist or has not UwUed')
-
-    user_creds = api.fetchCreds(victim_id)
-    await ctx.send(
-        f'The target has a total of **{user_creds}** uwuCreds'
-    )
-
 async def clearDatabase (ctx):
     """wipes the entire mongoDB cluster documents"""
     id = ctx.author.id
