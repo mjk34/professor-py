@@ -7,7 +7,7 @@ from discord_slash import SlashCommand, SlashContext
 from discord_slash.utils.manage_commands import create_option
 
 from cmd import ping, anime, uwuify
-from creds import dailyUwU
+from creds import daily
 # from creds  import daily, getCreds, handout, clearDatabase
 # from creds  import purchase, give, uwuTax
 # from valsub import getScore, getSubmit, raffle, leaderboard, restoreSubmit
@@ -56,7 +56,7 @@ async def _(ctx:SlashContext): await anime(ctx)
 
 """Allow users to randomly generate free uwu once a day"""
 @slash.slash(name='uwu', description=CMD_DESC[14], guild_ids=[GUILD_ID])
-async def _(ctx:SlashContext): await dailyUwU (ctx, BLOCKCHAIN)#daily(ctx)
+async def _(ctx:SlashContext): await daily (ctx, BLOCKCHAIN)#daily(ctx)
 
 # """Allow users to check out much uwuCreds they have accumulated"""
 # @slash.slash(name='view_wallet', description=CMD_DESC[15], guild_ids=[GUILD_ID])

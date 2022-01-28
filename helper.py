@@ -1,4 +1,4 @@
-import random
+import random, requests, json
 from datetime import timedelta, datetime
 from typing import Iterable, Union
 from dateutil import parser
@@ -56,3 +56,10 @@ def dailyLuck () -> Iterable[Union[int, str]]:
         cred_amount = 5000
         cred_status = 'RNJesus has blessed you, '
     return cred_amount, cred_status
+
+def dailyFortune () -> str:
+    while True:
+        response = requests.get('https://fortuneapi.herokuapp.com/')
+        if len(response.content) < 160: break
+        
+    return json.loads(response.text)
