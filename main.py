@@ -7,7 +7,7 @@ from discord_slash import SlashCommand, SlashContext
 from discord_slash.utils.manage_commands import create_option
 
 from cmd import ping, anime, uwuify
-from creds import daily, viewWallet, give
+from creds import daily, viewWallet, give, handout
 from helper import fetchContentList
 
 load_dotenv()
@@ -32,7 +32,7 @@ async def on_ready(): await client.change_presence(activity=discord.Game('testin
 async def on_message(message):
     if message.author == client.user: return        # checks if professor
     if message.channel.id != CHANNEL: return        # checks if from bot channel
-    if random.random() < 0.15:                      # 15% chance to get uwufied
+    if random.random() < 0.01:                      # 15% chance to get uwufied
         replace_message = uwuify(message.content)
         resend_message = f'{message.author.name}: ' + replace_message
         
@@ -63,12 +63,11 @@ async def _(ctx:SlashContext): await viewWallet(ctx, BLOCKCHAIN)
 async def _(ctx:SlashContext, receiver: str, amount: int): 
     await give(ctx, receiver, amount, BLOCKCHAIN)
 
-# """Allow moderators to generate specified amount of uwuCreds to another user"""
-# @slash.slash(name='handout', description=CMD_DESC[21], guild_ids=[GUILD_ID],
-#     options=[create_option(name='receiver', description=CMD_DESC[18], option_type=3, required=True),
-#              create_option(name='amount', description=CMD_DESC[19], option_type=4, required=True)])
-# async def _(ctx:SlashContext, receiver: str, amount: int): 
-#     await handout(ctx, receiver, amount, client)
+@slash.slash(name='handout', description=CMD_DESC[21], guild_ids=[GUILD_ID],
+    options=[create_option(name='receiver', description=CMD_DESC[18], option_type=3, required=True),
+             create_option(name='amount', description=CMD_DESC[19], option_type=4, required=True)])
+async def _(ctx:SlashContext, receiver: str, amount: int): 
+    await handout(ctx, receiver, amount, BLOCKCHAIN)
 
 # """Allow moderators to reduce a specified amount of uwuCreds from another user"""
 # @slash.slash(name='take', description=CMD_DESC[23], guild_ids=[GUILD_ID],

@@ -131,3 +131,57 @@ async def give (ctx, reciever, amount, BLOCKCHAIN):
     ).set_thumbnail(url='https://2.bp.blogspot.com/-UMkbGppX02A/UwoAVpunIMI/AAAAAAAAGxo/W9a0M4njhOQ/s1600/4363+-+animated_gif+k-on+k-on!+k-on!!+moe+nakano_azusa.gif')
     embed.set_footer(text='@~ powered by oogway desu')
     await ctx.send(embed=embed)
+    
+"""Allow moderators to generate specified amount of uwuCreds to another user"""
+async def handout(ctx, reciever, amount, BLOCKCHAIN):
+    """1. User will be checked for Moderator status
+       2. Blockchain will be validated, new blocks will be added to the end of Blockchain"""
+    
+    if amount > 3000:
+        text = f'Oi! This is not a charity, did you really try to give {amount} uwuCreds'
+        await ctx.send(f'```CSS\n[{text}]\n```')
+        return
+    
+    """Parses Reciever id from <@id>"""
+    giver_id, reciever_id = ctx.author.id, reciever
+    for ch in filler: reciever_id = reciever_id.replace(ch, '')
+    reciever_id = int(reciever_id)
+
+    """Check if the Giver is a moderator"""
+    role = get(ctx.guild.roles, name='Moderator')
+    if role.id in [y.id for y in ctx.author.roles]:
+        
+        """Generate new Block"""
+        new_block = block.Block(
+            user = reciever_id,
+            timestamp = today(),
+            description = 'Handout',
+            data = amount
+        )
+        
+        """Update Blockchain"""
+        if BLOCKCHAIN.isChainValid() == False:
+            print('The current Blockchain is not valid, performing rollback.')
+            BLOCKCHAIN = blockchain.Blockchain()
+    
+        BLOCKCHAIN.addBlock(new_block)
+        if BLOCKCHAIN.isChainValid():
+            BLOCKCHAIN.storeChain()           
+        BLOCKCHAIN.printChain()
+        
+        """Return Message"""
+        embed = discord.Embed(
+            title = f'Handout',
+            description = f'**{amount}** uwuCreds was handout to <@{reciever_id}>!',
+            color = 16700447    
+        ).set_thumbnail(url='https://i.imgur.com/zVdLFbp.gif')
+        embed.set_footer(text='@~ powered by oogway desu')
+        await ctx.send(embed=embed)
+    else: 
+        embed = discord.Embed(
+            title = f'Handout',
+            description = f'Insufficient power, you are not a moderator!',
+            color = 6053215    
+        ).set_thumbnail(url='https://media1.tenor.com/images/80662c4e35cf12354f65f1d6f7beada8/tenor.gif')
+        embed.set_footer(text='@~ powered by oogway desu')
+        await ctx.send(embed=embed)
