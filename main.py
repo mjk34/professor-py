@@ -7,10 +7,7 @@ from discord_slash import SlashCommand, SlashContext
 from discord_slash.utils.manage_commands import create_option
 
 from cmd import ping, anime, uwuify
-from creds import daily
-# from creds  import daily, getCreds, handout, clearDatabase
-# from creds  import purchase, give, uwuTax
-# from valsub import getScore, getSubmit, raffle, leaderboard, restoreSubmit
+from creds import daily, viewWallet, give
 from helper import fetchContentList
 
 load_dotenv()
@@ -28,7 +25,7 @@ BLOCKCHAIN = blockchain.Blockchain()
 
 """Start up bot status message on boot"""
 @client.event
-async def on_ready(): await client.change_presence(activity=discord.Game('va te faire foutre'))
+async def on_ready(): await client.change_presence(activity=discord.Game('testing /give'))
 
 """Filter message based on author and occasionally 'uwuify' read message"""
 @client.event
@@ -54,20 +51,17 @@ async def _(ctx:SlashContext): await anime(ctx)
 # @slash.slash(name='buy_tickets', description=CMD_DESC[32], guild_ids=[GUILD_ID])
 # async def _(ctx:SlashContext): await buy_tickets(ctx)#purchase(ctx)
 
-"""Allow users to randomly generate free uwu once a day"""
 @slash.slash(name='uwu', description=CMD_DESC[14], guild_ids=[GUILD_ID])
-async def _(ctx:SlashContext): await daily (ctx, BLOCKCHAIN)#daily(ctx)
+async def _(ctx:SlashContext): await daily (ctx, BLOCKCHAIN)
 
-# """Allow users to check out much uwuCreds they have accumulated"""
-# @slash.slash(name='view_wallet', description=CMD_DESC[15], guild_ids=[GUILD_ID])
-# async def _(ctx:SlashContext): await view_wallet(ctx)#getCreds(ctx)
+@slash.slash(name='view_wallet', description=CMD_DESC[15], guild_ids=[GUILD_ID])
+async def _(ctx:SlashContext): await viewWallet(ctx, BLOCKCHAIN)
 
-# """Allow users to give their uwuCreds to another user"""
-# @slash.slash(name='give', description=CMD_DESC[17], guild_ids=[GUILD_ID],
-#     options=[create_option(name='receiver', description=CMD_DESC[18], option_type=3, required=True),
-#              create_option(name='amount', description=CMD_DESC[19], option_type=4, required=True)])
-# async def _(ctx:SlashContext, receiver: str, amount: int): 
-#     await give(ctx, receiver, amount, client)
+@slash.slash(name='give', description=CMD_DESC[17], guild_ids=[GUILD_ID],
+    options=[create_option(name='receiver', description=CMD_DESC[18], option_type=3, required=True),
+             create_option(name='amount', description=CMD_DESC[19], option_type=4, required=True)])
+async def _(ctx:SlashContext, receiver: str, amount: int): 
+    await give(ctx, receiver, amount, BLOCKCHAIN)
 
 # """Allow moderators to generate specified amount of uwuCreds to another user"""
 # @slash.slash(name='handout', description=CMD_DESC[21], guild_ids=[GUILD_ID],

@@ -9,17 +9,20 @@ async def ping(ctx):
         title = f'Pong!',
         color = 16251130
     ).set_image(url= images[num])
+    embed.set_footer(text='@~ powered by oogway desu')
+    
     await ctx.send(embed=embed)
 
 """Requests for a link to Anichart to see the in season running anime"""
 async def anime (ctx):
     content, f = fetchContent('anichart.txt')
     embed = discord.Embed(
-        title = f'{ctx.name}',
+        title = f'Current Anime',
         url = 'https://anilist.co/search/anime/this-season',
         description = content,
         color = 6943230
     ).set_thumbnail(url = 'https://pbs.twimg.com/profile_images/1236103622636834816/5TFL-AFz_400x400.png')
+    embed.set_footer(text='@~ powered by oogway desu')
 
     await ctx.send(embed=embed)
     f.close()

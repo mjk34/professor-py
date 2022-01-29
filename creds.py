@@ -3,19 +3,18 @@ import user
 
 from dotenv import load_dotenv
 from discord.utils import get
-
-#from helper1 import dailyLuck, getTime, lessThan24HRs, timeWait, timeDiff
-#from helper1 import rewardCost
-from helper import today, dailyLuck, dailyFortune
+from helper import today, yesterday, dailyLuck, dailyFortune
 
 filler = ['<', '>', '!', '@']
 
+"""Allow users to randomly generate free uwu once a day"""
 async def daily (ctx, BLOCKCHAIN):
     """1. Users can generate uwuCreds based on rng
        2. Usage is checked to function once per day
-       3. Blockchain will be validated, new block will be added to end of blockchain"""
+       3. Blockchain will be validated, new block will be added to end of Blockchain"""
        
     id = ctx.author.id
+    """Check if the user has already done their daily"""
     if user.hasDaily(id, BLOCKCHAIN) == False:
         embed = discord.Embed(
             title = f'Daily',
@@ -23,7 +22,6 @@ async def daily (ctx, BLOCKCHAIN):
             color = 6053215    
         ).set_thumbnail(url=ctx.author.avatar_url)
         embed.set_footer(text='@~ powered by oogway desu')
-        
         await ctx.send(embed=embed)
         return
     
@@ -44,8 +42,9 @@ async def daily (ctx, BLOCKCHAIN):
     BLOCKCHAIN.addBlock(new_block)
     if BLOCKCHAIN.isChainValid():
         BLOCKCHAIN.storeChain()           
-    #BLOCKCHAIN.printChain()
+    BLOCKCHAIN.printChain()
     
+    """Return Message"""
     embed = discord.Embed(
         title = f'Daily',
         description = f'{status} **+{fortune}** creds were added to your *Wallet*!',
@@ -56,4 +55,79 @@ async def daily (ctx, BLOCKCHAIN):
         name = 'Fortune',
         value = dailyFortune()
     )
+    await ctx.send(embed=embed)
+    
+"""Allow users to check out much uwuCreds they have accumulated"""
+async def viewWallet (ctx, BLOCKCHAIN):
+    """1. Users can view the total amount of uwuCreds they have
+       2. Users can view the total amount of tickets they have"""
+     
+    """Read Blockchain and return user total"""  
+    id = ctx.author.id
+    user_creds = user.totalCreds(id, BLOCKCHAIN)
+
+    """Return Message"""
+    embed = discord.Embed(
+        title = f'Wallet',
+        description = f'You currently have **{user_creds}** uwuCreds!',
+        color = 16700447    
+    ).set_thumbnail(url=ctx.author.avatar_url)
+    embed.set_footer(text='@~ powered by oogway desu')
+    await ctx.send(embed=embed)
+   
+"""Allow users to give their uwuCreds to another user""" 
+async def give (ctx, reciever, amount, BLOCKCHAIN):
+    """1. Blockchain will be evaluated, user total is checked
+       2. Blockchain will be validated, new blocks will be added to the end of Blockchain"""
+
+    """Parses Reciever id from <@id>"""
+    giver_id, reciever_id = ctx.author.id, reciever
+    for ch in filler: reciever_id = reciever_id.replace(ch, '')
+    reciever_id = int(reciever_id)
+    
+    """Check if the Giver has sufficient uwuCreds"""
+    giver_creds = user.totalCreds(giver_id, BLOCKCHAIN)
+    if giver_creds < amount:
+        embed = discord.Embed(
+            title = f'Give',
+            description = f'Insufficient funds, you currently have **+{giver_creds}** uwuCreds!',
+            color = 6053215    
+        ).set_thumbnail(url='https://66.media.tumblr.com/2d52e78a64b9cc97fac0cb00a48fe676/tumblr_inline_pamkf7AfPf1s2a9fg_500.gif')
+        embed.set_footer(text='@~ powered by oogway desu')
+        await ctx.send(embed=embed)
+        return
+
+    """Generate new Blocks"""
+    new_block1 = block.Block( # Giver's block
+        user = giver_id,
+        timestamp = today(),
+        description = 'Give',
+        data = -amount
+    )
+
+    new_block2 = block.Block( # Reciever's block
+        user = reciever_id,
+        timestamp = today(),
+        description = 'Give',
+        data = amount
+    )
+    
+    """Update Blockchain"""
+    if BLOCKCHAIN.isChainValid() == False:
+        print('The current Blockchain is not valid, performing rollback.')
+        BLOCKCHAIN = blockchain.Blockchain()
+ 
+    BLOCKCHAIN.addBlock(new_block1)
+    BLOCKCHAIN.addBlock(new_block2)
+    if BLOCKCHAIN.isChainValid():
+        BLOCKCHAIN.storeChain()           
+    BLOCKCHAIN.printChain()
+    
+    """Return Message"""
+    embed = discord.Embed(
+        title = f'Give',
+        description = f'**{amount}** uwuCreds was given to <@{reciever_id}>!',
+        color = 16700447    
+    ).set_thumbnail(url='https://2.bp.blogspot.com/-UMkbGppX02A/UwoAVpunIMI/AAAAAAAAGxo/W9a0M4njhOQ/s1600/4363+-+animated_gif+k-on+k-on!+k-on!!+moe+nakano_azusa.gif')
+    embed.set_footer(text='@~ powered by oogway desu')
     await ctx.send(embed=embed)

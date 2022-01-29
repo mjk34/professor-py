@@ -16,6 +16,9 @@ class Blockchain:
 
     def getLatestBlock(self):
         return self.chain[-1]
+    
+    def isGenesis(self):
+        return self.chain[0]
 
     def addBlock(self, newBlock):
         newBlock.previousHash = self.getLatestBlock().hash
