@@ -6,10 +6,10 @@ from discord.ext import commands
 from discord_slash import SlashCommand, SlashContext
 from discord_slash.utils.manage_commands import create_option
 
-from cmd import ping, anime, uwuify
-from creds import daily, wallet, give, handout, take
-from valorant import buy_ticket, getValScore, bonusSubmit, leaderboard
-from helper import fetchContentList
+from commands.cmd import ping, anime, uwuify
+from commands.creds import daily, wallet, give, handout, take
+from commands.valorant import buy_ticket, getValScore, bonusSubmit, leaderboard
+from commands.helper import fetchContentList
 
 load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')

@@ -1,5 +1,5 @@
 import block, blockchain
-from helper import today, getName
+from commands.helper import today, getName
 from datetime import timedelta, datetime
 from dateutil import parser
 

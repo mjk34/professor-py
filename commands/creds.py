@@ -1,8 +1,8 @@
 import discord, block, blockchain
-import user
+import commands.user as user
 
 from discord.utils import get
-from helper import today, dailyLuck, dailyFortune, getName
+from commands.helper import today, dailyLuck, dailyFortune, getName
 
 filler = ['<', '>', '!', '@']
 
