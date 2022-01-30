@@ -1,9 +1,8 @@
 import discord, block, blockchain
 import user
 
-from dotenv import load_dotenv
 from discord.utils import get
-from helper import today, yesterday, dailyLuck, dailyFortune
+from helper import today, dailyLuck, dailyFortune, getName
 
 filler = ['<', '>', '!', '@']
 
@@ -13,7 +12,7 @@ async def daily (ctx, BLOCKCHAIN):
        2. Usage is checked to function once per day
        3. Blockchain will be validated, new block will be added to end of Blockchain"""
        
-    id = ctx.author.id
+    id, name = ctx.author.id, ctx.author.name
     """Check if the user has already done their daily"""
     if user.hasDaily(id, BLOCKCHAIN) == False:
         embed = discord.Embed(
@@ -29,6 +28,7 @@ async def daily (ctx, BLOCKCHAIN):
     fortune, status = dailyLuck()
     new_block = block.Block(
         user = id,
+        name = name,
         timestamp = today(),
         description = 'Daily',
         data = fortune
@@ -60,23 +60,30 @@ async def daily (ctx, BLOCKCHAIN):
 """Allow users to check out much uwuCreds they have accumulated"""
 async def wallet (ctx, BLOCKCHAIN):
     """1. Users can view the total amount of uwuCreds they have
-       2. Users can view the total amount of tickets they have"""
+       2. Users can view the total amount of tickets they have
+       3. Users can view daily counters for /uwu and submissions"""
      
     """Read Blockchain and return user total"""  
     id = ctx.author.id
     user_creds = user.totalCreds(id, BLOCKCHAIN)
+    user_tickets = user.totalTickets(id, BLOCKCHAIN)
+    
+    daily = {True:'Available', False:'Not Available'}[user.hasDaily(id, BLOCKCHAIN)]
+    user_subs = user.totalSubsToday(id, BLOCKCHAIN)
+    desc = f'Daily UwU:\u3000\u3000**{daily}**\nSubmissions: \u3000**{3 - user_subs}/3** \u3000Left\n\n'
+    desc += f'Total Creds:\u3000**{user_creds}**\u3000 Total Tickets: \u3000**{user_tickets}**'
 
     """Return Message"""
     embed = discord.Embed(
         title = f'Wallet',
-        description = f'You currently have **{user_creds}** uwuCreds!',
+        description = desc,
         color = 16700447    
     ).set_thumbnail(url=ctx.author.avatar_url)
     embed.set_footer(text='@~ powered by oogway desu')
     await ctx.send(embed=embed)
    
 """Allow users to give their uwuCreds to another user""" 
-async def give (ctx, reciever, amount, BLOCKCHAIN):
+async def give (ctx, reciever, amount, client, BLOCKCHAIN):
     """1. Blockchain will be evaluated, user total is checked
        2. Blockchain will be validated, new blocks will be added to the end of Blockchain"""
 
@@ -96,19 +103,23 @@ async def give (ctx, reciever, amount, BLOCKCHAIN):
         embed.set_footer(text='@~ powered by oogway desu')
         await ctx.send(embed=embed)
         return
+    
+    reciever_name = await getName(reciever_id, client)
 
     """Generate new Blocks"""
-    new_block1 = block.Block( # Giver's block
+    new_block1 = block.Block(
         user = giver_id,
+        name = ctx.author.name,
         timestamp = today(),
-        description = 'Give',
+        description = f'Gave {amount} to {reciever_name}',
         data = -amount
     )
 
-    new_block2 = block.Block( # Reciever's block
+    new_block2 = block.Block(
         user = reciever_id,
+        name = reciever_name,
         timestamp = today(),
-        description = 'Give',
+        description = f'Recieved {amount} from {ctx.author.name}',
         data = amount
     )
     
@@ -133,7 +144,7 @@ async def give (ctx, reciever, amount, BLOCKCHAIN):
     await ctx.send(embed=embed)
     
 """Allow moderators to generate specified amount of uwuCreds to another user"""
-async def handout(ctx, reciever, amount, BLOCKCHAIN):
+async def handout(ctx, reciever, amount, client, BLOCKCHAIN):
     """1. User will be checked for Moderator status
        2. Blockchain will be validated, new blocks will be added to the end of Blockchain"""
     
@@ -154,8 +165,9 @@ async def handout(ctx, reciever, amount, BLOCKCHAIN):
         """Generate new Block"""
         new_block = block.Block(
             user = reciever_id,
+            name = await getName(reciever_id, client),
             timestamp = today(),
-            description = 'Handout',
+            description = f'Handout from {ctx.author.name}',
             data = amount
         )
         
@@ -186,7 +198,8 @@ async def handout(ctx, reciever, amount, BLOCKCHAIN):
         embed.set_footer(text='@~ powered by oogway desu')
         await ctx.send(embed=embed)
         
-async def take(ctx, reciever, amount, BLOCKCHAIN):
+"""Allow moderators to reduce a specified amount of uwuCreds from another user"""
+async def take(ctx, reciever, amount, client, BLOCKCHAIN):
     """1. User will be checked for Moderator status
        2. Blockchain will be validated, new blocks will be added to the end of Blockchain"""
     
@@ -207,8 +220,9 @@ async def take(ctx, reciever, amount, BLOCKCHAIN):
         """Generate new Block"""
         new_block = block.Block(
             user = reciever_id,
+            name = await getName(reciever_id, client),
             timestamp = today(),
-            description = 'Take',
+            description = f'Taken by {ctx.author.name}',
             data = -amount
         )
         

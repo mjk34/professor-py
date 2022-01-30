@@ -2,7 +2,7 @@ from helper import today
 from block import *
 
 import pickle, os
-save_path = 'Blockchain'
+save_path = '.Blockchain'
 
 class Blockchain:
     def __init__ (self):
@@ -12,7 +12,7 @@ class Blockchain:
         else: self.chain = [self.createGenesisBlock()]
 
     def createGenesisBlock(self):
-        return Block(-1, today(), 'Genisis Block', 0, '0')
+        return Block(-1, 'God', today(), 'Genisis Block', 0, '0')
 
     def getLatestBlock(self):
         return self.chain[-1]
@@ -41,6 +41,7 @@ class Blockchain:
     def printChain(self):
         for block in self.chain:
             print(f'user: {block.user}\
+                  \nname: {block.name}\
                   \ntime: {block.timestamp}\
                   \ndesc: {block.description}\
                   \ndata: {block.data}\
