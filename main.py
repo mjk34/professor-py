@@ -7,7 +7,7 @@ from discord_slash import SlashCommand, SlashContext
 from discord_slash.utils.manage_commands import create_option
 
 from cmd import ping, anime, uwuify
-from creds import daily, viewWallet, give, handout
+from creds import daily, wallet, give, handout, take
 from helper import fetchContentList
 
 load_dotenv()
@@ -54,8 +54,8 @@ async def _(ctx:SlashContext): await anime(ctx)
 @slash.slash(name='uwu', description=CMD_DESC[14], guild_ids=[GUILD_ID])
 async def _(ctx:SlashContext): await daily (ctx, BLOCKCHAIN)
 
-@slash.slash(name='view_wallet', description=CMD_DESC[15], guild_ids=[GUILD_ID])
-async def _(ctx:SlashContext): await viewWallet(ctx, BLOCKCHAIN)
+@slash.slash(name='wallet', description=CMD_DESC[15], guild_ids=[GUILD_ID])
+async def _(ctx:SlashContext): await wallet(ctx, BLOCKCHAIN)
 
 @slash.slash(name='give', description=CMD_DESC[17], guild_ids=[GUILD_ID],
     options=[create_option(name='receiver', description=CMD_DESC[18], option_type=3, required=True),
@@ -69,13 +69,13 @@ async def _(ctx:SlashContext, receiver: str, amount: int):
 async def _(ctx:SlashContext, receiver: str, amount: int): 
     await handout(ctx, receiver, amount, BLOCKCHAIN)
 
-# """Allow moderators to reduce a specified amount of uwuCreds from another user"""
-# @slash.slash(name='take', description=CMD_DESC[23], guild_ids=[GUILD_ID],
-#     options=[create_option(name='victim', description=CMD_DESC[18], option_type=3, required=True),
-#              create_option(name='amount', description=CMD_DESC[19], option_type=4, required=True)])
-# async def _(ctx:SlashContext, victim: str, amount: int):
-#     await take(ctx, victim, amount, client)
-#     #await uwuTax(ctx, victim, amount, client)
+"""Allow moderators to reduce a specified amount of uwuCreds from another user"""
+@slash.slash(name='take', description=CMD_DESC[23], guild_ids=[GUILD_ID],
+    options=[create_option(name='victim', description=CMD_DESC[18], option_type=3, required=True),
+             create_option(name='amount', description=CMD_DESC[19], option_type=4, required=True)])
+async def _(ctx:SlashContext, victim: str, amount: int):
+    await take(ctx, victim, amount, BLOCKCHAIN)
+    #await uwuTax(ctx, victim, amount, client)
 
 # """Allow users to submit a Valorant game to earn uwuCreds"""
 # @slash.slash(name='submit_valorant_game', description=CMD_DESC[24], guild_ids=[GUILD_ID],
@@ -106,10 +106,6 @@ async def _(ctx:SlashContext, receiver: str, amount: int):
 # async def _(ctx:SlashContext):
 #     await view_submit_count(ctx)
 #     #await getSubmit(ctx)
-
-# """Allow the admin to archive the current blockchain and create a new blockchain"""
-# @slash.slash(name='iWANT2ERASE3v3ryTHING', description=CMD_DESC[16], guild_ids=[GUILD_ID])
-# async def _(ctx:SlashContext): await migrateBlockchain(ctx)#clearDatabase(ctx)
 
 # """Allow users to view the current raffle period and their accumulated raffle tickets"""
 # @slash.slash(name='raffle', description=CMD_DESC[33], guild_ids=[GUILD_ID])
