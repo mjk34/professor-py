@@ -2,7 +2,12 @@
 
 ## Summary:
 This is the coding behind Uwuversity's Professor bot for Discord.
-It is custom designed to retrieve specific messages like playlists and useful links, we hope to increase its capabilities using message/image recognition logic have it react to our communities posts and memes, designating a big brain for good content and small brain for filler.
+
+Professor bot is a developing agent that is currently used to reward community members based on in game achievements and daily participation. Members are currently able to submit Valorant game scores to earn uwuCreds, a community resource that can be used for trade, expression as well as participate in the ongoing raffles.
+
+Professor bot manages and evaluates resources through it's locally maintained centralized blockchain where each recorded action is a transaction block that can be used to result in something meaningful. Professor bot was first built with a MongoDB backend, but a personal interest in blockchain structure pushed me to rework it. 
+
+After reworking the available services around the centralized blockchain structure, I can say that it actually simplified the complexity of some of the services, and if anything, it was exciting to see the features in a new light.
 
 ## Install
 
@@ -10,6 +15,4 @@ pip3 install -r requirements.txt
 
 ## Current Development Branches:
   - [ ] main
-  - [x] feature/uwuCreds   # users can earn uwuCredits daily
-  - [x] feature/slashcmd   # upgrade commands to discord-slash-commands
-
+  - [x] blockChain	   # Rework the backend MongoDB dependency to a blockchain
