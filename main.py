@@ -1,4 +1,5 @@
 import os, random, discord
+from pandas import describe_option
 import blockchain
 
 from dotenv import load_dotenv
@@ -8,7 +9,7 @@ from discord_slash.utils.manage_commands import create_option
 
 from commands.cmd import ping, anime, uwuify
 from commands.creds import daily, wallet, give, handout, take
-from commands.valorant import buy_ticket, getValScore, bonusSubmit, leaderboard
+from commands.valorant import buy_ticket, getValScore, bonusSubmit, leaderboard, claimBonus
 from commands.helper import fetchContentList
 
 load_dotenv()
@@ -105,5 +106,9 @@ async def _(ctx:SlashContext):
     options=[create_option(name='reciever', description=CMD_DESC[18], option_type=3, required=True)])
 async def _(ctx:SlashContext, reciever: str): 
     await bonusSubmit(ctx, reciever, client, BLOCKCHAIN)
+
+@slash.slash(name='claim_bonus', description=CMD_DESC[36], guild_ids=[GUILD_ID])
+async def _(ctx:SlashCommand):
+    await claimBonus(ctx, client, BLOCKCHAIN)
 
 client.run(TOKEN)

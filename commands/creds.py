@@ -13,16 +13,18 @@ async def daily (ctx, BLOCKCHAIN):
        3. Blockchain will be validated, new block will be added to end of Blockchain"""
        
     id, name = ctx.author.id, ctx.author.name
-    """Check if the user has already done their daily"""
-    if user.hasDaily(id, BLOCKCHAIN) == False:
-        embed = discord.Embed(
-            title = f'Daily',
-            description = f'You next **/uwu** is tomorrow, it now resets based on date!',
-            color = 6053215    
-        ).set_thumbnail(url=ctx.author.avatar_url)
-        embed.set_footer(text='@~ powered by oogway desu')
-        await ctx.send(embed=embed)
-        return
+    # """Check if the user has already done their daily"""
+    # if user.hasDaily(id, BLOCKCHAIN) == False:
+    #     embed = discord.Embed(
+    #         title = f'Daily',
+    #         description = f'You next **/uwu** is tomorrow, it now resets based on date!',
+    #         color = 6053215    
+    #     ).set_thumbnail(url=ctx.author.avatar_url)
+    #     embed.set_footer(text='@~ powered by oogway desu')
+    #     await ctx.send(embed=embed)
+    #     return
+    
+    bonus = int(user.getDailyCount(id, BLOCKCHAIN) / 7)
     
     """Generate new Block"""
     fortune, status = dailyLuck()
@@ -31,7 +33,7 @@ async def daily (ctx, BLOCKCHAIN):
         name = name,
         timestamp = today(),
         description = 'Daily',
-        data = fortune
+        data = fortune + bonus*60
     )
     
     """Update Blockchain"""
@@ -44,10 +46,14 @@ async def daily (ctx, BLOCKCHAIN):
         BLOCKCHAIN.storeChain()           
     BLOCKCHAIN.printChain()
     
+    desc = f'{status} **+{fortune}** creds were added to your *Wallet*!\n'
+    if bonus > 0:
+        desc += f'From **+{bonus}** *Bonus*, you get an additional **+{bonus*60}** creds!'
+    
     """Return Message"""
     embed = discord.Embed(
         title = f'Daily',
-        description = f'{status} **+{fortune}** creds were added to your *Wallet*!',
+        description = desc,
         color = 16700447    
     ).set_thumbnail(url=ctx.author.avatar_url)
     embed.set_footer(text='@~ powered by oogway desu')

@@ -230,3 +230,68 @@ async def leaderboard (ctx, BLOCKCHAIN):
     ).set_thumbnail(url=ctx.guild.icon_url)
     embed.set_footer(text='@~ powered by oogway desu')
     await ctx.send(embed=embed)
+    
+"""Allow users to claim an additional reward after daily submits are used!"""
+async def claimBonus (ctx, client, BLOCKCHAIN):
+    """1. Blockchain will be evaluated, User daily will be checked
+       2. Blockchain will be evaluated, User submits will be checked
+       3. Blockchain will be validated, new block will be added to the end of Blockchain"""
+       
+    id, name = ctx.author.id, ctx.author.name
+    user_daily = user.getDailyCount(id, BLOCKCHAIN)
+    user_submits = user.totalSubsToday(id, BLOCKCHAIN)
+    
+    """Check if User has used daily submits before claim"""
+    if user_submits < 3:
+        embed = discord.Embed(
+            title = f'Claim Bonus',
+            description = f'You must exhaust your daily submits to claim the *Bonus*!',
+            color = 6053215    
+        ).set_thumbnail(url='https://media1.tenor.com/images/80662c4e35cf12354f65f1d6f7beada8/tenor.gif')
+        embed.set_footer(text='@~ powered by oogway desu')
+        await ctx.send(embed=embed)
+        return
+    
+    if user.hasClaim(id, BLOCKCHAIN) == False:
+        embed = discord.Embed(
+            title = f'Claim Bonus',
+            description = f'You have already claimed your bonus today!',
+            color = 6053215    
+        ).set_image(url='https://i.pinimg.com/originals/0d/cc/db/0dccdb5a90ed01d7c7c554deba3f66c3.gif')
+        embed.set_footer(text='@~ powered by oogway desu')
+        await ctx.send(embed=embed)
+        return
+
+    bonus = int(user_daily / 7)
+    bonus_creds = 40 + bonus*60
+    
+    """Generate new Block"""
+    new_block = block.Block(
+        user = id,
+        name = name,
+        timestamp = today(),
+        description = f'Claim Bonus',
+        data = bonus_creds
+    )
+        
+    """Update Blockchain"""
+    if BLOCKCHAIN.isChainValid() == False:
+        print('The current Blockchain is not valid, performing rollback.')
+        BLOCKCHAIN = blockchain.Blockchain()
+    
+    BLOCKCHAIN.addBlock(new_block)
+    if BLOCKCHAIN.isChainValid():
+        BLOCKCHAIN.storeChain()           
+    BLOCKCHAIN.printChain()
+    
+    desc = f'Congratulations on your submits!\n'
+    desc += f'From **+{bonus}** *Bonus*, you claimed **+{bonus_creds}** creds!'
+        
+    """Return Message"""
+    embed = discord.Embed(
+        title = f'Claim Bonus',
+        description = desc,
+        color = 16700447    
+    ).set_image(url='https://i.pinimg.com/originals/de/6b/5d/de6b5df29abaf7124387b9c86ca46a29.gif')
+    embed.set_footer(text='@~ powered by oogway desu')
+    await ctx.send(embed=embed)

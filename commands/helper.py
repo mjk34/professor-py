@@ -25,13 +25,13 @@ def fetchContent (filename) -> str:
 """Fetches today's date"""
 def today () -> str:
     time = datetime.now()
-    return time.strftime('%m-%d-%y') 
+    return str(time.strftime('%m-%d-%y'))
 
 """Fetches yesterdays date"""
 def yesterday () -> str:
     time = datetime.now()
     time = time - timedelta(days=1)
-    return time.strftime('%m-%d-%y %H:%M') 
+    return str(time.strftime('%m-%d-%y %H:%M'))
 
 """Randomly generate luck based on values 1-1001"""
 def dailyLuck () -> Iterable[Union[int, str]]:
@@ -59,16 +59,16 @@ def dailyLuck () -> Iterable[Union[int, str]]:
 def dailyFortune () -> str:
     while True:
         response = requests.get('https://fortuneapi.herokuapp.com/')
-        if len(response.content) < 160: break
+        if len(response.content) < 200: break
         
-    return json.loads(response.text)
+    return str(json.loads(response.text))
 
 """Fetch difference between the average and score"""
 def getWeight(average, score) -> float:
-    return (average - score) / (average + score)
+    return float((average - score) / (average + score))
 
 """Fetch discord user's Name by Id"""
 async def getName(id, client) -> str:
     user_object = await client.fetch_user(id)
-    return user_object.name
+    return str(user_object.name)
     

@@ -19,6 +19,22 @@ def hasDaily(user_id, BLOCKCHAIN) -> bool:
     time_diff = parser.parse(today()) - parser.parse(date)
     return {True:False, False:True}[time_diff == timedelta(seconds=0)]
 
+"""Evaluated Blockchain:
+        1. find the most recent claim based on user_id
+        2. check if the date difference is greater than 0"""
+def hasClaim(user_id, BLOCKCHAIN) -> bool: 
+    if len(BLOCKCHAIN.chain) == 1: return True
+    
+    desc, date = 'Claim Bonus', ''
+    for block in BLOCKCHAIN.chain[1:]:
+        if block.getUser() == user_id:
+            if block.getDesc() == desc:
+                date = block.getTime()
+                     
+    if date == '': return True
+    time_diff = parser.parse(today()) - parser.parse(date)
+    return {True:False, False:True}[time_diff == timedelta(seconds=0)]
+
 """Evaluate Blockchain:
         1. run through each block belonging to user_id
         2. for each block, add up all cred transactions"""
@@ -131,3 +147,17 @@ def getTop(BLOCKCHAIN) -> list:
         
     leaderboard.sort(key = lambda x: x[1], reverse=True)    
     return leaderboard[:10]
+
+"""Evaluate Blockchain:
+        1. run through each block belonging to user_id
+        2. for each daily block, add 1 to count"""
+def getDailyCount(user_id, BLOCKCHAIN) -> int:
+    if len(BLOCKCHAIN.chain) == 1: return 0
+    
+    desc, count = 'Daily', 0
+    for block in BLOCKCHAIN.chain[1:]:
+        if block.getUser() == user_id:
+            if block.getDesc() == desc:
+                count += 1
+    print(count)
+    return count

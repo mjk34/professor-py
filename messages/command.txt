@@ -35,3 +35,4 @@ Check your tickets for the current BP raffle
 Show the top wealthiest people in the server
 Give an user another submission slot
 Number of tickets you want to buy
+Allowed 1 claim a day after using all 3 submits for that day
