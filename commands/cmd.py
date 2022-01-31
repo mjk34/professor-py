@@ -28,7 +28,7 @@ async def anime (ctx):
     f.close()
 
 """Converts input text with u and o syllabols and sprinkle in text emojis"""
-def uwuify(text: str):
+def uwuify(text: str) -> str:
     uwu_emojis = [
         'ಇ( ꈍᴗꈍ)ಇ', '( ͡o ꒳ ͡o )', '(ó ꒳ ò✿)',
         '(ㅅꈍ ˘ ꈍ)', '(*ฅ́˘ฅ̀*)', ' (◡‿◡✿)',
@@ -74,7 +74,7 @@ def uwuify(text: str):
             output_text += c_char
     
     output_text += ' ✧･ﾟ:*\n`'
-    return output_text
+    return str(output_text)
 
 if __name__ == "__main__":
     test1 = "The quick brown fox jumps over the lazy dog."

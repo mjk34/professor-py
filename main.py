@@ -32,11 +32,15 @@ async def on_ready(): await client.change_presence(activity=discord.Game('/uwu f
 """Filter message based on author and occasionally 'uwuify' read message"""
 @client.event
 async def on_message(message):
+    print(message)
+    if message.author.name in ['Assistant', 'Professor']: return
     if message.author == client.user: return        # checks if professor
     if message.channel.id != CHANNEL: return        # checks if from bot channel
     if random.random() < 0.05:                      # 15% chance to get uwufied
         replace_message = uwuify(message.content)
         resend_message = f'{message.author.name}: ' + replace_message
+        
+        if message.author.name in ['Assistant', 'Professor']: return
         
         await message.delete()
         await client.get_channel(CHANNEL).send(resend_message)    

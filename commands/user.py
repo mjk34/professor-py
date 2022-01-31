@@ -117,6 +117,7 @@ def findRecentName(user_id, BLOCKCHAIN) -> str:
             
     return name
 
+"""Find the total cost of ticket(s)"""
 def totalValue(user_creds, user_tickets) -> int:
     ticket_value = 0
     for i in range(user_tickets):
