@@ -41,11 +41,12 @@ def hasClaim(user_id, BLOCKCHAIN) -> bool:
 def totalCreds(user_id, BLOCKCHAIN) -> int:
     if len(BLOCKCHAIN.chain) == 1: return 0
     
-    desc, desc2, total = 'Ticket', 'Submission', 0
+    desc, desc2, desc3, total = 'Ticket', 'Submission V', 'Submission L', 0
     for block in BLOCKCHAIN.chain[1:]:
         if block.getUser() == user_id:
             if block.getDesc() == desc: continue
-            if block.getDesc()[:-2] == desc2: continue
+            if block.getDesc() == desc2: continue
+            if block.getDesc() == desc3: continue
             total += block.getData()
     
     return total
@@ -70,12 +71,14 @@ def totalTickets(user_id, BLOCKCHAIN) -> int:
 def totalSubsToday(user_id, BLOCKCHAIN) -> int:
     if len(BLOCKCHAIN.chain) == 1: return 0
     
-    desc, desc2, total = 'Submission', 'Bonus Submit', 0
+    desc, desc2, desc3, total = 'Submission V', 'Submission L', 'Bonus Submit', 0
     for block in BLOCKCHAIN.chain[1:]:
         if block.getUser() == user_id:
-            if str(block.getDesc())[:-2] == desc and block.getTime() == today():
+            if block.getDesc() == desc and block.getTime() == today():
                 total += 1
             if block.getDesc() == desc2 and block.getTime() == today():
+                total += 1
+            if block.getDesc() == desc3 and block.getTime() == today():
                 total -= 1
     
     return total

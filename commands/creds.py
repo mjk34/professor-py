@@ -89,6 +89,8 @@ async def wallet (ctx, BLOCKCHAIN):
     desc = f'Daily UwU:\u3000\u3000**{daily}**\nClaim Bonus: \u3000**{claim}**\nSubmissions: \u3000**{3 - user_subs}/3** \u3000Left\n\n'
     desc += f'Total Creds:\u3000**{user_creds}**\u3000 Total Tickets: \u3000**{user_tickets}**'
 
+    BLOCKCHAIN.printChain()
+
     """Return Message"""
     embed = discord.Embed(
         title = f'Wallet',
