@@ -41,11 +41,12 @@ def hasClaim(user_id, BLOCKCHAIN) -> bool:
 def totalCreds(user_id, BLOCKCHAIN) -> int:
     if len(BLOCKCHAIN.chain) == 1: return 0
     
-    desc, desc2, total = 'Ticket', 'Submission', 0
+    desc, desc2, desc3, total = 'Ticket', 'Submission V', 'Submission L', 0
     for block in BLOCKCHAIN.chain[1:]:
         if block.getUser() == user_id:
             if block.getDesc() == desc: continue
             if block.getDesc() == desc2: continue
+            if block.getDesc() == desc3: continue
             total += block.getData()
     
     return total
@@ -70,12 +71,14 @@ def totalTickets(user_id, BLOCKCHAIN) -> int:
 def totalSubsToday(user_id, BLOCKCHAIN) -> int:
     if len(BLOCKCHAIN.chain) == 1: return 0
     
-    desc, desc2, total = 'Submission', 'Bonus Submit', 0
+    desc, desc2, desc3, total = 'Submission V', 'Submission L', 'Bonus Submit', 0
     for block in BLOCKCHAIN.chain[1:]:
         if block.getUser() == user_id:
             if block.getDesc() == desc and block.getTime() == today():
                 total += 1
             if block.getDesc() == desc2 and block.getTime() == today():
+                total += 1
+            if block.getDesc() == desc3 and block.getTime() == today():
                 total -= 1
     
     return total
@@ -84,10 +87,32 @@ def totalSubsToday(user_id, BLOCKCHAIN) -> int:
         1. run through each block belonging to user_id
         2. for each block, average the most recent 10 submissions
         3. average requires a minimum of 3 submissions"""
-def averageScore(user_id, BLOCKCHAIN) -> float:
+def averageVScore(user_id, BLOCKCHAIN) -> float:
     if len(BLOCKCHAIN.chain) == 1: return -1
     
-    desc, average, submissions = 'Submission', 0, []
+    desc, average, submissions = 'Submission V', 0, []
+    for block in BLOCKCHAIN.chain[1:]:
+        if block.getUser() == user_id:
+            if block.getDesc() == desc:
+                submissions.append(block.data)
+    
+    if len(submissions) < 3: return -1
+    elif len(submissions) < 10: 
+        for score in submissions:
+            average += score
+        average = average/len(submissions)
+    else:
+        i = len(submissions) - 10
+        for score in submissions[i:]:
+            average += score
+        average = average/10
+    
+    return average
+
+def averageLScore(user_id, BLOCKCHAIN) -> float:
+    if len(BLOCKCHAIN.chain) == 1: return -1
+    
+    desc, average, submissions = 'Submission L', 0, []
     for block in BLOCKCHAIN.chain[1:]:
         if block.getUser() == user_id:
             if block.getDesc() == desc:

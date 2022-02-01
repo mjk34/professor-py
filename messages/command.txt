@@ -36,3 +36,6 @@ Show the top wealthiest people in the server
 Give an user another submission slot
 Number of tickets you want to buy
 Allowed 1 claim a day after using all 3 submits for that day
+Number of creeps you killed
+Length of the game, round to the nearest minute. | EXAMPLE: 23:34mins --> 34
+The total number of wards placed, control wards placed, and wards killed
