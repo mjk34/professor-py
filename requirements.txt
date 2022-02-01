@@ -1,4 +1,5 @@
 discord.py
-pymongo[srv]
+requests
 python-dateutil
+python-dotenv
 discord-py-slash-command

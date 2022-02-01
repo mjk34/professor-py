@@ -66,7 +66,6 @@ async def buy_ticket(ctx, amount, BLOCKCHAIN):
         BLOCKCHAIN.addBlock(new_block2)
         if BLOCKCHAIN.isChainValid():
             BLOCKCHAIN.storeChain()           
-        BLOCKCHAIN.printChain()
     
         """Return Message"""
         embed = discord.Embed(
@@ -144,7 +143,6 @@ async def getValScore(ctx, k, d, a, adr, head, rounds, submit, BLOCKCHAIN):
             BLOCKCHAIN.addBlock(new_block)
             if BLOCKCHAIN.isChainValid():
                 BLOCKCHAIN.storeChain()           
-            BLOCKCHAIN.printChain()
             
         """Return Message"""
         desc = 'Valorant Game Stats:\u3000\u3000\u3000\u3000\u3000\u3000\u3000\u3000\u3000\u3000\n\n'
@@ -191,7 +189,6 @@ async def bonusSubmit(ctx, reciever, client, BLOCKCHAIN):
         BLOCKCHAIN.addBlock(new_block)
         if BLOCKCHAIN.isChainValid():
             BLOCKCHAIN.storeChain()           
-        BLOCKCHAIN.printChain()
         
         """Return Message"""
         embed = discord.Embed(
@@ -282,7 +279,6 @@ async def claimBonus (ctx, client, BLOCKCHAIN):
     BLOCKCHAIN.addBlock(new_block)
     if BLOCKCHAIN.isChainValid():
         BLOCKCHAIN.storeChain()           
-    BLOCKCHAIN.printChain()
     
     desc = f'Congratulations on your submits!\n'
     desc += f'From **+{bonus}** *Bonus*, you claimed **+{bonus_creds}** creds!'

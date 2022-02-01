@@ -13,16 +13,16 @@ async def daily (ctx, BLOCKCHAIN):
        3. Blockchain will be validated, new block will be added to end of Blockchain"""
        
     id, name = ctx.author.id, ctx.author.name
-    """Check if the user has already done their daily"""
-    if user.hasDaily(id, BLOCKCHAIN) == False:
-        embed = discord.Embed(
-            title = f'Daily',
-            description = f'You next **/uwu** is tomorrow, it now resets based on date!',
-            color = 6053215    
-        ).set_thumbnail(url=ctx.author.avatar_url)
-        embed.set_footer(text='@~ powered by oogway desu')
-        await ctx.send(embed=embed)
-        return
+    # """Check if the user has already done their daily"""
+    # if user.hasDaily(id, BLOCKCHAIN) == False:
+    #     embed = discord.Embed(
+    #         title = f'Daily',
+    #         description = f'You next **/uwu** is tomorrow, it now resets based on date!',
+    #         color = 6053215    
+    #     ).set_thumbnail(url=ctx.author.avatar_url)
+    #     embed.set_footer(text='@~ powered by oogway desu')
+    #     await ctx.send(embed=embed)
+    #     return
     
     bonus = int(user.getDailyCount(id, BLOCKCHAIN) / 7)
     
@@ -49,19 +49,27 @@ async def daily (ctx, BLOCKCHAIN):
     desc = f'{status} **+{fortune}** creds were added to your *Wallet*!\n'
     if bonus > 0:
         desc += f'From **+{bonus}** *Bonus*, you get an additional **+{bonus*60}** creds!'
+
+    read = ''
+    read += dailyFortune()
     
     """Return Message"""
     embed = discord.Embed(
-        title = f'Daily',
+        title = 'Daily',
         description = desc,
         color = 16700447    
     ).set_thumbnail(url=ctx.author.avatar_url)
     embed.set_footer(text='@~ powered by oogway desu')
-    embed.add_field(
-        name = 'Fortune',
-        value = dailyFortune()
-    )
+
+    embed2 = discord.Embed(
+        title = f'{name}\'s Fortune',
+        description = read,
+        color = 16251130
+    ).set_image(url='https://assets.dicebreaker.com/pondering-my-orb-header-art.png/BROK/resize/844%3E/format/jpg/quality/80/pondering-my-orb-header-art.png')
+    embed2.set_footer(text='@~ powered by oogway desu')
     await ctx.send(embed=embed)
+    await ctx.send(embed=embed2)
+
     
 """Allow users to check out much uwuCreds they have accumulated"""
 async def wallet (ctx, BLOCKCHAIN):
@@ -73,10 +81,12 @@ async def wallet (ctx, BLOCKCHAIN):
     id = ctx.author.id
     user_creds = user.totalCreds(id, BLOCKCHAIN)
     user_tickets = user.totalTickets(id, BLOCKCHAIN)
+    user_subs = user.totalSubsToday(id, BLOCKCHAIN)
+
+    claim = {True:'Available', False:'Not Available'}[user.hasClaim(id, BLOCKCHAIN) == True]
     
     daily = {True:'Available', False:'Not Available'}[user.hasDaily(id, BLOCKCHAIN)]
-    user_subs = user.totalSubsToday(id, BLOCKCHAIN)
-    desc = f'Daily UwU:\u3000\u3000**{daily}**\nSubmissions: \u3000**{3 - user_subs}/3** \u3000Left\n\n'
+    desc = f'Daily UwU:\u3000\u3000**{daily}**\nClaim Bonus: \u3000**{claim}**\nSubmissions: \u3000**{3 - user_subs}/3** \u3000Left\n\n'
     desc += f'Total Creds:\u3000**{user_creds}**\u3000 Total Tickets: \u3000**{user_tickets}**'
 
     """Return Message"""
@@ -138,7 +148,6 @@ async def give (ctx, reciever, amount, client, BLOCKCHAIN):
     BLOCKCHAIN.addBlock(new_block2)
     if BLOCKCHAIN.isChainValid():
         BLOCKCHAIN.storeChain()           
-    BLOCKCHAIN.printChain()
     
     """Return Message"""
     embed = discord.Embed(
@@ -185,7 +194,6 @@ async def handout(ctx, reciever, amount, client, BLOCKCHAIN):
         BLOCKCHAIN.addBlock(new_block)
         if BLOCKCHAIN.isChainValid():
             BLOCKCHAIN.storeChain()           
-        BLOCKCHAIN.printChain()
         
         """Return Message"""
         embed = discord.Embed(
@@ -240,7 +248,6 @@ async def take(ctx, reciever, amount, client, BLOCKCHAIN):
         BLOCKCHAIN.addBlock(new_block)
         if BLOCKCHAIN.isChainValid():
             BLOCKCHAIN.storeChain()           
-        BLOCKCHAIN.printChain()
         
         """Return Message"""
         embed = discord.Embed(
