@@ -139,7 +139,7 @@ async def leaderboard (ctx, BLOCKCHAIN):
        2. Blockchain will be evaluated, User tickets will be checked"""
 
     leaderboard = user.getTop(BLOCKCHAIN)
-    desc = 'Here lists the highest ranked students on UwUversity!\n\n'
+    desc = 'Here lists the most active students on UwUversity!\n\n'
     count = 1
     for member in leaderboard:
         desc += f'\u3000** #{count} ** \u3000\u3000*{member[0]}*\n'
