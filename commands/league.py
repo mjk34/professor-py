@@ -6,7 +6,7 @@ from commands.helper import today, getWeight
 filler = ['<', '>', '!', '@']
         
 """Allow users to submit a Valorant game to earn uwuCreds"""
-async def getValScore(ctx, k, d, a, adr, head, rounds, submit, BLOCKCHAIN):
+async def getLolScore(ctx, k, d, a, cs, time, wards, submit, BLOCKCHAIN):
     """1. Blockchain will be evaluated, user submissions will be checked
        2. Blockchain will be evaluated, recent submissions will be averaged
        3. Blockchain will be validated, new block will be added to the end of Blockchain"""
@@ -26,12 +26,12 @@ async def getValScore(ctx, k, d, a, adr, head, rounds, submit, BLOCKCHAIN):
         return
     
     """calculate uwuScore, check for divide by zero"""
-    if d <= 4: d = 4 # prevent scaling above 800
-    kda, game = (k + 0.5*a) / d, rounds / 25  
-    score = int(kda*game*(adr + 3*head))
+    if d <= 0: d = 1 # prevent scaling above 800
+    kda, game = (k + a) / d, time / 30  
+    score = int(kda*game*10 + cs + 3*wards)
     
     """fetch and calculate user average/score weight"""
-    final_score, average = 0, user.averageVScore(id, BLOCKCHAIN)
+    final_score, average = 0, user.averageLScore(id, BLOCKCHAIN)
     if average == -1: final_score = score
     else:
         weight = getWeight(average, score)
@@ -51,7 +51,7 @@ async def getValScore(ctx, k, d, a, adr, head, rounds, submit, BLOCKCHAIN):
                 user = id,
                 name = name,
                 timestamp = today(),
-                description = 'Submission V',
+                description = 'Submission L',
                 data = final_score
             )
             
@@ -65,8 +65,8 @@ async def getValScore(ctx, k, d, a, adr, head, rounds, submit, BLOCKCHAIN):
                 BLOCKCHAIN.storeChain()           
             
         """Return Message"""
-        desc = 'Valorant Game Stats:\u3000\u3000\u3000\u3000\u3000\u3000\u3000\u3000\u3000\u3000\n\n'
-        desc += f'KDA: \u3000**{k}**/**{nd}**/**{a}**\u3000\u3000ADR: \u3000\u3000\u3000**{adr}**\nHEAD:\u3000**{head}** \u3000\u3000\u3000\u3000ROUNDS: \u3000**{rounds}**\n\n'
+        desc = 'League Game Stats:\u3000\u3000\u3000\u3000\u3000\u3000\u3000\u3000\u3000\u3000\n\n'
+        desc += f'KDA: \u3000**{k}**/**{nd}**/**{a}**\u3000\u3000CS: \u3000\u3000**{cs}**\n\n'
         desc += f'Calculated Score: \u3000**{final_score}**'
         embed = discord.Embed(
             title = f'Submission',

@@ -8,7 +8,9 @@ from discord_slash.utils.manage_commands import create_option
 
 from commands.cmd import ping, anime, uwuify
 from commands.creds import daily, wallet, give, handout, take
-from commands.valorant import buy_ticket, getValScore, bonusSubmit, leaderboard, claimBonus
+from commands.valorant import getValScore
+from commands.league import getLolScore
+from commands.submit import buy_ticket, bonusSubmit, leaderboard, claimBonus
 from commands.helper import fetchContentList
 
 load_dotenv()
@@ -99,6 +101,26 @@ async def _(ctx:SlashContext, kill: int, death: int, assist: int, adr: int, head
              create_option(name='rounds', description=CMD_DESC[30], option_type=4, required=True)])
 async def _(ctx:SlashContext, kill: int, death: int, assist: int, adr: int, head: int, rounds: int):
     await getValScore(ctx, kill, death, assist, adr, head, rounds, False, BLOCKCHAIN)
+    
+@slash.slash(name='submit_league', description=CMD_DESC[24], guild_ids=[GUILD_ID],
+    options=[create_option(name='kill', description=CMD_DESC[25], option_type=4, required=True),
+             create_option(name='death', description=CMD_DESC[26], option_type=4, required=True),
+             create_option(name='assist', description=CMD_DESC[27], option_type=4, required=True),
+             create_option(name='cs', description=CMD_DESC[38], option_type=4, required=True),
+             create_option(name='time', description=CMD_DESC[39], option_type=4, required=True),
+             create_option(name='wards', description=CMD_DESC[40], option_type=4, required=True)])
+async def _(ctx:SlashContext, kill: int, death: int, assist: int, cs: int, time: int, wards: int):
+    await getLolScore(ctx, kill, death, assist, cs, time, wards, True, BLOCKCHAIN)
+
+@slash.slash(name='view_league', description=CMD_DESC[24], guild_ids=[GUILD_ID],
+    options=[create_option(name='kill', description=CMD_DESC[25], option_type=4, required=True),
+             create_option(name='death', description=CMD_DESC[26], option_type=4, required=True),
+             create_option(name='assist', description=CMD_DESC[27], option_type=4, required=True),
+             create_option(name='cs', description=CMD_DESC[38], option_type=4, required=True),
+             create_option(name='time', description=CMD_DESC[39], option_type=4, required=True),
+             create_option(name='wards', description=CMD_DESC[40], option_type=4, required=True)])
+async def _(ctx:SlashContext, kill: int, death: int, assist: int, cs: int, time: int , wards: int):
+    await getLolScore(ctx, kill, death, assist, cs, time, wards, False, BLOCKCHAIN)
 
 @slash.slash(name='leaderboard', description=CMD_DESC[34], guild_ids=[GUILD_ID])
 async def _(ctx:SlashContext):
