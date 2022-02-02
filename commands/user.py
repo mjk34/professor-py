@@ -165,6 +165,8 @@ def getTop(BLOCKCHAIN) -> list:
         user_creds = totalCreds(user_id, BLOCKCHAIN)
         user_tickets = totalTickets(user_id, BLOCKCHAIN)
         total = totalValue(user_creds, user_tickets)
+
+        print(f'{user_name} {user_creds} {user_tickets} {total}')
         
         leaderboard.append([user_name, total])
         

@@ -2,6 +2,9 @@ import random, requests, json
 from datetime import timedelta, datetime
 from typing import Iterable, Union
 from dateutil import parser
+from pytz import timezone
+
+est = timezone('EST')
 
 """Replaces a character in all string of a list"""
 def replaceList (list_of_strings:list, old:str, new:str) -> list:
@@ -24,14 +27,8 @@ def fetchContent (filename) -> str:
 
 """Fetches today's date"""
 def today () -> str:
-    time = datetime.now()
+    time = datetime.now(est)
     return str(time.strftime('%m-%d-%y'))
-
-"""Fetches yesterdays date"""
-def yesterday () -> str:
-    time = datetime.now()
-    time = time - timedelta(days=1)
-    return str(time.strftime('%m-%d-%y %H:%M'))
 
 """Randomly generate luck based on values 1-1001"""
 def dailyLuck () -> Iterable[Union[int, str]]:
