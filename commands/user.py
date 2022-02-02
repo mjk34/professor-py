@@ -1,6 +1,5 @@
 import block, blockchain
 from commands.helper import today, getName
-from datetime import timedelta, datetime
 from dateutil import parser
 
 """Evaluated Blockchain:
@@ -16,8 +15,7 @@ def hasDaily(user_id, BLOCKCHAIN) -> bool:
                 date = block.getTime()
                      
     if date == '': return True
-    time_diff = parser.parse(today()) - parser.parse(date)
-    return {True:False, False:True}[time_diff == timedelta(seconds=0)]
+    return {True:False, False:True}[date == today()]
 
 """Evaluated Blockchain:
         1. find the most recent claim based on user_id
@@ -32,8 +30,7 @@ def hasClaim(user_id, BLOCKCHAIN) -> bool:
                 date = block.getTime()
                      
     if date == '': return True
-    time_diff = parser.parse(today()) - parser.parse(date)
-    return {True:False, False:True}[time_diff == timedelta(seconds=0)]
+    return {True:False, False:True}[date == today()]
 
 """Evaluate Blockchain:
         1. run through each block belonging to user_id
@@ -49,7 +46,7 @@ def totalCreds(user_id, BLOCKCHAIN) -> int:
             if block.getDesc() == desc3: continue
             total += block.getData()
     
-    return total
+    return int(total)
 
 """Evaluate Blockchain:
         1. run through each block belonging to user_id
@@ -63,7 +60,7 @@ def totalTickets(user_id, BLOCKCHAIN) -> int:
             if block.getDesc() == desc:
                 total += block.getData()
     
-    return total
+    return int(total)
 
 """Evaluate Blockchain:
         1. run through each block belonging to user_id
@@ -81,7 +78,7 @@ def totalSubsToday(user_id, BLOCKCHAIN) -> int:
             if block.getDesc() == desc3 and block.getTime() == today():
                 total -= 1
     
-    return total
+    return int(total)
 
 """Evaluate Blockchain:
         1. run through each block belonging to user_id
@@ -107,7 +104,7 @@ def averageVScore(user_id, BLOCKCHAIN) -> float:
             average += score
         average = average/10
     
-    return average
+    return float(average)
 
 def averageLScore(user_id, BLOCKCHAIN) -> float:
     if len(BLOCKCHAIN.chain) == 1: return -1
@@ -129,7 +126,7 @@ def averageLScore(user_id, BLOCKCHAIN) -> float:
             average += score
         average = average/10
     
-    return average
+    return float(average)
 
 """Evaluate Blockchain:
         1. run through each block belonging to user_id
@@ -140,7 +137,7 @@ def findRecentName(user_id, BLOCKCHAIN) -> str:
         if block.getUser() == user_id:
             name = block.getName()
             
-    return name
+    return str(name)
 
 """Find the total cost of ticket(s)"""
 def totalValue(user_creds, user_tickets) -> int:
@@ -148,7 +145,7 @@ def totalValue(user_creds, user_tickets) -> int:
     for i in range(user_tickets):
         ticket_value += 2000 + i*400
         
-    return user_creds + ticket_value
+    return int(user_creds + ticket_value)
     
 """Evaluate Blockchain:
         1. find a list of all unique user ids
@@ -185,5 +182,5 @@ def getDailyCount(user_id, BLOCKCHAIN) -> int:
         if block.getUser() == user_id:
             if block.getDesc() == desc:
                 count += 1
-    print(count)
-    return count
+
+    return int(count)
