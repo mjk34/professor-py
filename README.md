@@ -15,4 +15,9 @@ pip3 install -r requirements.txt
 
 ## Current Development Branches:
   - [ ] main
-  - [x] blockChain	   # Rework the backend MongoDB dependency to a blockchain
+
+## Past Development Branches:
+  - [x] blockChain     # Rework the backend MongoDB dependency to a blockchain structure
+  - [x] refactor       # Simplify duplication code and add in documentation to improve clarity
+  - [x] slashcmd       # Upgrade Professor's features to slashcommands
+  - [x] uwufy          # Implement message filtering to make user messages more "kawaii" 
