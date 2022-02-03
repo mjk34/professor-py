@@ -56,9 +56,13 @@ def dailyLuck () -> Iterable[Union[int, str]]:
 def dailyFortune () -> str:
     while True:
         response = requests.get('https://fortuneapi.herokuapp.com/')
-        if len(response.content) < 200: break
+        response_size = len(response.content)
+        if response_size < 200 and response_size > 1: break
         
-    return str(json.loads(response.text))
+        
+    reading = ''
+    reading += str(json.loads(response.text))
+    return reading
 
 """Fetch difference between the average and score"""
 def getWeight(average, score) -> float:

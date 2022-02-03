@@ -6,7 +6,7 @@ from discord.ext import commands
 from discord_slash import SlashCommand, SlashContext
 from discord_slash.utils.manage_commands import create_option
 
-from commands.cmd import ping, anime, uwuify
+from commands.cmd import ping, anime, uwuify, fortune
 from commands.creds import daily, wallet, give, handout, take
 from commands.valorant import getValScore
 from commands.league import getLolScore
@@ -51,6 +51,9 @@ async def _(ctx:SlashContext): await ping(ctx)
 
 @slash.slash(name='anime', description=CMD_DESC[4], guild_ids=[GUILD_ID])
 async def _(ctx:SlashContext): await anime(ctx)
+
+@slash.slash(name='fortune', description=CMD_DESC[41], guild_ids=[GUILD_ID])
+async def _(ctx:SlashContext): await fortune (ctx)
 
 """Blockchin dependent commands"""
 @slash.slash(name='buy_ticket', description=CMD_DESC[32], guild_ids=[GUILD_ID],

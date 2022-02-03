@@ -1,5 +1,5 @@
 import random, discord
-from commands.helper import fetchContentList, fetchContent
+from commands.helper import fetchContentList, fetchContent, dailyFortune
 
 """Checks uwuBot's response to see if it is available"""
 async def ping(ctx):
@@ -26,7 +26,23 @@ async def anime (ctx):
 
     await ctx.send(embed=embed)
     f.close()
-
+    
+"""Reqests a reading from fortune api"""
+async def fortune (ctx):
+    name = ctx.author.name
+    
+    read = ''
+    read += dailyFortune()
+    
+    embed = discord.Embed(
+        title = f'{name}\'s Fortune',
+        description = read,
+        color = 16251130
+    ).set_image(url='https://assets.dicebreaker.com/pondering-my-orb-header-art.png/BROK/resize/844%3E/format/jpg/quality/80/pondering-my-orb-header-art.png')
+    embed.set_footer(text='@~ powered by oogway desu')
+    
+    await ctx.send(embed=embed)
+    
 """Converts input text with u and o syllabols and sprinkle in text emojis"""
 def uwuify(text: str) -> str:
     uwu_emojis = [

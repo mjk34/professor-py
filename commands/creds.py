@@ -2,7 +2,7 @@ import discord, block, blockchain
 import commands.user as user
 
 from discord.utils import get
-from commands.helper import today, dailyLuck, dailyFortune, getName
+from commands.helper import today, dailyLuck, getName
 
 filler = ['<', '>', '!', '@']
 
@@ -49,9 +49,6 @@ async def daily (ctx, BLOCKCHAIN):
     desc = f'{status} **+{fortune}** creds were added to your *Wallet*!\n'
     if bonus > 0:
         desc += f'From **+{bonus}** *Bonus*, you get an additional **+{bonus*60}** creds!'
-
-    read = ''
-    read += dailyFortune()
     
     """Return Message"""
     embed = discord.Embed(
@@ -61,15 +58,7 @@ async def daily (ctx, BLOCKCHAIN):
     ).set_thumbnail(url=ctx.author.avatar_url)
     embed.set_footer(text='@~ powered by oogway desu')
 
-    embed2 = discord.Embed(
-        title = f'{name}\'s Fortune',
-        description = read,
-        color = 16251130
-    ).set_image(url='https://assets.dicebreaker.com/pondering-my-orb-header-art.png/BROK/resize/844%3E/format/jpg/quality/80/pondering-my-orb-header-art.png')
-    embed2.set_footer(text='@~ powered by oogway desu')
     await ctx.send(embed=embed)
-    await ctx.send(embed=embed2)
-
     
 """Allow users to check out much uwuCreds they have accumulated"""
 async def wallet (ctx, BLOCKCHAIN):
