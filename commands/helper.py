@@ -1,4 +1,5 @@
 import random, requests, json
+from bs4 import BeautifulSoup
 from datetime import timedelta, datetime
 from typing import Iterable, Union
 from dateutil import parser
@@ -54,15 +55,11 @@ def dailyLuck () -> Iterable[Union[int, str]]:
 
 """Randomly generate fortune readings from fortune-api"""
 def dailyFortune () -> str:
-    while True:
-        response = requests.get('https://fortuneapi.herokuapp.com/')
-        response_size = len(response.content)
-        if response_size < 200 and response_size > 1: break
-        
-        
-    reading = ''
-    reading += str(json.loads(response.text))
-    return reading
+    response = requests.get('https://fungenerators.com/random/fortune-cookie/')
+    soup = BeautifulSoup(response.content, 'html.parser')
+    contents = soup.find('h2').get_text()
+
+    return str('\"' + contents + '\"')
 
 """Fetch difference between the average and score"""
 def getWeight(average, score) -> float:
