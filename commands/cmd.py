@@ -31,8 +31,8 @@ async def anime (ctx):
 async def fortune (ctx):
     name = ctx.author.name
 
-    orb_url = 'https://i.imgur.com/1icMQHf.jpg'
-    if random.random() < 0.5:
+    orb_url = 'https://assets.dicebreaker.com/pondering-my-orb-header-art.png/BROK/resize/844%3E/format/jpg/quality/80/pondering-my-orb-header-art.png'
+    if random.random() < 0.35:
         PONDER_LIST = fetchContentList('ponder.txt')
         index = random.randint(0, len(PONDER_LIST)-1)
         orb_url = PONDER_LIST[index]
