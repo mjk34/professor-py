@@ -30,7 +30,13 @@ async def anime (ctx):
 """Reqests a reading from fortune api"""
 async def fortune (ctx):
     name = ctx.author.name
-    
+
+    orb_url = 'https://i.imgur.com/1icMQHf.jpg'
+    if random.random() < 0.5:
+        PONDER_LIST = fetchContentList('ponder.txt')
+        index = random.randint(0, len(PONDER_LIST)-1)
+        orb_url = PONDER_LIST[index]
+
     read = ''
     read += dailyFortune()
     
@@ -38,7 +44,7 @@ async def fortune (ctx):
         title = f'{name}\'s Fortune',
         description = read,
         color = 16251130
-    ).set_image(url='https://assets.dicebreaker.com/pondering-my-orb-header-art.png/BROK/resize/844%3E/format/jpg/quality/80/pondering-my-orb-header-art.png')
+    ).set_image(url=orb_url)
     embed.set_footer(text='@~ powered by oogway desu')
     
     await ctx.send(embed=embed)
