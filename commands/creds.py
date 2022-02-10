@@ -1,8 +1,8 @@
-import discord, block, blockchain
+import discord, block, blockchain, random
 import commands.user as user
 
 from discord.utils import get
-from commands.helper import today, dailyLuck, getName
+from commands.helper import today, dailyLuck, dailyFortune, getName, fetchContentList
 
 filler = ['<', '>', '!', '@']
 
@@ -33,7 +33,7 @@ async def daily (ctx, BLOCKCHAIN):
         name = name,
         timestamp = today(),
         description = 'Daily',
-        data = fortune + bonus*60
+        data = fortune + bonus*100
     )
     
     """Update Blockchain"""
@@ -45,6 +45,15 @@ async def daily (ctx, BLOCKCHAIN):
     if BLOCKCHAIN.isChainValid():
         BLOCKCHAIN.storeChain()           
     BLOCKCHAIN.printChain()
+
+    orb_url = 'https://assets.dicebreaker.com/pondering-my-orb-header-art.png/BROK/resize/844%3E/format/jpg/quality/80/pondering-my-orb-header-art.png'
+    if random.random() < 0.50:
+        PONDER_LIST = fetchContentList('ponder.txt')
+        index = random.randint(0, len(PONDER_LIST)-1)
+        orb_url = PONDER_LIST[index]
+
+    read = ''
+    read += dailyFortune()
     
     desc = f'{status} **+{fortune}** creds were added to your *Wallet*!\n'
     if bonus > 0:
@@ -57,6 +66,11 @@ async def daily (ctx, BLOCKCHAIN):
         color = 16700447    
     ).set_thumbnail(url=ctx.author.avatar_url)
     embed.set_footer(text='@~ powered by oogway desu')
+    embed.add_field(
+        name = f'Fortune\u3000\u3000\u3000\u3000\u3000\u3000\u3000\u3000\u3000\u3000\u3000\u3000\u3000\u3000\u3000\u3000\u3000\u3000-',
+        value = read
+    )
+    embed.set_image(url=orb_url)
 
     await ctx.send(embed=embed)
     

@@ -6,7 +6,7 @@ from discord.ext import commands
 from discord_slash import SlashCommand, SlashContext
 from discord_slash.utils.manage_commands import create_option
 
-from commands.cmd import ping, anime, uwuify, fortune
+from commands.cmd import ping, anime, uwuify
 from commands.creds import daily, wallet, give, handout, take
 from commands.valorant import getValScore
 from commands.league import getLolScore
@@ -23,6 +23,10 @@ CMD_DESC = fetchContentList('command.txt')
 client = commands.Bot(command_prefix='!')
 slash = SlashCommand(client, sync_commands=True)
 
+keywords = ['ping', 'anime', 'uwu', 'wallet', 'give', 'handout',\
+            'take', 'submit_valorant', 'view_valorant', 'submit_league',\
+            'view_league', 'buy_ticket', 'bonus_submit', 'leaderboard', 'claim_bonus']
+
 """Either imports existing blockchain or initiates with a new genesis block"""
 BLOCKCHAIN = blockchain.Blockchain()
 
@@ -33,10 +37,11 @@ async def on_ready(): await client.change_presence(activity=discord.Game('/uwu f
 """Filter message based on author and occasionally 'uwuify' read message"""
 @client.event
 async def on_message(message):
-    if message.author.name in ['Assistant', 'Professor']: return
-    if message.author == client.user: return        # checks if professor
-    if message.channel.id != CHANNEL: return        # checks if from bot channel
-    if random.random() < 0.05:                      # 15% chance to get uwufied
+    if message.author.name in ['Assistant', 'Professor', 'humble', 'valuwu', 'RoleBot']: return
+    if message.author == client.user: return                # checks if professor
+    if message.channel.id != CHANNEL: return                # checks if from bot channel
+    if message.content.split(' ')[0] in keywords: return    # checks for keywords (commands)
+    if random.random() < 0.05:                              # 15% chance to get uwufied
         replace_message = uwuify(message.content)
         resend_message = f'{message.author.name}: ' + replace_message
         
@@ -51,9 +56,6 @@ async def _(ctx:SlashContext): await ping(ctx)
 
 @slash.slash(name='anime', description=CMD_DESC[4], guild_ids=[GUILD_ID])
 async def _(ctx:SlashContext): await anime(ctx)
-
-@slash.slash(name='fortune', description=CMD_DESC[41], guild_ids=[GUILD_ID])
-async def _(ctx:SlashContext): await fortune (ctx)
 
 """Blockchin dependent commands"""
 @slash.slash(name='buy_ticket', description=CMD_DESC[32], guild_ids=[GUILD_ID],
