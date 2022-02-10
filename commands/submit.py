@@ -186,7 +186,7 @@ async def claimBonus (ctx, client, BLOCKCHAIN):
         return
 
     bonus = int(user_daily / 7)
-    bonus_creds = 40 + bonus*60
+    bonus_creds = 100 + bonus*80
     
     """Generate new Block"""
     new_block = block.Block(
