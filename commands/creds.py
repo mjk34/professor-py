@@ -57,7 +57,7 @@ async def daily (ctx, BLOCKCHAIN):
     
     desc = f'{status} **+{fortune}** creds were added to your *Wallet*!\n'
     if bonus > 0:
-        desc += f'From **+{bonus}** *Bonus*, you get an additional **+{bonus*60}** creds!'
+        desc += f'From **+{bonus}** *Bonus*, you get an additional **+{bonus*100}** creds!'
     
     """Return Message"""
     embed = discord.Embed(
