@@ -12,6 +12,7 @@ from commands.valorant import getValScore
 from commands.league import getLolScore
 from commands.submit import buy_ticket, bonusSubmit, leaderboard, claimBonus
 from commands.helper import fetchContentList
+from commands.humble import humble_powa
 
 load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')
@@ -139,5 +140,13 @@ async def _(ctx:SlashContext, reciever: str):
 @slash.slash(name='claim_bonus', description=CMD_DESC[36], guild_ids=[GUILD_ID])
 async def _(ctx:SlashCommand):
     await claimBonus(ctx, client, BLOCKCHAIN)
+
+# @slash.slash(name='user_stats', description='', guild_ids=[GUILD_ID])
+# async def _(ctx:SlashCommand):
+#     await get_average_uwu(ctx, BLOCKCHAIN)
+    
+@slash.slash(name='humble', description='humble daily', guild_ids=[GUILD_ID])
+async def _(ctx:SlashCommand):
+    await humble_powa(ctx, BLOCKCHAIN)
 
 client.run(TOKEN)
