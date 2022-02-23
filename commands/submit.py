@@ -227,13 +227,17 @@ async def rafflelist (ctx, BLOCKCHAIN):
        2. Blockchain will be evaluated, User tickets will be checked"""
 
     rafflelist = user.getRaffle(BLOCKCHAIN)
-    desc = 'Here lists the participating rafflers, the drawing is Tuesday (3/19)!\n\n'
+    desc = 'Here lists the participating rafflers, the drawing is Tuesday (4/19)!\n\n'
     count = 1
+
+    mem_list = ''
     for member in rafflelist:
-        desc += f'\u3000\u3000**{member[1]}**'
-        if member[1] > 9: desc += '\u3000\u2000'
-        else: desc += '\u3000\u3000'
-        desc += f'*{member[0]}*\n'
+        mem_list += f'\u3000\u3000**{member[1]}**'
+        if member[1] > 9: mem_list += '\u3000\u2000'
+        else: mem_list += '\u3000\u3000'
+        mem_list += f'*{member[0]}*\n'
+
+    if mem_list == '': mem_list += 'Currently there are no participants...'
     
     """Return Message"""
     embed = discord.Embed(
