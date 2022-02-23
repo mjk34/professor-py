@@ -10,7 +10,7 @@ from commands.cmd import ping, anime, uwuify
 from commands.creds import daily, wallet, give, handout, take
 from commands.valorant import getValScore
 from commands.league import getLolScore
-from commands.submit import buy_ticket, bonusSubmit, leaderboard, claimBonus
+from commands.submit import buy_ticket, bonusSubmit, leaderboard, claimBonus, rafflelist
 from commands.helper import fetchContentList
 from commands.humble import humble_powa
 
@@ -26,14 +26,15 @@ slash = SlashCommand(client, sync_commands=True)
 
 keywords = ['ping', 'anime', 'uwu', 'wallet', 'give', 'handout',\
             'take', 'submit_valorant', 'view_valorant', 'submit_league',\
-            'view_league', 'buy_ticket', 'bonus_submit', 'leaderboard', 'claim_bonus']
+            'view_league', 'buy_ticket', 'bonus_submit', 'leaderboard',\
+            'claim_bonus', 'humble', 'raffle', 'music_box', 'add', 'join', 'leave', 'game']
 
 """Either imports existing blockchain or initiates with a new genesis block"""
 BLOCKCHAIN = blockchain.Blockchain()
 
 """Start up bot status message on boot"""
 @client.event
-async def on_ready(): await client.change_presence(activity=discord.Game('Drawing T-t-ttime'))#'/uwu for fortune!'))
+async def on_ready(): await client.change_presence(activity=discord.Game('/uwu for fortune!'))
 
 """Filter message based on author and occasionally 'uwuify' read message"""
 @client.event
@@ -42,7 +43,7 @@ async def on_message(message):
     if message.author == client.user: return                # checks if professor
     if message.channel.id != CHANNEL: return                # checks if from bot channel
     if message.content.split(' ')[0] in keywords: return    # checks for keywords (commands)
-    if random.random() < 0.05:                              # 15% chance to get uwufied
+    if random.random() < 0.08:                              # 15% chance to get uwufied
         replace_message = uwuify(message.content)
         resend_message = f'{message.author.name}: ' + replace_message
         
@@ -137,12 +138,16 @@ async def _(ctx:SlashContext):
 async def _(ctx:SlashContext, reciever: str): 
     await bonusSubmit(ctx, reciever, client, BLOCKCHAIN)
 
-@slash.slash(name='claim_bonus', description=CMD_DESC[36], guild_ids=[GUILD_ID])
+@slash.slash(name='claim_bonus', description=CMD_DESC[37], guild_ids=[GUILD_ID])
 async def _(ctx:SlashCommand):
     await claimBonus(ctx, client, BLOCKCHAIN)
     
-@slash.slash(name='humble', description='humble daily', guild_ids=[GUILD_ID])
+@slash.slash(name='humble', description=CMD_DESC[42], guild_ids=[GUILD_ID])
 async def _(ctx:SlashCommand):
-    await humble_powa(ctx, BLOCKCHAIN)
+    await humble_powa(ctx, client, BLOCKCHAIN)
+
+@slash.slash(name='raffle', description=CMD_DESC[43], guild_ids=[GUILD_ID])
+async def _(ctx:SlashCommand):
+    await rafflelist(ctx, BLOCKCHAIN)
 
 client.run(TOKEN)

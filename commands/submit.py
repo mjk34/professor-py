@@ -15,16 +15,22 @@ async def buy_ticket(ctx, amount, BLOCKCHAIN):
     user_creds = user.totalCreds(id, BLOCKCHAIN)
     user_tickets = user.totalTickets(id, BLOCKCHAIN)
     
-    """Check if User requested invalid amounts"""
-    if amount < 1: 
-        text = f'You cannot buy \'{amount}\' amount of tickets'
-        await ctx.send(f'```CSS\n[{text}]\n```')
-        return
-    
+    """Check if User requested -1 to purchase all tickets"""
     total_cost = 0
-    for i in range(amount):
-        total_cost += 2000 + 400*(user_tickets + i)
-        
+    if amount < 1:
+        count = 0 
+        while True:
+            cost = 2000 + 400*(user_tickets + count)
+            if cost + total_cost < user_creds:
+                total_cost += cost
+                count += 1
+            else: 
+                amount = count
+                break
+    else:
+        for i in range(amount):
+            total_cost += 2000 + 400*(user_tickets + i)
+            
     """Check if User has sufficient amount of uwuCreds"""
     if user_creds - total_cost > 0:
         
@@ -131,7 +137,15 @@ async def leaderboard (ctx, BLOCKCHAIN):
     desc = 'Here lists the most active students on UwUversity!\n\n'
     count = 1
     for member in leaderboard:
-        desc += f'\u3000** #{count} ** \u3000\u3000*{member[0]}*\n'
+        if member[0] == 'humble':
+            desc += f'\u3000** #{count} ** \u3000\u3000 **{member[0]}** \u3000~({member[1]})\n'
+            count += 1
+            continue
+
+        desc += f'\u3000** #{count} ** '
+        if count > 9: desc += '\u3000\u2000'
+        else: desc += '\u3000\u3000'
+        desc += f'*{member[0]}*\n'
         count += 1
     
     """Return Message"""
@@ -206,3 +220,27 @@ async def claimBonus (ctx, client, BLOCKCHAIN):
     ).set_image(url='https://i.pinimg.com/originals/de/6b/5d/de6b5df29abaf7124387b9c86ca46a29.gif')
     embed.set_footer(text='@~ powered by oogway desu')
     await ctx.send(embed=embed)
+
+"""Allow users to see the list of raffle participants"""
+async def rafflelist (ctx, BLOCKCHAIN):
+    """1. Blockchain will be evaluated, User uwuCreds will be checked
+       2. Blockchain will be evaluated, User tickets will be checked"""
+
+    rafflelist = user.getRaffle(BLOCKCHAIN)
+    desc = 'Here lists the participating rafflers, the drawing is Tuesday (3/19)!\n\n'
+    count = 1
+    for member in rafflelist:
+        desc += f'\u3000\u3000**{member[1]}**'
+        if member[1] > 9: desc += '\u3000\u2000'
+        else: desc += '\u3000\u3000'
+        desc += f'*{member[0]}*\n'
+    
+    """Return Message"""
+    embed = discord.Embed(
+        title = f'Current Raffle',
+        description = desc,
+        color = 6943230    
+    ).set_thumbnail(url=ctx.guild.icon_url)
+    embed.set_footer(text='@~ powered by oogway desu')
+    await ctx.send(embed=embed)
+

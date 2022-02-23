@@ -40,3 +40,5 @@ Number of creeps you killed
 Length of the game, round to the nearest minute. | EXAMPLE: 23:34mins --> 34
 The total number of wards placed, control wards placed, and wards killed
 Get a fortune reading!
+Give humble his daily!
+View current raffle info and list of participants!

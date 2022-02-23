@@ -70,3 +70,7 @@ async def getName(id, client) -> str:
     user_object = await client.fetch_user(id)
     return str(user_object.name)
     
+"""Fectch discord user's Icon by Id"""
+async def getIcon(id, client) -> str:
+    user_object = await client.fetch_user(id)
+    return str(user_object.avatar_url)

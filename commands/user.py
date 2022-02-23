@@ -189,3 +189,26 @@ def getDailyCount(user_id, BLOCKCHAIN) -> int:
                 count += 1
 
     return int(count)
+
+"""Evaluate Blockchain:
+        1. find a list of all unique user ids
+        2. for each id, get the name, totalCreds, and ticket count
+        3. sort the final list and return the top 10 users"""
+def getRaffle(BLOCKCHAIN) -> list:
+    if len(BLOCKCHAIN.chain) == 1: return []
+    
+    unique_ids = []
+    for block in BLOCKCHAIN.chain[1:]:
+        unique_ids.append(block.getUser())
+    unique_ids = list(set(unique_ids))
+    
+    raffle = []
+    for user_id in unique_ids:
+        user_name = findRecentName(user_id, BLOCKCHAIN)
+        user_tickets = totalTickets(user_id, BLOCKCHAIN)
+
+        if user_tickets == 0: continue
+        
+        raffle.append([user_name, user_tickets])   
+    raffle.sort(key = lambda x: x[1], reverse=True)  
+    return raffle

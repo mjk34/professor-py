@@ -3,25 +3,26 @@ import commands.user as user
 import random
 
 from dotenv import load_dotenv
-from commands.helper import today
+from commands.helper import today, getIcon
 
 load_dotenv()
 HUMBLE = int(os.getenv('HUMBLE_ID'))
 
 """Allow humble to generate free uwu once a day"""
-async def humble_powa(ctx, BLOCKCHAIN):
+async def humble_powa(ctx, client, BLOCKCHAIN):
     """1. humble can generate uwuCreds based on wng
        2. Usage is checked to function once per day
        3. Blockchain will be validated, new block will be added to end of Blockchain"""
        
     id, name = ctx.author.id, ctx.author.name
+    humble_icon = await getIcon(HUMBLE, client)
     """Check if humble has already recieved its daily"""
     if user.hasDaily(HUMBLE, BLOCKCHAIN) == False:
         embed = discord.Embed(
             title = f'Daily',
             description = f'My Creator says I\'m fat, I shall fast until tomorrow!',
             color = 6053215    
-        ).set_thumbnail(url=ctx.author.avatar_url)
+        ).set_thumbnail(url=humble_icon)
         embed.set_footer(text='@~ powered by oogway desu')
         embed.set_image(url='https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fi.ytimg.com%2Fvi%2FK6SZyj7A3AU%2Fmaxresdefault.jpg')
         await ctx.send(embed=embed)
@@ -66,7 +67,7 @@ async def humble_powa(ctx, BLOCKCHAIN):
         title = 'Daily',
         description = desc,
         color = 16700447    
-    ).set_thumbnail(url=ctx.author.avatar_url)
+    ).set_thumbnail(url=humble_icon)
     embed.set_footer(text='@~ powered by oogway desu')
     embed.set_image(url='https://i.ytimg.com/vi/m5KFpQYIYmE/maxresdefault.jpg')
 

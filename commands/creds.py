@@ -168,7 +168,7 @@ async def handout(ctx, reciever, amount, client, BLOCKCHAIN):
     """1. User will be checked for Moderator status
        2. Blockchain will be validated, new blocks will be added to the end of Blockchain"""
     
-    if amount > 3000:
+    if amount > 5000:
         text = f'Oi! This is not a charity, did you really try to give {amount} uwuCreds'
         await ctx.send(f'```CSS\n[{text}]\n```')
         return
@@ -222,7 +222,7 @@ async def take(ctx, reciever, amount, client, BLOCKCHAIN):
     """1. User will be checked for Moderator status
        2. Blockchain will be validated, new blocks will be added to the end of Blockchain"""
     
-    if amount > 3000:
+    if amount > 5000:
         text = f'Oi! This is a bit much, did you really try to take {amount} uwuCreds'
         await ctx.send(f'```CSS\n[{text}]\n```')
         return
