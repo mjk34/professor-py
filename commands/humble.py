@@ -1,5 +1,4 @@
 import discord, block, blockchain, os
-from pyrsistent import b
 import commands.user as user
 import random
 

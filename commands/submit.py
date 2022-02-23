@@ -21,17 +21,6 @@ async def buy_ticket(ctx, amount, BLOCKCHAIN):
         await ctx.send(f'```CSS\n[{text}]\n```')
         return
     
-    """Check if User has 10 tickets"""
-    if user_tickets == 10:
-        embed = discord.Embed(
-            title = f'Buy Ticket',
-            description = f'Max tickets obtained, you cannot buy anymore tickets!',
-            color = 6053215    
-        ).set_thumbnail(url='https://media1.tenor.com/images/80662c4e35cf12354f65f1d6f7beada8/tenor.gif')
-        embed.set_footer(text='@~ powered by oogway desu')
-        await ctx.send(embed=embed)
-        return
-    
     total_cost = 0
     for i in range(amount):
         total_cost += 2000 + 400*(user_tickets + i)

@@ -33,7 +33,7 @@ BLOCKCHAIN = blockchain.Blockchain()
 
 """Start up bot status message on boot"""
 @client.event
-async def on_ready(): await client.change_presence(activity=discord.Game('/uwu for fortune!'))
+async def on_ready(): await client.change_presence(activity=discord.Game('Drawing T-t-ttime'))#'/uwu for fortune!'))
 
 """Filter message based on author and occasionally 'uwuify' read message"""
 @client.event
@@ -140,10 +140,6 @@ async def _(ctx:SlashContext, reciever: str):
 @slash.slash(name='claim_bonus', description=CMD_DESC[36], guild_ids=[GUILD_ID])
 async def _(ctx:SlashCommand):
     await claimBonus(ctx, client, BLOCKCHAIN)
-
-# @slash.slash(name='user_stats', description='', guild_ids=[GUILD_ID])
-# async def _(ctx:SlashCommand):
-#     await get_average_uwu(ctx, BLOCKCHAIN)
     
 @slash.slash(name='humble', description='humble daily', guild_ids=[GUILD_ID])
 async def _(ctx:SlashCommand):

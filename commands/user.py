@@ -170,7 +170,10 @@ def getTop(BLOCKCHAIN) -> list:
         
         leaderboard.append([user_name, total])
         
-    leaderboard.sort(key = lambda x: x[1], reverse=True)    
+    leaderboard.sort(key = lambda x: x[1], reverse=True) 
+
+    for i in leaderboard:
+        print(i)   
     return leaderboard[:10]
 
 """Evaluate Blockchain:
