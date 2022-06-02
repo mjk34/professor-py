@@ -32,15 +32,15 @@ async def humble_powa(ctx, client, BLOCKCHAIN):
     print(bonus)
     
     """Generate new Block"""
-    uwu_average, uwu_rng = 420, random.randint(-50, 50)
+    uwu_average, uwu_rng = 520, random.randint(-50, 50)
     total = uwu_average + uwu_rng + bonus*60
     
-    val_average = 300
+    val_average = 400
     for i in range(3):
         val_rng = random.randint(-50, 50)
         total += val_average + val_rng
     
-    total += 100 + bonus*60
+    total += 150 + bonus*50
     
     new_block = block.Block(
         user = HUMBLE,

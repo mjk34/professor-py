@@ -228,7 +228,7 @@ async def rafflelist (ctx, BLOCKCHAIN):
 
     rafflelist = user.getRaffle(BLOCKCHAIN)
     
-    desc = 'Here lists the participating rafflers, the drawing is Tuesday (4/19)!\n\n'
+    desc = 'Here lists the participating rafflers, the next drawing is Tuesday (8/13)!\n\n'
     count = 1
 
     mem_list = ''
