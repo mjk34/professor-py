@@ -137,7 +137,7 @@ async def leaderboard (ctx, BLOCKCHAIN):
     desc = 'Here lists the most active students on UwUversity!\n\n'
     count = 1
     for member in leaderboard:
-        if member[0] == 'humble':
+        if count == 1:
             desc += f'\u3000** #{count} ** \u3000\u3000 **{member[0]}** \u3000~({member[1]})\n'
             count += 1
             continue
@@ -154,7 +154,7 @@ async def leaderboard (ctx, BLOCKCHAIN):
         description = desc,
         color = 6943230    
     ).set_thumbnail(url=ctx.guild.icon_url)
-    embed.set_footer(text='@~ powered by oogway desu')
+    embed.set_footer(text='@~ powered by oxygen tax')
     await ctx.send(embed=embed)
     
 """Allow users to claim an additional reward after daily submits are used!"""
@@ -174,7 +174,7 @@ async def claimBonus (ctx, client, BLOCKCHAIN):
             description = f'You must exhaust your daily submits to claim the *Bonus*!',
             color = 6053215    
         ).set_thumbnail(url='https://media1.tenor.com/images/80662c4e35cf12354f65f1d6f7beada8/tenor.gif')
-        embed.set_footer(text='@~ powered by oogway desu')
+        embed.set_footer(text='@~ powered by oxygen tax')
         await ctx.send(embed=embed)
         return
     
@@ -184,7 +184,7 @@ async def claimBonus (ctx, client, BLOCKCHAIN):
             description = f'You have already claimed your bonus today!',
             color = 6053215    
         ).set_image(url='https://i.pinimg.com/originals/0d/cc/db/0dccdb5a90ed01d7c7c554deba3f66c3.gif')
-        embed.set_footer(text='@~ powered by oogway desu')
+        embed.set_footer(text='@~ powered by oxygen tax')
         await ctx.send(embed=embed)
         return
 
@@ -218,7 +218,7 @@ async def claimBonus (ctx, client, BLOCKCHAIN):
         description = desc,
         color = 16700447    
     ).set_image(url='https://i.pinimg.com/originals/de/6b/5d/de6b5df29abaf7124387b9c86ca46a29.gif')
-    embed.set_footer(text='@~ powered by oogway desu')
+    embed.set_footer(text='@~ powered by oxygen tax')
     await ctx.send(embed=embed)
 
 """Allow users to see the list of raffle participants"""
@@ -247,6 +247,6 @@ async def rafflelist (ctx, BLOCKCHAIN):
         description = desc,
         color = 6943230    
     ).set_thumbnail(url=ctx.guild.icon_url)
-    embed.set_footer(text='@~ powered by oogway desu')
+    embed.set_footer(text='@~ powered by oxygen tax')
     await ctx.send(embed=embed)
 

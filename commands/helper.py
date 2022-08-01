@@ -33,20 +33,20 @@ def today () -> str:
 
 """Randomly generate luck based on values 1-1001"""
 def dailyLuck () -> Iterable[Union[int, str]]:
-    luck = random.randint(1, 1011)
+    luck = random.randint(1, 1006)
     cred_amount, cred_status = 0, ''
 
     if luck <= 550: 
-        cred_amount = random.randint(100, 250)
-        cred_status = '*oof...*'
+        cred_amount = random.randint(100, 200)
+        cred_status = '*Yikers bruv...*'
     if luck > 550 and luck <= 850: 
-        cred_amount = random.randint(300, 500)
-        cred_status = 'Ok, not bad,'
+        cred_amount = random.randint(200, 400)
+        cred_status = '*Another day, another stack of creds*.'
     if luck > 850 and luck <= 950: 
-        cred_amount = random.randint(600, 700)
+        cred_amount = random.randint(400, 500)
         cred_status = '**Super Pog**,'
     if luck > 950 and luck <= 1000:
-        cred_amount = random.randint(800, 900)
+        cred_amount = random.randint(500, 700)
         cred_status = '***Kyaaaaaaa!!***,'
     if luck > 1000:
         cred_amount = 2000
@@ -63,7 +63,7 @@ def dailyFortune () -> str:
 
 """Fetch difference between the average and score"""
 def getWeight(average, score) -> float:
-    return float((average - score) / (average + score))
+    return abs(float((average - score) / (average + score)))
 
 """Fetch discord user's Name by Id"""
 async def getName(id, client) -> str:

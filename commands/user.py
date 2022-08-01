@@ -1,4 +1,6 @@
 import block, blockchain
+import random
+
 from commands.helper import today, getName
 from dateutil import parser
 
@@ -106,28 +108,6 @@ def averageVScore(user_id, BLOCKCHAIN) -> float:
     
     return float(average)
 
-def averageLScore(user_id, BLOCKCHAIN) -> float:
-    if len(BLOCKCHAIN.chain) == 1: return -1
-    
-    desc, average, submissions = 'Submission L', 0, []
-    for block in BLOCKCHAIN.chain[1:]:
-        if block.getUser() == user_id:
-            if block.getDesc() == desc:
-                submissions.append(block.data)
-    
-    if len(submissions) < 3: return -1
-    elif len(submissions) < 10: 
-        for score in submissions:
-            average += score
-        average = average/len(submissions)
-    else:
-        i = len(submissions) - 10
-        for score in submissions[i:]:
-            average += score
-        average = average/10
-    
-    return float(average)
-
 """Evaluate Blockchain:
         1. run through each block belonging to user_id
         2. for each block, update name, return most recent"""
@@ -175,6 +155,35 @@ def getTop(BLOCKCHAIN) -> list:
     for i in leaderboard:
         print(i)   
     return leaderboard[:10]
+
+"""Evaluate Blockchain:
+        1. find a list of all unique user ids
+        2. for each id, get the totalCreds
+        3. sort the final list and return the top 10 users"""
+def getTopIds(creds, HUMBLE, BLOCKCHAIN) -> list:
+    if len(BLOCKCHAIN.chain) == 1: return []
+    
+    unique_ids = []
+    for block in BLOCKCHAIN.chain[1:]:
+        unique_ids.append(block.getUser())
+    unique_ids = list(set(unique_ids))
+    
+    leaderboard = []
+    for user_id in unique_ids:
+        if user_id == HUMBLE: continue
+        user_name = findRecentName(user_id, BLOCKCHAIN)
+        user_creds = totalCreds(user_id, BLOCKCHAIN)
+        if user_creds > creds:
+            leaderboard.append([user_id, user_name])
+    leaderboard.sort(key = lambda x: x[1], reverse=True)
+
+    max = leaderboard[:10]
+    while True:
+        user1 = random.randint(0, len(max)-1)
+        user2 = random.randint(0, len(max)-1)
+
+        if user1 == user2: continue
+        return [max[user1], max[user2]]
 
 """Evaluate Blockchain:
         1. run through each block belonging to user_id

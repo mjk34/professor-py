@@ -3,3 +3,5 @@ requests
 python-dateutil
 python-dotenv
 discord-py-slash-command
+bs4
+pytz

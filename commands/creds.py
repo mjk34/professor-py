@@ -1,5 +1,6 @@
 import discord, block, blockchain, random
 import commands.user as user
+import commands.humble as humble
 
 from discord.utils import get
 from commands.helper import today, dailyLuck, dailyFortune, getName, fetchContentList
@@ -7,7 +8,7 @@ from commands.helper import today, dailyLuck, dailyFortune, getName, fetchConten
 filler = ['<', '>', '!', '@']
 
 """Allow users to randomly generate free uwu once a day"""
-async def daily (ctx, BLOCKCHAIN):
+async def daily (ctx, client, BLOCKCHAIN):
     """1. Users can generate uwuCreds based on rng
        2. Usage is checked to function once per day
        3. Blockchain will be validated, new block will be added to end of Blockchain"""
@@ -24,7 +25,7 @@ async def daily (ctx, BLOCKCHAIN):
         await ctx.send(embed=embed)
         return
     
-    bonus = int(user.getDailyCount(id, BLOCKCHAIN) / 7)
+    bonus = int(user.getDailyCount(id, BLOCKCHAIN) / 8)
     
     """Generate new Block"""
     fortune, status = dailyLuck()
@@ -65,14 +66,16 @@ async def daily (ctx, BLOCKCHAIN):
         description = desc,
         color = 16700447    
     ).set_thumbnail(url=ctx.author.avatar_url)
-    embed.set_footer(text='@~ powered by oogway desu')
+    embed.set_footer(text='@~ powered by oxygen tax')
     embed.add_field(
         name = f'Fortune\u3000\u3000\u3000\u3000\u3000\u3000\u3000\u3000\u3000\u3000\u3000\u3000\u3000\u3000\u3000\u3000\u3000\u3000-',
         value = read
     )
     embed.set_image(url=orb_url)
-
     await ctx.send(embed=embed)
+
+    if fortune >= 400:
+        await humble.chaos(ctx, client, BLOCKCHAIN)
     
 """Allow users to check out much uwuCreds they have accumulated"""
 async def wallet (ctx, BLOCKCHAIN):
@@ -100,7 +103,7 @@ async def wallet (ctx, BLOCKCHAIN):
         description = desc,
         color = 16700447    
     ).set_thumbnail(url=ctx.author.avatar_url)
-    embed.set_footer(text='@~ powered by oogway desu')
+    embed.set_footer(text='@~ powered by oxygen tax')
     await ctx.send(embed=embed)
    
 """Allow users to give their uwuCreds to another user""" 
@@ -121,7 +124,7 @@ async def give (ctx, reciever, amount, client, BLOCKCHAIN):
             description = f'Insufficient funds, you currently have **+{giver_creds}** uwuCreds!',
             color = 6053215    
         ).set_thumbnail(url='https://66.media.tumblr.com/2d52e78a64b9cc97fac0cb00a48fe676/tumblr_inline_pamkf7AfPf1s2a9fg_500.gif')
-        embed.set_footer(text='@~ powered by oogway desu')
+        embed.set_footer(text='@~ powered by oxygen tax')
         await ctx.send(embed=embed)
         return
     
@@ -160,7 +163,7 @@ async def give (ctx, reciever, amount, client, BLOCKCHAIN):
         description = f'**{amount}** uwuCreds was given to <@{reciever_id}>!',
         color = 16700447    
     ).set_image(url='https://2.bp.blogspot.com/-UMkbGppX02A/UwoAVpunIMI/AAAAAAAAGxo/W9a0M4njhOQ/s1600/4363+-+animated_gif+k-on+k-on!+k-on!!+moe+nakano_azusa.gif')
-    embed.set_footer(text='@~ powered by oogway desu')
+    embed.set_footer(text='@~ powered by oxygen tax')
     await ctx.send(embed=embed)
     
 """Allow moderators to generate specified amount of uwuCreds to another user"""
@@ -206,7 +209,7 @@ async def handout(ctx, reciever, amount, client, BLOCKCHAIN):
             description = f'**{amount}** uwuCreds was handout to <@{reciever_id}>!',
             color = 16749300    
         ).set_image(url='https://i.imgur.com/zVdLFbp.gif')
-        embed.set_footer(text='@~ powered by oogway desu')
+        embed.set_footer(text='@~ powered by oxygen tax')
         await ctx.send(embed=embed)
     else: 
         embed = discord.Embed(
@@ -214,7 +217,7 @@ async def handout(ctx, reciever, amount, client, BLOCKCHAIN):
             description = f'Insufficient power, you are not a moderator!',
             color = 6053215    
         ).set_thumbnail(url='https://media1.tenor.com/images/80662c4e35cf12354f65f1d6f7beada8/tenor.gif')
-        embed.set_footer(text='@~ powered by oogway desu')
+        embed.set_footer(text='@~ powered by oxygen tax')
         await ctx.send(embed=embed)
         
 """Allow moderators to reduce a specified amount of uwuCreds from another user"""
@@ -260,7 +263,7 @@ async def take(ctx, reciever, amount, client, BLOCKCHAIN):
             description = f'**{amount}** uwuCreds was taken from <@{reciever_id}>!',
             color = 16749300    
         ).set_image(url='https://i.gifer.com/7Z7b.gif')
-        embed.set_footer(text='@~ powered by oogway desu')
+        embed.set_footer(text='@~ powered by oxygen tax')
         await ctx.send(embed=embed)
     else: 
         embed = discord.Embed(
@@ -268,5 +271,5 @@ async def take(ctx, reciever, amount, client, BLOCKCHAIN):
             description = f'Insufficient power, you are not a moderator!',
             color = 6053215    
         ).set_thumbnail(url='https://media1.tenor.com/images/80662c4e35cf12354f65f1d6f7beada8/tenor.gif')
-        embed.set_footer(text='@~ powered by oogway desu')
+        embed.set_footer(text='@~ powered by oxygen tax')
         await ctx.send(embed=embed)
