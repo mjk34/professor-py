@@ -11,7 +11,7 @@ from commands.creds import daily, wallet, give, handout, take
 from commands.valorant import getValScore
 from commands.submit import buy_ticket, bonusSubmit, leaderboard, claimBonus, rafflelist
 from commands.helper import fetchContentList
-from commands.humble import humble_powa, chaos
+from commands.humble import humble_powa
 
 load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')
@@ -65,7 +65,7 @@ async def _(ctx:SlashContext, amount: int):
     await buy_ticket(ctx, amount, BLOCKCHAIN)
 
 @slash.slash(name='uwu', description=CMD_DESC[14], guild_ids=[GUILD_ID])
-async def _(ctx:SlashContext): await daily (ctx, BLOCKCHAIN)
+async def _(ctx:SlashContext): await daily (ctx, client, BLOCKCHAIN)
 
 @slash.slash(name='wallet', description=CMD_DESC[15], guild_ids=[GUILD_ID])
 async def _(ctx:SlashContext): await wallet(ctx, BLOCKCHAIN)
@@ -114,9 +114,5 @@ async def _(ctx:SlashCommand):
 @slash.slash(name='raffle', description=CMD_DESC[43], guild_ids=[GUILD_ID])
 async def _(ctx:SlashCommand):
     await rafflelist(ctx, BLOCKCHAIN)
-
-@slash.slash(name='chaos', description=CMD_DESC[44], guild_ids=[GUILD_ID])
-async def _(ctx:SlashCommand):
-    await chaos(ctx, client, BLOCKCHAIN)
 
 client.run(TOKEN)

@@ -81,20 +81,7 @@ async def chaos(ctx, client, BLOCKCHAIN):
        4. Blockchain will be validated, new block will be added to end of Blockchain"""
 
     luck = random.random()
-    creds = random.randint(250, 750)
-    humble_icon = await getIcon(HUMBLE, client)
-
-    """Check if humble has already recieved its daily"""
-    if user.hasChaos(HUMBLE, BLOCKCHAIN) == False:
-        embed = discord.Embed(
-            title = f'Chaos',
-            description = f'My Creator says I\'m causing too much trouble, try again later!',
-            color = 6053215    
-        ).set_thumbnail(url=humble_icon)
-        embed.set_footer(text='@~ powered by oxygen tax')
-        embed.set_image(url='https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fi.ytimg.com%2Fvi%2FK6SZyj7A3AU%2Fmaxresdefault.jpg')
-        await ctx.send(embed=embed)
-        return
+    creds = random.randint(200, 550)
 
     candidates = user.getTopIds(creds, HUMBLE, BLOCKCHAIN)
     humble_name = await getName(HUMBLE, client)
@@ -121,13 +108,6 @@ async def chaos(ctx, client, BLOCKCHAIN):
             description = f'Recieved from {humble_name}',
             data = creds
         )
-        new_block3 = block.Block(
-            user = HUMBLE,
-            name = humble_name,
-            timestamp = today(),
-            description = 'Chaos',
-            data = 0
-        )
 
         """Update Blockchain"""
         if BLOCKCHAIN.isChainValid() == False:
@@ -136,7 +116,6 @@ async def chaos(ctx, client, BLOCKCHAIN):
     
         BLOCKCHAIN.addBlock(new_block1)
         BLOCKCHAIN.addBlock(new_block2)
-        BLOCKCHAIN.addBlock(new_block3)
         if BLOCKCHAIN.isChainValid():
             BLOCKCHAIN.storeChain()    
 
@@ -168,13 +147,6 @@ async def chaos(ctx, client, BLOCKCHAIN):
             description = f'Taken from Humble ({userName1})',
             data = -creds
         )
-        new_block3 = block.Block(
-            user = HUMBLE,
-            name = humble_name,
-            timestamp = today(),
-            description = 'Chaos',
-            data = 0
-        )
 
         """Update Blockchain"""
         if BLOCKCHAIN.isChainValid() == False:
@@ -183,7 +155,6 @@ async def chaos(ctx, client, BLOCKCHAIN):
     
         BLOCKCHAIN.addBlock(new_block1)
         BLOCKCHAIN.addBlock(new_block2)
-        BLOCKCHAIN.addBlock(new_block3)
         if BLOCKCHAIN.isChainValid():
             BLOCKCHAIN.storeChain()    
         
@@ -215,13 +186,6 @@ async def chaos(ctx, client, BLOCKCHAIN):
             description = f'Lost to {humble_name}',
             data = -creds
         )
-        new_block3 = block.Block(
-            user = HUMBLE,
-            name = humble_name,
-            timestamp = today(),
-            description = 'Chaos',
-            data = 0
-        )
 
         """Update Blockchain"""
         if BLOCKCHAIN.isChainValid() == False:
@@ -230,7 +194,6 @@ async def chaos(ctx, client, BLOCKCHAIN):
     
         BLOCKCHAIN.addBlock(new_block1)
         BLOCKCHAIN.addBlock(new_block2)
-        BLOCKCHAIN.addBlock(new_block3)
         if BLOCKCHAIN.isChainValid():
             BLOCKCHAIN.storeChain()   
 

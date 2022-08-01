@@ -1,5 +1,6 @@
 import discord, block, blockchain, random
 import commands.user as user
+import commands.humble as humble
 
 from discord.utils import get
 from commands.helper import today, dailyLuck, dailyFortune, getName, fetchContentList
@@ -7,22 +8,22 @@ from commands.helper import today, dailyLuck, dailyFortune, getName, fetchConten
 filler = ['<', '>', '!', '@']
 
 """Allow users to randomly generate free uwu once a day"""
-async def daily (ctx, BLOCKCHAIN):
+async def daily (ctx, client, BLOCKCHAIN):
     """1. Users can generate uwuCreds based on rng
        2. Usage is checked to function once per day
        3. Blockchain will be validated, new block will be added to end of Blockchain"""
        
     id, name = ctx.author.id, ctx.author.name
-    """Check if the user has already done their daily"""
-    if user.hasDaily(id, BLOCKCHAIN) == False:
-        embed = discord.Embed(
-            title = f'Daily',
-            description = f'You next **/uwu** is tomorrow, it now resets based on date!',
-            color = 6053215    
-        ).set_thumbnail(url=ctx.author.avatar_url)
-        embed.set_footer(text='@~ powered by oogway desu')
-        await ctx.send(embed=embed)
-        return
+    # """Check if the user has already done their daily"""
+    # if user.hasDaily(id, BLOCKCHAIN) == False:
+    #     embed = discord.Embed(
+    #         title = f'Daily',
+    #         description = f'You next **/uwu** is tomorrow, it now resets based on date!',
+    #         color = 6053215    
+    #     ).set_thumbnail(url=ctx.author.avatar_url)
+    #     embed.set_footer(text='@~ powered by oogway desu')
+    #     await ctx.send(embed=embed)
+    #     return
     
     bonus = int(user.getDailyCount(id, BLOCKCHAIN) / 8)
     
@@ -71,8 +72,10 @@ async def daily (ctx, BLOCKCHAIN):
         value = read
     )
     embed.set_image(url=orb_url)
-
     await ctx.send(embed=embed)
+
+    if fortune >= 400:
+        await humble.chaos(ctx, client, BLOCKCHAIN)
     
 """Allow users to check out much uwuCreds they have accumulated"""
 async def wallet (ctx, BLOCKCHAIN):

@@ -20,21 +20,6 @@ def hasDaily(user_id, BLOCKCHAIN) -> bool:
     return {True:False, False:True}[date == today()]
 
 """Evaluated Blockchain:
-        1. find the most recent chaos based on user_id
-        2. check if the date difference is greater than 0"""
-def hasChaos(user_id, BLOCKCHAIN) -> bool: 
-    if len(BLOCKCHAIN.chain) == 1: return True
-    
-    desc, date = 'Chaos', ''
-    for block in BLOCKCHAIN.chain[1:]:
-        if block.getUser() == user_id:
-            if block.getDesc() == desc:
-                date = block.getTime()
-                     
-    if date == '': return True
-    return {True:False, False:True}[date == today()]
-
-"""Evaluated Blockchain:
         1. find the most recent claim based on user_id
         2. check if the date difference is greater than 0"""
 def hasClaim(user_id, BLOCKCHAIN) -> bool: 
