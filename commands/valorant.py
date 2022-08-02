@@ -29,9 +29,9 @@ async def getValScore(ctx, acs, submit, BLOCKCHAIN):
         return
     
     """calculate uwuScore, check for divide by zero"""
-    if   acs < 150: score = int(acs*1.25)
-    elif acs < 250: score = int(acs*1.20)
-    else:           score = int(acs*1.15)
+    if   acs < 150: score = int(acs*1.30)
+    elif acs < 250: score = int(acs*1.25)
+    else:           score = int(acs*1.20)
     
     """fetch and calculate user average/score weight"""
     final_score, average = 0, user.averageVScore(id, BLOCKCHAIN)

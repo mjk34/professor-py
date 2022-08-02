@@ -89,7 +89,7 @@ async def _(ctx:SlashContext, victim: str, amount: int):
     await take(ctx, victim, amount, client, BLOCKCHAIN)
 
 @slash.slash(name='valorant', description=CMD_DESC[24], guild_ids=[GUILD_ID],
-    options=[create_option(name='adr', description=CMD_DESC[28], option_type=4, required=True),
+    options=[create_option(name='acs', description=CMD_DESC[28], option_type=4, required=True),
              create_option(name='view', description=CMD_DESC[29], option_type=3, required=True)])
 async def _(ctx:SlashContext, acs: int, view: bool):
     await getValScore(ctx, acs, view, BLOCKCHAIN)
