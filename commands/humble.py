@@ -92,6 +92,7 @@ async def chaos(ctx, client, BLOCKCHAIN):
     if luck > 0 and luck < 0.25:
         """Humble gives his own creds to a random user"""
         print(f"Humble gives {creds} to {userId1}")
+        creds = 0.75*creds
 
         """Generate new Blocks"""
         new_block1 = block.Block(
