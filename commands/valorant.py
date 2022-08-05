@@ -34,7 +34,7 @@ async def getValScore(ctx, acs, submit, BLOCKCHAIN):
     else:           score = int(acs*1.20)
     
     """fetch and calculate user average/score weight"""
-    final_score, average = 0, user.averageVScore(id, BLOCKCHAIN)
+    final_score, average = 0, int(user.averageVScore(id, BLOCKCHAIN))
     if average == -1: final_score = score
     else:
         weight = getWeight(average, score)

@@ -7,7 +7,7 @@ from discord_slash import SlashCommand, SlashContext
 from discord_slash.utils.manage_commands import create_option
 
 from commands.cmd import ping, anime, uwuify
-from commands.creds import daily, wallet, give, handout, take
+from commands.creds import daily, wallet, give, handout, take, snoop
 from commands.valorant import getValScore
 from commands.submit import buy_ticket, bonusSubmit, leaderboard, claimBonus, rafflelist
 from commands.helper import fetchContentList
@@ -114,5 +114,10 @@ async def _(ctx:SlashCommand):
 @slash.slash(name='raffle', description=CMD_DESC[43], guild_ids=[GUILD_ID])
 async def _(ctx:SlashCommand):
     await rafflelist(ctx, BLOCKCHAIN)
+
+@slash.slash(name='snoop', description=CMD_DESC[22], guild_ids=[GUILD_ID],
+    options=[create_option(name='target', description=CMD_DESC[18], option_type=3, required=True)])
+async def _(ctx:SlashCommand, target: str):
+    await snoop(ctx, target, client, BLOCKCHAIN)
 
 client.run(TOKEN)

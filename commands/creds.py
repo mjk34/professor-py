@@ -3,7 +3,7 @@ import commands.user as user
 import commands.humble as humble
 
 from discord.utils import get
-from commands.helper import today, dailyLuck, dailyFortune, getName, fetchContentList
+from commands.helper import today, dailyLuck, dailyFortune, getName, fetchContentList, getIcon
 
 filler = ['<', '>', '!', '@']
 
@@ -273,3 +273,35 @@ async def take(ctx, reciever, amount, client, BLOCKCHAIN):
         ).set_thumbnail(url='https://media1.tenor.com/images/80662c4e35cf12354f65f1d6f7beada8/tenor.gif')
         embed.set_footer(text='@~ powered by oxygen tax')
         await ctx.send(embed=embed)
+
+"Allow users to view vaguely where another user's creds are at"
+async def snoop (ctx, target, client, BLOCKCHAIN):
+
+    """Parses Reciever id from <@id>"""
+    target_id = target
+    for ch in filler: target_id = target_id.replace(ch, '')
+    target_id = int(target_id)
+
+    user_creds = user.totalCreds(target_id, BLOCKCHAIN)
+    randomFT = random.random()
+    luck = 0
+    
+    if randomFT < 0.1: luck = 0.5
+    if randomFT > 0.1 and randomFT < 0.5: luck = 0.15
+    if randomFT > 0.5: luck = 0.20
+
+    upper = (1 + luck)*user_creds
+    lower = (1 - luck)*user_creds
+
+    desc = f'<hmmm, I suspect @{target_id}>-chan is around {lower}-{upper}!'
+    target_icon = getIcon(target_id, client)
+
+    """Return Message"""
+    embed = discord.Embed(
+        title = f'Snoop',
+        description = desc,
+        color = 6943230    
+    ).set_thumbnail(url=target_icon)
+    embed.set_footer(text='@~ powered by oxygen tax')
+    embed.set_image(url='https://c.tenor.com/LBkGAkraDxQAAAAC/vtuber-hololive.gif')
+    await ctx.send(embed=embed)
