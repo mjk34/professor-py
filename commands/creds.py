@@ -294,7 +294,7 @@ async def snoop (ctx, target, client, BLOCKCHAIN):
     lower = (1 - luck)*user_creds
 
     desc = f'<hmmm, I suspect @{target_id}>-chan is around {lower}-{upper}!'
-    target_icon = getIcon(target_id, client)
+    target_icon = await getIcon(target_id, client)
 
     """Return Message"""
     embed = discord.Embed(
