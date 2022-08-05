@@ -293,7 +293,7 @@ async def snoop (ctx, target, client, BLOCKCHAIN):
     upper = (1 + luck)*user_creds
     lower = (1 - luck)*user_creds
 
-    desc = f'<hmmm, I suspect @{target_id}>-chan is around {lower}-{upper}!'
+    desc = f'<hmmm, I suspect <@{target_id}>-chan is around {lower}-{upper}!'
     target_icon = await getIcon(target_id, client)
 
     """Return Message"""
