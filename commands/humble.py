@@ -28,14 +28,14 @@ async def humble_powa(ctx, client, BLOCKCHAIN):
         await ctx.send(embed=embed)
         return
     
-    bonus = int(user.getDailyCount(HUMBLE, BLOCKCHAIN) / 10)
+    bonus = int(user.getDailyCount(HUMBLE, BLOCKCHAIN) / 9)
     print(bonus)
     
     """Generate new Block"""
-    uwu_average, uwu_rng = 440, random.randint(-100, 100)
+    uwu_average, uwu_rng = 550, random.randint(-100, 100)
     total = uwu_average + uwu_rng + bonus*60
     
-    val_average = 305
+    val_average = 355
     for i in range(3):
         val_rng = random.randint(-100, 100)
         total += val_average + val_rng
