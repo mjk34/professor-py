@@ -158,9 +158,9 @@ def getTop(BLOCKCHAIN) -> list:
 
 """Evaluate Blockchain:
         1. find a list of all unique user ids
-        2. for each id, get the totalCreds
+        2. for each id, get the name and average
         3. sort the final list and return the top 10 users"""
-def getTopIds(creds, HUMBLE, BLOCKCHAIN) -> list:
+def getAverage(BLOCKCHAIN) -> list:
     if len(BLOCKCHAIN.chain) == 1: return []
     
     unique_ids = []
@@ -170,14 +170,22 @@ def getTopIds(creds, HUMBLE, BLOCKCHAIN) -> list:
     
     leaderboard = []
     for user_id in unique_ids:
-        if user_id == HUMBLE: continue
         user_name = findRecentName(user_id, BLOCKCHAIN)
-        user_creds = totalCreds(user_id, BLOCKCHAIN)
-        if user_creds > creds:
-            leaderboard.append([user_id, user_name])
-    leaderboard.sort(key = lambda x: x[1], reverse=True)
+        user_avg = int(averageVScore(user_id, BLOCKCHAIN))
+        
+        leaderboard.append([user_name, user_avg])
+        
+    leaderboard.sort(key = lambda x: x[1], reverse=True) 
 
-    max = leaderboard[:10]
+    for i in leaderboard:
+        print(i)   
+    return leaderboard[:10]
+
+"""Evaluate Blockchain:
+        1. get top 10 users from leaderboard
+        2. pick 2 victims from that list"""
+def getTopIds(creds, HUMBLE, BLOCKCHAIN) -> list:
+    max = getTop(BLOCKCHAIN)
     while True:
         user1 = random.randint(0, len(max)-1)
         user2 = random.randint(0, len(max)-1)

@@ -75,7 +75,7 @@ async def daily (ctx, client, BLOCKCHAIN):
     await ctx.send(embed=embed)
 
     if fortune >= 400:
-        await humble.chaos(ctx, client, BLOCKCHAIN)
+        await humble.chaos(ctx, client, bonus, BLOCKCHAIN)
     
 """Allow users to check out much uwuCreds they have accumulated"""
 async def wallet (ctx, BLOCKCHAIN):
@@ -283,15 +283,15 @@ async def snoop (ctx, target, client, BLOCKCHAIN):
     target_id = int(target_id)
 
     user_creds = user.totalCreds(target_id, BLOCKCHAIN)
-    randomFT = random.random()
-    luck = 0
-    
-    if randomFT < 0.1: luck = 0.5
-    if randomFT > 0.1 and randomFT < 0.5: luck = 0.15
-    if randomFT > 0.5: luck = 0.20
+    while True:
+        left = random.random()
+        right = random.random()
+        
+        if left < 0.25 and right < 0.25 and left != right:
+            break
 
-    upper = int((1 + luck)*user_creds)
-    lower = int((1 - luck)*user_creds)
+    upper = int((1 + left)*user_creds)
+    lower = int((1 - right)*user_creds)
 
     desc = f'*hmmm*, I suspect <@{target_id}>-chan is around **{lower}**-**{upper}**!'
     target_icon = await getIcon(target_id, client)

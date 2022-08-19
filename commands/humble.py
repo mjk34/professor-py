@@ -74,14 +74,14 @@ async def humble_powa(ctx, client, BLOCKCHAIN):
     await ctx.send(embed=embed)
 
 """Allow humble to either handout his own creds, or take someone else's creds and give it to someone else"""
-async def chaos(ctx, client, BLOCKCHAIN):
+async def chaos(ctx, client, bonus, BLOCKCHAIN):
     """1. Humble randomly determines a set amount
        2. Humble will select 2 users from a list of top 10 candidates that meet the threshold
        3. Humble will either give, take, or move
        4. Blockchain will be validated, new block will be added to end of Blockchain"""
 
     luck = random.random()
-    creds = random.randint(200, 550)
+    creds = random.randint(200, 550) + 80*bonus
 
     candidates = user.getTopIds(creds, HUMBLE, BLOCKCHAIN)
     humble_name = await getName(HUMBLE, client)
@@ -89,7 +89,7 @@ async def chaos(ctx, client, BLOCKCHAIN):
     userId1, userName1 = candidates[0][0], candidates[0][1]
     userId2, userName2 = candidates[1][0], candidates[1][1]
 
-    if luck > 0 and luck < 0.25:
+    if luck > 0 and luck < 0.20:
         """Humble gives his own creds to a random user"""
         print(f"Humble gives {creds} to {userId1}")
         creds = 0.75*creds
@@ -129,7 +129,7 @@ async def chaos(ctx, client, BLOCKCHAIN):
         embed.set_footer(text='@~ powered by oxygen tax')
         await ctx.send(embed=embed)
 
-    if luck > 0.25 and luck < 0.7:
+    if luck > 0.20 and luck < 0.7:
         """Humble takes one random user's creds and gives it to another random user"""
         print(f"Humble moves {creds} from {userId1} to {userId2}")
 

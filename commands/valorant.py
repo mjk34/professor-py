@@ -69,7 +69,7 @@ async def getValScore(ctx, acs, submit, BLOCKCHAIN):
             
         """Return Message"""
         desc = 'Valorant Game:\u3000\u3000\u3000\u3000\u3000\u3000\u3000\u3000\u3000\u3000\n\n'
-        desc += f'Name: \u3000**{name}**\u3000\u3000Average: \u3000**{average}**\n\n'
+        desc += f'ACS: \u3000**{acs}**\u3000\u3000Average: \u3000**{average}**\n\n'
         desc += f'Calculated Score: \u3000**{final_score}**'
         embed = discord.Embed(
             title = f'Submission',

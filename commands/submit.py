@@ -128,13 +128,13 @@ async def bonusSubmit(ctx, reciever, client, BLOCKCHAIN):
         embed.set_footer(text='@~ powered by oogway desu')
         await ctx.send(embed=embed)
         
-"""Allow users to view a top users, does not display their total uwuCreds"""
+"""Allow users to view 10 top users, does not display their total uwuCreds"""
 async def leaderboard (ctx, BLOCKCHAIN):
     """1. Blockchain will be evaluated, User uwuCreds will be checked
        2. Blockchain will be evaluated, User tickets will be checked"""
 
     leaderboard = user.getTop(BLOCKCHAIN)
-    desc = 'Here lists the most active students on UwUversity!\n\n'
+    desc = 'Here lists the most active students in UwUversity!\n\n'
     count = 1
     for member in leaderboard:
         if count == 1:
@@ -151,6 +151,34 @@ async def leaderboard (ctx, BLOCKCHAIN):
     """Return Message"""
     embed = discord.Embed(
         title = f'Leaderboard',
+        description = desc,
+        color = 6943230    
+    ).set_thumbnail(url=ctx.guild.icon_url)
+    embed.set_footer(text='@~ powered by oxygen tax')
+    await ctx.send(embed=embed)
+    
+"""Allow users to view 10 top users"""
+async def top_average (ctx, BLOCKCHAIN):
+    """1. Blockchain will be evaluated, User averages will be checked"""
+
+    leaderboard = user.getAverage(BLOCKCHAIN)
+    desc = 'Here lists the highest acs average students in UwUversity!\n\n'
+    count = 1
+    for member in leaderboard:
+        if count == 1:
+            desc += f'\u3000** #{count} ** \u3000\u3000 **{member[0]}** \u3000~({member[1]})\n'
+            count += 1
+            continue
+
+        desc += f'\u3000** #{count} ** '
+        if count > 9: desc += '\u3000\u2000'
+        else: desc += '\u3000\u3000'
+        desc += f'*{member[0]}* \u3000~({member[1]})\n'
+        count += 1
+    
+    """Return Message"""
+    embed = discord.Embed(
+        title = f'Top Average',
         description = desc,
         color = 6943230    
     ).set_thumbnail(url=ctx.guild.icon_url)
