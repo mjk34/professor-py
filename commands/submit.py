@@ -162,18 +162,27 @@ async def top_average (ctx, BLOCKCHAIN):
     """1. Blockchain will be evaluated, User averages will be checked"""
 
     leaderboard = user.getAverage(BLOCKCHAIN)
-    desc = 'Here lists the highest acs average students in UwUversity!\n\n'
+    desc = 'Here lists the highest performing students in UwUversity!\n\n'
+    desc += '\u3000\u3000\u3000\u2000ACS \u3000 #Subs \u3000 Name\u3000\n'
     count = 1
     for member in leaderboard:
+        if member[1] == -1: continue
         if count == 1:
-            desc += f'\u3000** #{count} ** \u3000\u3000 **{member[0]}** \u3000~({member[1]})\n'
+            desc += f'\u3000** #{count} ** \u3000   {member[1]} \u3000\u2000 {member[2]} \u3000\u3000\u3000**{member[0]}**\n'
             count += 1
             continue
 
         desc += f'\u3000** #{count} ** '
-        if count > 9: desc += '\u3000\u2000'
+        if count > 9: desc += '\u2000'
+        else: desc += '\u3000'
+        desc += f'{member[1]} \u3000\u2000 {member[2]} '
+
+        if member[2] < 10: desc += '\u3000\u3000\u3000'
+        elif member[2] < 100: desc += '\u3000\u3000\u2000'
         else: desc += '\u3000\u3000'
-        desc += f'*{member[0]}* \u3000~({member[1]})\n'
+
+        desc += f'{member[0]}\n'
+
         count += 1
     
     """Return Message"""
@@ -198,7 +207,7 @@ async def claimBonus (ctx, client, BLOCKCHAIN):
     """Check if User has used daily submits before claim"""
     if user_submits < 3:
         embed = discord.Embed(
-            title = f'Claim Bonus',
+            title = f'Bonus',
             description = f'You must exhaust your daily submits to claim the *Bonus*!',
             color = 6053215    
         ).set_thumbnail(url='https://media1.tenor.com/images/80662c4e35cf12354f65f1d6f7beada8/tenor.gif')
@@ -208,7 +217,7 @@ async def claimBonus (ctx, client, BLOCKCHAIN):
     
     if user.hasClaim(id, BLOCKCHAIN) == False:
         embed = discord.Embed(
-            title = f'Claim Bonus',
+            title = f'Bonus',
             description = f'You have already claimed your bonus today!',
             color = 6053215    
         ).set_image(url='https://i.pinimg.com/originals/0d/cc/db/0dccdb5a90ed01d7c7c554deba3f66c3.gif')
@@ -217,7 +226,7 @@ async def claimBonus (ctx, client, BLOCKCHAIN):
         return
 
     bonus = int(user_daily / 7)
-    bonus_creds = 100 + bonus*80
+    bonus_creds = 145 + bonus*135
     
     """Generate new Block"""
     new_block = block.Block(
@@ -242,7 +251,7 @@ async def claimBonus (ctx, client, BLOCKCHAIN):
         
     """Return Message"""
     embed = discord.Embed(
-        title = f'Claim Bonus',
+        title = f'Bonus',
         description = desc,
         color = 16700447    
     ).set_image(url='https://i.pinimg.com/originals/de/6b/5d/de6b5df29abaf7124387b9c86ca46a29.gif')
@@ -254,7 +263,20 @@ async def rafflelist (ctx, BLOCKCHAIN):
     """1. Blockchain will be evaluated, User uwuCreds will be checked
        2. Blockchain will be evaluated, User tickets will be checked"""
 
+    id, name = ctx.author.id, ctx.author.name
+
     rafflelist = user.getRaffle(BLOCKCHAIN)
+    user_creds = user.totalCreds(id, BLOCKCHAIN)
+    user_tickets = user.totalTickets(id, BLOCKCHAIN)
+
+    count_tickets = 0 
+    total_cost = 0
+    while True:
+        cost = 2000 + 400*(user_tickets + count_tickets)
+        if cost + total_cost < user_creds:
+            total_cost += cost
+            count_tickets += 1
+        else: break
     
     desc = 'Here lists the participating rafflers, the next drawing is (9/2)!\n\n'
     count = 1
@@ -266,9 +288,12 @@ async def rafflelist (ctx, BLOCKCHAIN):
         else: mem_list += '\u3000\u3000'
         mem_list += f'*{member[0]}*\n'
 
-    if mem_list == '': mem_list += 'Currently there are no participants...'
-    else: desc += mem_list
-    
+    if mem_list == '': 
+        mem_list += 'Currently there are no participants...'
+
+    desc += mem_list
+    desc += f'\n\nYou can currently buy {count_tickets} tickets with {user_creds} uwuCreds!'
+
     """Return Message"""
     embed = discord.Embed(
         title = f'Current Raffle',

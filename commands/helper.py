@@ -1,4 +1,6 @@
+from ast import parse
 import random, requests, json
+from time import strftime
 from bs4 import BeautifulSoup
 from datetime import timedelta, datetime
 from typing import Iterable, Union
@@ -30,6 +32,32 @@ def fetchContent (filename) -> str:
 def today () -> str:
     time = datetime.now(est)
     return str(time.strftime('%m-%d-%y'))
+
+"""Fetches the current monday"""
+def thisMonday () -> str:
+    today = datetime.now(est)
+    weekday =  datetime.weekday(today)
+
+    if weekday == 0: return today()
+    else: 
+        monday = today + timedelta(days=-weekday)
+        return str(monday.strftime('%m-%d-%y'))
+
+"""Checks if the designated monday is the current monday"""
+def checkMonday (block_date) -> bool:
+    block_datetime = parser.parse(block_date)
+    block_week = datetime.weekday(block_datetime)
+    block_monday = ''
+
+    if block_week == 0: 
+        block_week = str(block_datetime.strftime('%m-%d-y'))
+    else:
+        temp_monday = block_datetime + timedelta(days=-block_week)
+        block_monday = str(temp_monday.strftime('%m-%d-%y'))
+
+    if block_monday == thisMonday(): return True
+    return False
+
 
 """Randomly generate luck based on values 1-1001"""
 def dailyLuck () -> Iterable[Union[int, str]]:
@@ -74,3 +102,7 @@ async def getName(id, client) -> str:
 async def getIcon(id, client) -> str:
     user_object = await client.fetch_user(id)
     return str(user_object.avatar_url)
+
+if __name__ == '__main__':
+    print(thisMonday())
+    print(checkMonday('9-7-2022'))

@@ -1,5 +1,4 @@
 import os, random, discord
-from pandas import describe_option
 import blockchain
 
 from dotenv import load_dotenv
@@ -34,7 +33,7 @@ BLOCKCHAIN = blockchain.Blockchain()
 
 """Start up bot status message on boot"""
 @client.event
-async def on_ready(): await client.change_presence(activity=discord.Game('TEST BETA'))#'/uwu for fortune!'))
+async def on_ready(): await client.change_presence(activity=discord.Game('UwU Mommy Makima'))#'/uwu for fortune!'))
 
 """Filter message based on author and occasionally 'uwuify' read message"""
 @client.event
@@ -43,7 +42,7 @@ async def on_message(message):
     if message.author == client.user: return                # checks if professor
     if message.channel.id != CHANNEL: return                # checks if from bot channel
     if message.content.split(' ')[0] in keywords: return    # checks for keywords (commands)
-    if random.random() < 0.12:                              # 15% chance to get uwufied
+    if random.random() < 0.12:                              # 12% chance to get uwufied
         replace_message = uwuify(message.content)
         resend_message = f'{message.author.name}: ' + replace_message
         
@@ -90,10 +89,9 @@ async def _(ctx:SlashContext, victim: str, amount: int):
     await take(ctx, victim, amount, client, BLOCKCHAIN)
 
 @slash.slash(name='valorant', description=CMD_DESC[24], guild_ids=[GUILD_ID],
-    options=[create_option(name='acs', description=CMD_DESC[28], option_type=4, required=True),
-             create_option(name='view', description=CMD_DESC[29], option_type=3, required=True)])
-async def _(ctx:SlashContext, acs: int, view: bool):
-    await getValScore(ctx, acs, view, BLOCKCHAIN)
+    options=[create_option(name='acs', description=CMD_DESC[28], option_type=4, required=True)])
+async def _(ctx:SlashContext, acs: int):
+    await getValScore(ctx, acs, BLOCKCHAIN)
     
 @slash.slash(name='leaderboard', description=CMD_DESC[34], guild_ids=[GUILD_ID])
 async def _(ctx:SlashContext):

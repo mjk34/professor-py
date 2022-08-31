@@ -1,7 +1,7 @@
 import block, blockchain
 import random
 
-from commands.helper import today, getName
+from commands.helper import today, getName, checkMonday
 from dateutil import parser
 
 """Evaluated Blockchain:
@@ -25,14 +25,15 @@ def hasDaily(user_id, BLOCKCHAIN) -> bool:
 def hasClaim(user_id, BLOCKCHAIN) -> bool: 
     if len(BLOCKCHAIN.chain) == 1: return True
     
-    desc, date = 'Claim Bonus', ''
+    desc, count = 'Claim Bonus', 0
     for block in BLOCKCHAIN.chain[1:]:
+        if checkMonday(block.getTime()) == False: continue
         if block.getUser() == user_id:
             if block.getDesc() == desc:
-                date = block.getTime()
+                count += 1
                      
-    if date == '': return True
-    return {True:False, False:True}[date == today()]
+    if count == 0: return True
+    return False
 
 """Evaluate Blockchain:
         1. run through each block belonging to user_id
@@ -67,18 +68,31 @@ def totalTickets(user_id, BLOCKCHAIN) -> int:
 """Evaluate Blockchain:
         1. run through each block belonging to user_id
         2. for each block, add up all submissions dated today"""
-def totalSubsToday(user_id, BLOCKCHAIN) -> int:
+def totalSubsWeek(user_id, BLOCKCHAIN) -> int:
     if len(BLOCKCHAIN.chain) == 1: return 0
     
-    desc, desc2, desc3, total = 'Submission V', 'Submission L', 'Bonus Submit', 0
+    desc, desc3, total = 'Submission V', 'Bonus Submit', 0
+    for block in BLOCKCHAIN.chain[1:]:
+        if checkMonday(block.getTime()) == False: continue
+        if block.getUser() == user_id:
+            if block.getDesc() == desc:
+                total += 1
+            if block.getDesc() == desc3:
+                total -= 1
+    
+    return int(total)
+
+"""Evaluate Blockchain:
+        1. run through each block belonging to user_id
+        2. for each block, add up all submissions"""
+def totalSubs(user_id, BLOCKCHAIN) -> int:
+    if len(BLOCKCHAIN.chain) == 1: return 0
+    
+    desc, total = 'Submission V', 0
     for block in BLOCKCHAIN.chain[1:]:
         if block.getUser() == user_id:
             if block.getDesc() == desc and block.getTime() == today():
                 total += 1
-            if block.getDesc() == desc2 and block.getTime() == today():
-                total += 1
-            if block.getDesc() == desc3 and block.getTime() == today():
-                total -= 1
     
     return int(total)
 
@@ -172,8 +186,9 @@ def getAverage(BLOCKCHAIN) -> list:
     for user_id in unique_ids:
         user_name = findRecentName(user_id, BLOCKCHAIN)
         user_avg = int(averageVScore(user_id, BLOCKCHAIN))
+        user_subs = int(totalSubs(user_id, BLOCKCHAIN))
         
-        leaderboard.append([user_name, user_avg])
+        leaderboard.append([user_name, user_avg, user_subs])
         
     leaderboard.sort(key = lambda x: x[1], reverse=True) 
 

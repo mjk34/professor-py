@@ -87,12 +87,12 @@ async def wallet (ctx, BLOCKCHAIN):
     id = ctx.author.id
     user_creds = user.totalCreds(id, BLOCKCHAIN)
     user_tickets = user.totalTickets(id, BLOCKCHAIN)
-    user_subs = user.totalSubsToday(id, BLOCKCHAIN)
+    user_subs = user.totalSubsWeek(id, BLOCKCHAIN)
 
     claim = {True:'Available', False:'Not Available'}[user.hasClaim(id, BLOCKCHAIN) == True]
     
     daily = {True:'Available', False:'Not Available'}[user.hasDaily(id, BLOCKCHAIN)]
-    desc = f'Daily UwU:\u3000\u3000**{daily}**\nClaim Bonus: \u3000**{claim}**\nSubmissions: \u3000**{3 - user_subs}/3** \u3000Left\n\n'
+    desc = f'Daily UwU:\u3000\u3000**{daily}**\nClaim Bonus: \u3000**{claim}**\nSubmissions: \u3000**{5 - user_subs}/3** \u3000Left\n\n'
     desc += f'Total Creds:\u3000**{user_creds}**\u3000 Total Tickets: \u3000**{user_tickets}**'
 
     BLOCKCHAIN.printChain()
