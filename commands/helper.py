@@ -1,6 +1,4 @@
-from ast import parse
-import random, requests, json
-from time import strftime
+import random, requests
 from bs4 import BeautifulSoup
 from datetime import timedelta, datetime
 from typing import Iterable, Union

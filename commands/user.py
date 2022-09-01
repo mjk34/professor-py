@@ -1,8 +1,6 @@
-import block, blockchain
 import random
 
-from commands.helper import today, getName, checkMonday
-from dateutil import parser
+from commands.helper import today, checkMonday
 
 """Evaluated Blockchain:
         1. find the most recent daily based on user_id

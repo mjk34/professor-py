@@ -1,5 +1,5 @@
 import random, discord
-from commands.helper import fetchContentList, fetchContent, dailyFortune
+from commands.helper import fetchContentList, fetchContent
 
 """Checks uwuBot's response to see if it is available"""
 async def ping(ctx):
