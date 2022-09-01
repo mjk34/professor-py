@@ -200,7 +200,28 @@ def getAverage(BLOCKCHAIN) -> list:
         1. get top 10 users from leaderboard
         2. pick 2 victims from that list"""
 def getTopIds(creds, HUMBLE, BLOCKCHAIN) -> list:
-    max = getTop(BLOCKCHAIN)
+    if len(BLOCKCHAIN.chain) == 1: return []
+    
+    unique_ids = []
+    for block in BLOCKCHAIN.chain[1:]:
+        unique_ids.append(block.getUser())
+    unique_ids = list(set(unique_ids))
+    
+    leaderboard = []
+    for user_id in unique_ids:
+        user_name = findRecentName(user_id, BLOCKCHAIN)
+        user_creds = totalCreds(user_id, BLOCKCHAIN)
+        user_tickets = totalTickets(user_id, BLOCKCHAIN)
+        total = totalValue(user_creds, user_tickets)
+
+        print(f'{user_name} {user_creds} {user_tickets} {total}')
+        
+        leaderboard.append([user_id, user_name])
+        
+    leaderboard.sort(key = lambda x: x[1], reverse=True) 
+
+    max = leaderboard[:10]
+
     while True:
         user1 = random.randint(0, len(max)-1)
         user2 = random.randint(0, len(max)-1)
