@@ -62,16 +62,16 @@ async def getValScore(ctx, acs, BLOCKCHAIN):
         if BLOCKCHAIN.isChainValid():
             BLOCKCHAIN.storeChain()           
             
-    """Return Message"""
-    desc = 'Valorant Game:\u3000\u3000\u3000\u3000\u3000\u3000\u3000\u3000\u3000\u3000\n\n'
-    desc += f'ACS: \u3000**{acs}**\u3000\u3000Average: \u3000**{average}**\n\n'
-    desc += f'Calculated Score: \u3000**{final_score}**'
-    embed = discord.Embed(
-        title = f'Submission',
-        description = desc,
-        color = color    
-    ).set_thumbnail(url=ctx.author.avatar_url)
-    embed.set_footer(text='@~ powered by oxygen tax')
-    message_to_pin = await ctx.send(embed=embed)   
- 
-    await message_to_pin.pin()
+        """Return Message"""
+        desc = 'Valorant Game:\u3000\u3000\u3000\u3000\u3000\u3000\u3000\u3000\u3000\u3000\n\n'
+        desc += f'ACS: \u3000**{acs}**\u3000\u3000Average: \u3000**{average}**\n\n'
+        desc += f'Calculated Score: \u3000**{final_score}**'
+        embed = discord.Embed(
+            title = f'Submission',
+            description = desc,
+            color = color    
+        ).set_thumbnail(url=ctx.author.avatar_url)
+        embed.set_footer(text='@~ powered by oxygen tax')
+        message_to_pin = await ctx.send(embed=embed)   
+    
+        await message_to_pin.pin()

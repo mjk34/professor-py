@@ -7,7 +7,7 @@ from discord_slash import SlashCommand, SlashContext
 from discord_slash.utils.manage_commands import create_option
 
 from commands.cmd import ping, anime, uwuify
-from commands.creds import daily, wallet, give, handout, take, snoop
+from commands.creds import daily, wallet, give, handout, take, snoop, view_score
 from commands.valorant import getValScore
 from commands.submit import buy_ticket, bonusSubmit, leaderboard, claimBonus, rafflelist, top_average
 from commands.helper import fetchContentList
@@ -119,8 +119,12 @@ async def _(ctx:SlashCommand):
 async def _(ctx:SlashCommand, target: str):
     await snoop(ctx, target, client, BLOCKCHAIN)
 
-@slash.slash(name='top_average', description=CMD_DESC[45], guild_ids=[GUILD_ID])
+@slash.slash(name='average', description=CMD_DESC[45], guild_ids=[GUILD_ID])
 async def _(ctx:SlashCommand):
     await top_average(ctx, BLOCKCHAIN)
+
+@slash.slash(name='score', description=CMD_DESC[46], guild_ids=[GUILD_ID])
+async def _(ctx:SlashCommand):
+    await view_score(ctx, BLOCKCHAIN)
 
 client.run(TOKEN)

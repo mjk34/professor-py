@@ -305,3 +305,22 @@ async def snoop (ctx, target, client, BLOCKCHAIN):
     embed.set_footer(text='@~ powered by oxygen tax')
     embed.set_image(url='https://c.tenor.com/LBkGAkraDxQAAAAC/vtuber-hololive.gif')
     await ctx.send(embed=embed)
+
+async def view_score(ctx, BLOCKCHAIN):
+    id, name = ctx.author.id, ctx.author.name
+
+    user_creds = user.totalCreds(id, BLOCKCHAIN)
+    user_tickets = user.totalTickets(id, BLOCKCHAIN)
+    total = user.totalValue(user_creds, user_tickets)
+
+    desc = f'Your UwUversity Score is {total}!'
+
+    """Return Message"""
+    embed = discord.Embed(
+        title = f'UwUversity Score',
+        description = desc,
+        color = 6943230    
+    ).set_thumbnail(url=ctx.author.avatar_url)
+    embed.set_footer(text='@~ powered by oxygen tax')
+    embed.set_image(url='https://vignette.wikia.nocookie.net/powerlisting/images/d/d7/Giorno_Giovanna_(JoJo)_Gold_Experience.gif')
+    await ctx.send(embed=embed)
