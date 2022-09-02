@@ -32,7 +32,7 @@ async def humble_powa(ctx, client, BLOCKCHAIN):
     print(bonus)
     
     """Generate new Block"""
-    uwu_average, uwu_rng = 550, random.randint(-100, 100)
+    uwu_average, uwu_rng = 350, random.randint(-100, 100)
     total = uwu_average + uwu_rng + bonus*60
     
     val_average = 355
@@ -40,7 +40,7 @@ async def humble_powa(ctx, client, BLOCKCHAIN):
         val_rng = random.randint(-100, 100)
         total += val_average + val_rng
     
-    total += 200 + bonus*55
+    total += 100 + bonus*85
     
     new_block = block.Block(
         user = HUMBLE,
@@ -80,8 +80,9 @@ async def chaos(ctx, client, bonus, BLOCKCHAIN):
        3. Humble will either give, take, or move
        4. Blockchain will be validated, new block will be added to end of Blockchain"""
 
+    id, name = ctx.author.id, ctx.author.name
     luck = random.random()
-    creds = random.randint(200, 550) + 80*bonus
+    creds = random.randint(200, 450) + 80*bonus
 
     candidates = user.getTopIds(creds, HUMBLE, BLOCKCHAIN)
     humble_name = await getName(HUMBLE, client)
@@ -89,8 +90,8 @@ async def chaos(ctx, client, bonus, BLOCKCHAIN):
     userId1, userName1 = candidates[0][0], candidates[0][1]
     userId2, userName2 = candidates[1][0], candidates[1][1]
 
-    if luck > 0 and luck < 0.20:
-        """Humble gives his own creds to a random user"""
+    if luck > 0 and luck < 0.15:
+        """Humble gives his own creds to the user"""
         print(f"Humble gives {creds} to {userId1}")
         creds = 0.75*creds
 
@@ -99,12 +100,12 @@ async def chaos(ctx, client, bonus, BLOCKCHAIN):
             user = HUMBLE,
             name = humble_name,
             timestamp = today(),
-            description = f'Given to {userName1}',
+            description = f'Given to {name}',
             data = -creds
         )
         new_block2 = block.Block(
-            user = userId1,
-            name = userName1,
+            user = id,
+            name = name,
             timestamp = today(),
             description = f'Recieved from {humble_name}',
             data = creds
@@ -129,7 +130,7 @@ async def chaos(ctx, client, bonus, BLOCKCHAIN):
         embed.set_footer(text='@~ powered by oxygen tax')
         await ctx.send(embed=embed)
 
-    if luck > 0.20 and luck < 0.7:
+    if luck >= 0.15 and luck < 0.85:
         """Humble takes one random user's creds and gives it to another random user"""
         print(f"Humble moves {creds} from {userId1} to {userId2}")
 
@@ -168,7 +169,7 @@ async def chaos(ctx, client, bonus, BLOCKCHAIN):
         embed.set_footer(text='@~ powered by oxygen tax')
         await ctx.send(embed=embed)
 
-    if luck > 0.7 and luck < 1: 
+    if luck >= 0.85 and luck < 1: 
         """Humble takes a random user's creds"""
         print(f"Humble takes {creds} from {userId1}")
 

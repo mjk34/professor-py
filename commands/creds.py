@@ -87,12 +87,12 @@ async def wallet (ctx, BLOCKCHAIN):
     id = ctx.author.id
     user_creds = user.totalCreds(id, BLOCKCHAIN)
     user_tickets = user.totalTickets(id, BLOCKCHAIN)
-    user_subs = user.totalSubsToday(id, BLOCKCHAIN)
+    user_subs = user.totalSubsWeek(id, BLOCKCHAIN)
 
     claim = {True:'Available', False:'Not Available'}[user.hasClaim(id, BLOCKCHAIN) == True]
     
     daily = {True:'Available', False:'Not Available'}[user.hasDaily(id, BLOCKCHAIN)]
-    desc = f'Daily UwU:\u3000\u3000**{daily}**\nClaim Bonus: \u3000**{claim}**\nSubmissions: \u3000**{3 - user_subs}/3** \u3000Left\n\n'
+    desc = f'Daily UwU:\u3000\u3000**{daily}**\nClaim Bonus: \u3000**{claim}**\nSubmissions: \u3000**{5 - user_subs}/3** \u3000Left\n\n'
     desc += f'Total Creds:\u3000**{user_creds}**\u3000 Total Tickets: \u3000**{user_tickets}**'
 
     BLOCKCHAIN.printChain()
@@ -304,4 +304,23 @@ async def snoop (ctx, target, client, BLOCKCHAIN):
     ).set_thumbnail(url=target_icon)
     embed.set_footer(text='@~ powered by oxygen tax')
     embed.set_image(url='https://c.tenor.com/LBkGAkraDxQAAAAC/vtuber-hololive.gif')
+    await ctx.send(embed=embed)
+
+async def view_score(ctx, BLOCKCHAIN):
+    id, name = ctx.author.id, ctx.author.name
+
+    user_creds = user.totalCreds(id, BLOCKCHAIN)
+    user_tickets = user.totalTickets(id, BLOCKCHAIN)
+    total = user.totalValue(user_creds, user_tickets)
+
+    desc = f'Your UwUversity Score is **{total}**!'
+
+    """Return Message"""
+    embed = discord.Embed(
+        title = f'UwUversity Score',
+        description = desc,
+        color = 6943230    
+    ).set_thumbnail(url=ctx.author.avatar_url)
+    embed.set_footer(text='@~ powered by oxygen tax')
+    embed.set_image(url='https://vignette.wikia.nocookie.net/powerlisting/images/d/d7/Giorno_Giovanna_(JoJo)_Gold_Experience.gif')
     await ctx.send(embed=embed)
