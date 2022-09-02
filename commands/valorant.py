@@ -12,17 +12,17 @@ async def getValScore(ctx, acs, BLOCKCHAIN):
     id, name = ctx.author.id, ctx.author.name
     color = 6053215
 
-    """check if the user has submissions left"""
-    user_subs = user.totalSubsWeek(id, BLOCKCHAIN)
-    if user_subs >= 5:
-        embed = discord.Embed(
-            title = f'Submission',
-            description = f'Out of Submissions, it now resets every Monday!',
-            color = 6053215    
-        ).set_thumbnail(url='https://66.media.tumblr.com/2d52e78a64b9cc97fac0cb00a48fe676/tumblr_inline_pamkf7AfPf1s2a9fg_500.gif')
-        embed.set_footer(text='@~ powered by oxygen tax')
-        await ctx.send(embed=embed)
-        return
+    # """check if the user has submissions left"""
+    # user_subs = user.totalSubsWeek(id, BLOCKCHAIN)
+    # if user_subs >= 5:
+    #     embed = discord.Embed(
+    #         title = f'Submission',
+    #         description = f'Out of Submissions, it now resets every Monday!',
+    #         color = 6053215    
+    #     ).set_thumbnail(url='https://66.media.tumblr.com/2d52e78a64b9cc97fac0cb00a48fe676/tumblr_inline_pamkf7AfPf1s2a9fg_500.gif')
+    #     embed.set_footer(text='@~ powered by oxygen tax')
+    #     await ctx.send(embed=embed)
+    #     return
     
     """calculate uwuScore, check for divide by zero"""
     if   acs < 150: score = int(acs*1.30)

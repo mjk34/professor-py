@@ -89,7 +89,7 @@ def totalSubs(user_id, BLOCKCHAIN) -> int:
     desc, total = 'Submission V', 0
     for block in BLOCKCHAIN.chain[1:]:
         if block.getUser() == user_id:
-            if block.getDesc() == desc and block.getTime() == today():
+            if block.getDesc() == desc:
                 total += 1
     
     return int(total)

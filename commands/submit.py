@@ -202,7 +202,7 @@ async def claimBonus (ctx, client, BLOCKCHAIN):
        
     id, name = ctx.author.id, ctx.author.name
     user_daily = user.getDailyCount(id, BLOCKCHAIN)
-    user_submits = user.totalSubsToday(id, BLOCKCHAIN)
+    user_submits = user.totalSubsWeek(id, BLOCKCHAIN)
     
     """Check if User has used daily submits before claim"""
     if user_submits < 3:
@@ -292,7 +292,8 @@ async def rafflelist (ctx, BLOCKCHAIN):
         mem_list += 'Currently there are no participants...'
 
     desc += mem_list
-    desc += f'\n\nYou can currently buy {count_tickets} tickets with {user_creds} uwuCreds!'
+    desc += f'\n\nYou can currently buy **{count_tickets}** tickets with **{user_creds}** uwuCreds! '
+    desc += f'Your next ticket costs **{2000 + 400*user_tickets}**, Ganbatte!'
 
     """Return Message"""
     embed = discord.Embed(

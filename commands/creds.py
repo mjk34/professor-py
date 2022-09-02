@@ -313,7 +313,7 @@ async def view_score(ctx, BLOCKCHAIN):
     user_tickets = user.totalTickets(id, BLOCKCHAIN)
     total = user.totalValue(user_creds, user_tickets)
 
-    desc = f'Your UwUversity Score is {total}!'
+    desc = f'Your UwUversity Score is **{total}**!'
 
     """Return Message"""
     embed = discord.Embed(
