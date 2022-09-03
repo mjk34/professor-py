@@ -278,7 +278,7 @@ async def rafflelist (ctx, BLOCKCHAIN):
             count_tickets += 1
         else: break
     
-    desc = 'Here lists the participating rafflers, the next drawing is (9/2)!\n\n'
+    desc = 'Here lists the participating rafflers, the next drawing is (10/7)!\n\n'
     count = 1
 
     mem_list = ''
@@ -293,7 +293,7 @@ async def rafflelist (ctx, BLOCKCHAIN):
 
     desc += mem_list
     desc += f'\n\nYou can currently buy **{count_tickets}** tickets with **{user_creds}** uwuCreds! '
-    desc += f'Your next ticket costs **{2000 + 400*user_tickets}**, Ganbatte!'
+    desc += f'Your next ticket costs **{1500 + 300*user_tickets}**, Ganbatte!'
 
     """Return Message"""
     embed = discord.Embed(

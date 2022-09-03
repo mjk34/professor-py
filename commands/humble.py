@@ -158,12 +158,17 @@ async def chaos(ctx, client, bonus, BLOCKCHAIN):
         BLOCKCHAIN.addBlock(new_block1)
         BLOCKCHAIN.addBlock(new_block2)
         if BLOCKCHAIN.isChainValid():
-            BLOCKCHAIN.storeChain()    
+            BLOCKCHAIN.storeChain()
+
+        desc = ''
+        if userId1 == HUMBLE: desc = f'Humble moved **{creds}** uwuCreds from <@{userId2}> to Humble!'
+        elif userId2 == HUMBLE: desc = f'Humble moved **{creds}** uwuCreds from Humble to <@{userId1}>!'
+        else: desc = f'Humble moved **{creds}** uwuCreds from <@{userId2}> to <@{userId1}>!'
         
         """Return Message"""
         embed = discord.Embed(
             title = f'Chaos',
-            description = f'Humble moved **{creds}** uwuCreds from <@{userId2}> to <@{userId1}>!',
+            description = desc,
             color = 16700447    
         ).set_image(url='https://c.tenor.com/JHsVtTnvQ48AAAAC/tenor.gif')
         embed.set_footer(text='@~ powered by oxygen tax')
