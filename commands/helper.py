@@ -36,7 +36,7 @@ def thisMonday () -> str:
     today = datetime.now(est)
     weekday =  datetime.weekday(today)
 
-    if weekday == 0: return today()
+    if weekday == 0: return str(today.strftime('%m-%d-%y'))
     else: 
         monday = today + timedelta(days=-weekday)
         return str(monday.strftime('%m-%d-%y'))
@@ -48,7 +48,7 @@ def checkMonday (block_date) -> bool:
     block_monday = ''
 
     if block_week == 0: 
-        block_week = str(block_datetime.strftime('%m-%d-y'))
+        block_monday = str(block_datetime.strftime('%m-%d-%y'))
     else:
         temp_monday = block_datetime + timedelta(days=-block_week)
         block_monday = str(temp_monday.strftime('%m-%d-%y'))
@@ -64,16 +64,16 @@ def dailyLuck () -> Iterable[Union[int, str]]:
 
     if luck <= 450: 
         cred_amount = random.randint(100, 200)
-        cred_status = '*Yikers bruv, this aint it.*'
+        cred_status = '*Not so jolly...*'
     if luck > 450 and luck <= 750: 
         cred_amount = random.randint(200, 400)
-        cred_status = '*Another day, another stack of creds*.'
+        cred_status = '*A thrill of hope!*.'
     if luck > 750 and luck <= 950: 
         cred_amount = random.randint(400, 500)
-        cred_status = '**Ara Ara! Super Pog**,'
+        cred_status = '**Jolly Indeed!**,'
     if luck > 950 and luck <= 1000:
         cred_amount = random.randint(500, 700)
-        cred_status = '***Kyaaaaaaa!!***,'
+        cred_status = '***Ho Ho Ho!!***,'
     if luck > 1000:
         cred_amount = 2000
         cred_status = 'RNJesus has blessed you, '
@@ -102,5 +102,5 @@ async def getIcon(id, client) -> str:
     return str(user_object.avatar_url)
 
 if __name__ == '__main__':
-    print(thisMonday())
-    print(checkMonday('9-7-2022'))
+    print(checkMonday('9-13-2022'))
+    print(checkMonday('9-12-2022'))

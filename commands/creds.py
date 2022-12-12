@@ -1,11 +1,16 @@
-import discord, block, blockchain, random
+import discord, block, blockchain, random, os
 import commands.user as user
 import commands.humble as humble
 
 from discord.utils import get
+from dotenv import load_dotenv
 from commands.helper import today, dailyLuck, dailyFortune, getName, fetchContentList, getIcon
 
-filler = ['<', '>', '!', '@']
+filler = ['<', '>', '!', '@', '&']
+
+load_dotenv()
+HUMBLE = int(os.getenv('HUMBLE_ID'))
+HBOT = 904417820899700756
 
 """Allow users to randomly generate free uwu once a day"""
 async def daily (ctx, client, BLOCKCHAIN):
@@ -87,12 +92,14 @@ async def wallet (ctx, BLOCKCHAIN):
     id = ctx.author.id
     user_creds = user.totalCreds(id, BLOCKCHAIN)
     user_tickets = user.totalTickets(id, BLOCKCHAIN)
-    user_subs = user.totalSubsWeek(id, BLOCKCHAIN)
+
+    user_subs_val = user.totalSubsWeek(id, 'V', BLOCKCHAIN)
+    user_subs_ow = user.totalSubsWeek(id, 'O', BLOCKCHAIN)
 
     claim = {True:'Available', False:'Not Available'}[user.hasClaim(id, BLOCKCHAIN) == True]
     
     daily = {True:'Available', False:'Not Available'}[user.hasDaily(id, BLOCKCHAIN)]
-    desc = f'Daily UwU:\u3000\u3000**{daily}**\nClaim Bonus: \u3000**{claim}**\nSubmissions: \u3000**{5 - user_subs}/5** \u3000Left\n\n'
+    desc = f'Daily UwU:\u3000\u3000**{daily}**\nClaim Bonus: \u3000**{claim}**\nSubmissions: \u3000**{10 - user_subs_val}/10** VAL\u3000**{10 - user_subs_ow}/10** OW\n\n'
     desc += f'Total Creds:\u3000**{user_creds}**\u3000 Total Tickets: \u3000**{user_tickets}**'
 
     BLOCKCHAIN.printChain()
@@ -181,6 +188,8 @@ async def handout(ctx, reciever, amount, client, BLOCKCHAIN):
     for ch in filler: reciever_id = reciever_id.replace(ch, '')
     reciever_id = int(reciever_id)
 
+    if reciever_id == HBOT: reciever_id = HUMBLE
+
     """Check if the Giver is a moderator"""
     role = get(ctx.guild.roles, name='Moderator')
     if role.id in [y.id for y in ctx.author.roles]:
@@ -234,6 +243,8 @@ async def take(ctx, reciever, amount, client, BLOCKCHAIN):
     reciever_id = reciever
     for ch in filler: reciever_id = reciever_id.replace(ch, '')
     reciever_id = int(reciever_id)
+
+    if reciever_id == HBOT: reciever_id = HUMBLE
 
     """Check if the Giver is a moderator"""
     role = get(ctx.guild.roles, name='Moderator')
@@ -323,4 +334,31 @@ async def view_score(ctx, BLOCKCHAIN):
     ).set_thumbnail(url=ctx.author.avatar_url)
     embed.set_footer(text='@~ powered by oxygen tax')
     embed.set_image(url='https://vignette.wikia.nocookie.net/powerlisting/images/d/d7/Giorno_Giovanna_(JoJo)_Gold_Experience.gif')
+    await ctx.send(embed=embed)
+
+async def view_luck(ctx, BLOCKCHAIN):
+    id, name = ctx.author.id, ctx.author.name
+
+    luck_list = user.getLuck(BLOCKCHAIN, HUMBLE)
+    desc = 'Here lists the luckiest people in the server\n\n'
+
+    desc += '\u3000\u3000\u3000\u3000\u2000 Avg \u3000 #s \u3000 Humble  \u3000 #s \u3000 Name\n'
+    count = 1
+    for member in luck_list:
+        if count == 1:
+            desc += '\u3000** #%-2d ** \u3000\u3000 %3.0f \u3000 %02d\u2000\u3000%05.0f \u2000\u3000 %02d \u2000\u3000 **% 20s**\n' % (count, member[1], member[2], member[3], member[4], member[0][:20])
+        elif count > 1 and count < 10:
+            desc += '\u3000** #%-2d ** \u3000\u3000 %3.0f \u3000 %02d\u2000\u3000%05.0f \u2000\u3000 %02d \u2000\u3000 % 20s\n' % (count, member[1], member[2], member[3], member[4], member[0][:20])
+        else: 
+            desc += ' \u3000 ** #%-2d ** \u3000\u2000 %3.0f \u3000 %02d\u2000\u3000%05.0f \u2000\u3000 %02d \u2000\u3000 % 20s\n' % (count, member[1], member[2], member[3], member[4], member[0][:20])
+
+        count += 1
+
+    """Return Message"""
+    embed = discord.Embed(
+        title = f'Top Fortune',
+        description = desc,
+        color = 6943230    
+    ).set_thumbnail(url=ctx.guild.icon_url)
+    embed.set_footer(text='@~ powered by oxygen tax')
     await ctx.send(embed=embed)

@@ -18,29 +18,18 @@ async def humble_powa(ctx, client, BLOCKCHAIN):
     humble_icon = await getIcon(HUMBLE, client)
     """Check if humble has already recieved its daily"""
     if user.hasDaily(HUMBLE, BLOCKCHAIN) == False:
-        embed = discord.Embed(
-            title = f'Daily',
-            description = f'My Creator says I\'m fat, I shall fast until tomorrow!',
-            color = 6053215    
-        ).set_thumbnail(url=humble_icon)
-        embed.set_footer(text='@~ powered by oxygen tax')
-        embed.set_image(url='https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fi.ytimg.com%2Fvi%2FK6SZyj7A3AU%2Fmaxresdefault.jpg')
-        await ctx.send(embed=embed)
         return
     
     bonus = int(user.getDailyCount(HUMBLE, BLOCKCHAIN) / 9)
     print(bonus)
     
     """Generate new Block"""
-    uwu_average, uwu_rng = 350, random.randint(-100, 100)
-    total = uwu_average + uwu_rng + bonus*60
+    uwu_average, uwu_rng = 400, random.randint(0, 100)
+    total = uwu_average + uwu_rng + bonus*50
     
-    val_average = 355
-    for i in range(3):
-        val_rng = random.randint(-100, 100)
-        total += val_average + val_rng
-    
-    total += 100 + bonus*85
+    val_average = 250
+    val_rng = random.randint(-50, 100)
+    total += val_average + val_rng
     
     new_block = block.Block(
         user = HUMBLE,
@@ -100,14 +89,14 @@ async def chaos(ctx, client, bonus, BLOCKCHAIN):
             user = HUMBLE,
             name = humble_name,
             timestamp = today(),
-            description = f'Given to {name}',
+            description = f'~Given to {name}',
             data = -creds
         )
         new_block2 = block.Block(
             user = id,
             name = name,
             timestamp = today(),
-            description = f'Recieved from {humble_name}',
+            description = f'~Recieved from {humble_name}',
             data = creds
         )
 
@@ -130,7 +119,7 @@ async def chaos(ctx, client, bonus, BLOCKCHAIN):
         embed.set_footer(text='@~ powered by oxygen tax')
         await ctx.send(embed=embed)
 
-    if luck >= 0.15 and luck < 0.85:
+    if luck >= 0.15 and luck < 0.65:
         """Humble takes one random user's creds and gives it to another random user"""
         print(f"Humble moves {creds} from {userId1} to {userId2}")
 
@@ -139,14 +128,14 @@ async def chaos(ctx, client, bonus, BLOCKCHAIN):
             user = userId1,
             name = userName1,
             timestamp = today(),
-            description = f'Recieved from Humble ({userName2})',
+            description = f'~Recieved from Humble ({userName2})',
             data = creds
         )
         new_block2 = block.Block(
             user = userId2,
             name = userName2,
             timestamp = today(),
-            description = f'Taken from Humble ({userName1})',
+            description = f'~Taken from Humble ({userName1})',
             data = -creds
         )
 
@@ -174,7 +163,7 @@ async def chaos(ctx, client, bonus, BLOCKCHAIN):
         embed.set_footer(text='@~ powered by oxygen tax')
         await ctx.send(embed=embed)
 
-    if luck >= 0.85 and luck < 1: 
+    if luck >= 0.65 and luck < 1: 
         """Humble takes a random user's creds"""
         print(f"Humble takes {creds} from {userId1}")
 
@@ -183,14 +172,14 @@ async def chaos(ctx, client, bonus, BLOCKCHAIN):
             user = HUMBLE,
             name = humble_name,
             timestamp = today(),
-            description = f'Taken from {userName1}',
+            description = f'~Taken from {userName1}',
             data = creds
         )
         new_block2 = block.Block(
             user = userId1,
             name = userName1,
             timestamp = today(),
-            description = f'Lost to {humble_name}',
+            description = f'~Lost to {humble_name}',
             data = -creds
         )
 

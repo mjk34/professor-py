@@ -45,3 +45,13 @@ View current raffle info and list of participants!
 Add a bit of chaos to the discord...ehe
 Show the top perfroming people in the server
 Get your total score thats used for the Leaderboard
+Show the top luckiest people in the server
+Calculate your Overwatch game score and earn uwuCreds
+The chosen role that you queued up
+The total damage you dealt in the game
+The total healing you provided in the game
+The total damage you mitigated
+The round up to the nearest whole minute ex. 5 for 4mins 30s
+Put either Valorant or Overwatch
+Clip title: [Character] [Play]
+Clip link: [Medal Link]

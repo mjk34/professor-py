@@ -4,6 +4,8 @@ import commands.user as user
 from discord.utils import get
 from commands.helper import today, getName
 
+heroes = ['DVA', 'D.VA', 'DOOMFIST', 'DOOM', 'WINSTON', 'MONKEY', 'WRECKING BALL', 'BALL', 'HAMMOND', 'JUNKER QUEEN', 'ORISA', 'ROADHOG', 'HOG', 'REINHARDT', 'REIN', 'SIGMA', 'SIG', 'ZARYA', 'BASTION', 'ECHO', 'JUNKRAT', 'MEI', 'PHARAH', 'SOJOURN', 'SOLDIER', 'SOLDIER: 76', '76', 'SOLDIER 76', 'SYMMETRA', "SYM", 'TORBJORN', 'TORB', 'ASHE', 'HANZO', 'CASSIDY', 'CREE', 'CASS', 'MCCREE', 'GENJI', 'REAPER', 'SOMBRA', 'TRACER', 'ANA', 'BAPTISTE', 'BRIGITTE', 'KIRIKO', 'LUCIO', 'MERCY', 'MOIRA', 'ZENYATTA', 'ZEN']
+
 filler = ['<', '>', '!', '@']
 """Exchanges user uwuCreds for (a) raffle ticket(s)"""
 async def buy_ticket(ctx, amount, BLOCKCHAIN):
@@ -20,7 +22,7 @@ async def buy_ticket(ctx, amount, BLOCKCHAIN):
     if amount < 1:
         count = 0 
         while True:
-            cost = 2000 + 400*(user_tickets + count)
+            cost = 1500 + 300*(user_tickets + count)
             if cost + total_cost < user_creds:
                 total_cost += cost
                 count += 1
@@ -29,7 +31,7 @@ async def buy_ticket(ctx, amount, BLOCKCHAIN):
                 break
     else:
         for i in range(amount):
-            total_cost += 2000 + 400*(user_tickets + i)
+            total_cost += 1500 + 300*(user_tickets + i)
             
     """Check if User has sufficient amount of uwuCreds"""
     if user_creds - total_cost > 0:
@@ -80,10 +82,13 @@ async def buy_ticket(ctx, amount, BLOCKCHAIN):
         await ctx.send(embed=embed)
         
 """Allow moderators to generate one additional submit to a user"""
-async def bonusSubmit(ctx, reciever, client, BLOCKCHAIN):
+async def bonusSubmit(ctx, game, reciever, client, BLOCKCHAIN):
     """1. User will be checked for Moderator status
        2. Blockchain will be validated, new block will be added to the end of Blockchain"""
     
+    if game == 'V' or game == 'Valorant' or game == 'valorant': game = 'V'
+    if game == 'O' or game == 'Overwatch' or game == 'overwatch': game = 'O'
+
     """Parses Reciever id from <@id>"""
     giver_id, reciever_id = ctx.author.id, reciever
     for ch in filler: reciever_id = reciever_id.replace(ch, '')
@@ -98,7 +103,7 @@ async def bonusSubmit(ctx, reciever, client, BLOCKCHAIN):
             user = reciever_id,
             name = await getName(reciever_id, client),
             timestamp = today(),
-            description = f'Bonus Submit',
+            description = f'Bonus Submit {game}',
             data = 0
         )
         
@@ -134,9 +139,11 @@ async def leaderboard (ctx, BLOCKCHAIN):
        2. Blockchain will be evaluated, User tickets will be checked"""
 
     leaderboard = user.getTop(BLOCKCHAIN)
+    print(leaderboard)
     desc = 'Here lists the most active students in UwUversity!\n\n'
     count = 1
     for member in leaderboard:
+        if member[0] in heroes: continue
         if count == 1:
             desc += f'\u3000** #{count} ** \u3000\u3000 **{member[0]}** \u3000~({member[1]})\n'
             count += 1
@@ -168,14 +175,14 @@ async def top_average (ctx, BLOCKCHAIN):
     for member in leaderboard:
         if member[1] == -1: continue
         if count == 1:
-            desc += f'\u3000** #{count} ** \u3000   {member[1]} \u3000\u2000 {member[2]} \u3000\u3000\u3000**{member[0]}**\n'
+            desc += f'\u3000** #{count} ** \u3000   {int(0.75*int(member[1]))} \u3000\u2000 {member[2]} \u3000\u3000\u3000**{member[0]}**\n'
             count += 1
             continue
 
         desc += f'\u3000** #{count} ** '
         if count > 9: desc += '\u2000'
         else: desc += '\u3000'
-        desc += f'{member[1]} \u3000\u2000 {member[2]} '
+        desc += f'{int(0.75*int(member[1]))} \u3000\u2000 {member[2]} '
 
         if member[2] < 10: desc += '\u3000\u3000\u3000'
         elif member[2] < 100: desc += '\u3000\u3000\u2000'
@@ -202,10 +209,12 @@ async def claimBonus (ctx, client, BLOCKCHAIN):
        
     id, name = ctx.author.id, ctx.author.name
     user_daily = user.getDailyCount(id, BLOCKCHAIN)
-    user_submits = user.totalSubsWeek(id, BLOCKCHAIN)
     
+    user_submits_val = user.totalSubsWeek(id, 'V', BLOCKCHAIN)
+    user_submits_ow = user.totalSubsWeek(id, 'O', BLOCKCHAIN)
+
     """Check if User has used daily submits before claim"""
-    if user_submits < 3:
+    if user_submits_val < 3 and user_submits_ow < 6:
         embed = discord.Embed(
             title = f'Bonus',
             description = f'You must exhaust your daily submits to claim the *Bonus*!',
@@ -218,7 +227,7 @@ async def claimBonus (ctx, client, BLOCKCHAIN):
     if user.hasClaim(id, BLOCKCHAIN) == False:
         embed = discord.Embed(
             title = f'Bonus',
-            description = f'You have already claimed your bonus today!',
+            description = f'You have already claimed your bonus this week!',
             color = 6053215    
         ).set_image(url='https://i.pinimg.com/originals/0d/cc/db/0dccdb5a90ed01d7c7c554deba3f66c3.gif')
         embed.set_footer(text='@~ powered by oxygen tax')
@@ -272,26 +281,26 @@ async def rafflelist (ctx, BLOCKCHAIN):
     count_tickets = 0 
     total_cost = 0
     while True:
-        cost = 2000 + 400*(user_tickets + count_tickets)
+        cost = 1500 + 300*(user_tickets + count_tickets)
         if cost + total_cost < user_creds:
             total_cost += cost
             count_tickets += 1
         else: break
     
-    desc = 'Here lists the participating rafflers, the next drawing is (10/7)!\n\n'
+    desc = 'Here lists the participating rafflers, the next drawing is (12/2)!\n\n'
+
+    desc += '\u3000\u3000\u3000\u3000\u2000 # \u3000 Name\n'
     count = 1
-
-    mem_list = ''
     for member in rafflelist:
-        mem_list += f'\u3000\u3000**{member[1]}**'
-        if member[1] > 9: mem_list += '\u3000\u2000'
-        else: mem_list += '\u3000\u3000'
-        mem_list += f'*{member[0]}*\n'
+        if count == 1:
+            desc += '\u3000** #%-2d ** \u3000\u3000 %3.0f \u3000 **%-20s**\n' % (count, member[1], member[0][:20])
+        elif count > 1 and count < 10:
+            desc += '\u3000** #%-2d ** \u3000\u3000 %3.0f \u3000 %-20s\n' % (count, member[1], member[0][:20])
+        else: 
+            desc += '\u3000** #%-2d ** \u3000\u2000 %3.0f \u3000 %-20s\n' % (count, member[1], member[0][:20])
 
-    if mem_list == '': 
-        mem_list += 'Currently there are no participants...'
+        count += 1
 
-    desc += mem_list
     desc += f'\n\nYou can currently buy **{count_tickets}** tickets with **{user_creds}** uwuCreds! '
     desc += f'Your next ticket costs **{1500 + 300*user_tickets}**, Ganbatte!'
 
