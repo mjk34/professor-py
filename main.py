@@ -1,9 +1,8 @@
 import os, random, discord
-from pydoc import describe
 import blockchain
 
 from dotenv import load_dotenv
-from discord.ext import commands
+from discord.ext.commands import Bot
 from discord_slash import SlashCommand, SlashContext
 from discord_slash.utils.manage_commands import create_option
 
@@ -22,7 +21,7 @@ GUILD_ID = int(os.getenv('GUILD_ID'))
 CHANNEL = int(os.getenv('BOT_CMD'))
 CMD_DESC = fetchContentList('command.txt')
 
-client = commands.Bot(command_prefix='!')
+client = Bot(command_prefix='!', intents=discord.Intents.all())
 slash = SlashCommand(client, sync_commands=True)
 
 keywords = ['ping', 'anime', 'uwu', 'wallet', 'give', 'handout',\
