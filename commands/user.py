@@ -1,6 +1,6 @@
 import random
 
-from commands.helper import dailyLuck, today, checkMonday
+from commands.helper import today, checkMonday
 
 heroes = ['DVA', 'D.VA', 'DOOMFIST', 'DOOM', 'WINSTON', 'MONKEY', 'WRECKING BALL', 'BALL', 'HAMMOND', 'JUNKER QUEEN', 'ORISA', 'ROADHOG', 'HOG', 'REINHARDT', 'REIN', 'SIGMA', 'SIG', 'ZARYA', 'BASTION', 'ECHO', 'JUNKRAT', 'MEI', 'PHARAH', 'SOJOURN', 'SOLDIER', 'SOLDIER: 76', '76', 'SOLDIER 76', 'SYMMETRA', "SYM", 'TORBJORN', 'TORB', 'ASHE', 'HANZO', 'CASSIDY', 'CREE', 'CASS', 'MCCREE', 'GENJI', 'REAPER', 'SOMBRA', 'TRACER', 'ANA', 'BAPTISTE', 'BRIGITTE', 'KIRIKO', 'LUCIO', 'MERCY', 'MOIRA', 'ZENYATTA', 'ZEN']
 
@@ -19,6 +19,17 @@ def hasDaily(user_id, BLOCKCHAIN) -> bool:
     if date == '': return True
     return {True:False, False:True}[date == today()]
 
+def hasWish(user_id, BLOCKCHAIN) -> int:
+    if len(BLOCKCHAIN.chain) == 1: return True
+
+    desc, count = 'Wish', 0
+    for block in BLOCKCHAIN.chain[1:]:
+        if block.getUser() == user_id:
+            if block.getDesc() == desc:
+                if block.getTime() == today():
+                    count += 1
+    return count
+
 def getAvgDaily(user_id, BLOCKCHAIN) -> float:
     if len(BLOCKCHAIN.chain) == 1: return -1.0
     
@@ -35,7 +46,7 @@ def getAvgDaily(user_id, BLOCKCHAIN) -> float:
 """Evaluated Blockchain:
         1. find the most recent claim based on user_id
         2. check if the date difference is greater than 0"""
-def hasClaim(user_id, BLOCKCHAIN) -> bool: 
+def hasClaim(user_id, BLOCKCHAIN) -> int: 
     if len(BLOCKCHAIN.chain) == 1: return True
     
     desc, count = 'Claim Bonus', 0
@@ -44,9 +55,7 @@ def hasClaim(user_id, BLOCKCHAIN) -> bool:
         if block.getUser() == user_id:
             if block.getDesc() == desc:
                 count += 1
-                     
-    if count == 0: return True
-    return False
+    return count
 
 """Evaluate Blockchain:
         1. run through each block belonging to user_id
@@ -79,10 +88,10 @@ def totalTickets(user_id, BLOCKCHAIN) -> int:
 """Evaluate Blockchain:
         1. run through each block belonging to user_id
         2. for each block, add up all submissions dated today"""
-def totalSubsWeek(user_id, game, BLOCKCHAIN) -> int:
+def totalSubsWeek(user_id, BLOCKCHAIN) -> int:
     if len(BLOCKCHAIN.chain) == 1: return 0
     
-    desc, desc3, total = f'Submission {game}', f'Bonus Submit {game}', 0
+    desc, desc3, total = f'Submission', f'Bonus Submit', 0
     for block in BLOCKCHAIN.chain[1:]:
         if checkMonday(block.getTime()) == False: continue
         if block.getUser() == user_id:

@@ -22,7 +22,7 @@ Check the registered birthday date
 Reward an user with uwuCreds, new creds
 Peek at another memeber\'s uwuCred amount, kinda
 Take some creds from a specific misdemeanor
-Calculate your Valorant game score and earn uwuCreds
+Submit a gameplay clip and pin for future review
 Number of kills you got in the game
 Number of deaths you got in the game
 Number of assists you got in the game
@@ -55,3 +55,9 @@ The round up to the nearest whole minute ex. 5 for 4mins 30s
 Put either Valorant or Overwatch
 Clip title: [Character] [Play]
 Clip link: [Medal Link]
+View your current stats and benefits
+Level Up a stat to recieve benefits
+Vitality, Stamina, Strength, Dexterity, or Fortune
+Gamble 200 uwuCreds to gain the Star Stat
+Rate a gameplay clip 1-5
+1-5, 5 being the highest

@@ -3,6 +3,7 @@ import commands.user as user
 
 from discord.utils import get
 from commands.helper import today, getName
+from commands.stats import getStamina, getStar, getFortune, stamina_benefits2, fortune_benefits
 
 heroes = ['DVA', 'D.VA', 'DOOMFIST', 'DOOM', 'WINSTON', 'MONKEY', 'WRECKING BALL', 'BALL', 'HAMMOND', 'JUNKER QUEEN', 'ORISA', 'ROADHOG', 'HOG', 'REINHARDT', 'REIN', 'SIGMA', 'SIG', 'ZARYA', 'BASTION', 'ECHO', 'JUNKRAT', 'MEI', 'PHARAH', 'SOJOURN', 'SOLDIER', 'SOLDIER: 76', '76', 'SOLDIER 76', 'SYMMETRA', "SYM", 'TORBJORN', 'TORB', 'ASHE', 'HANZO', 'CASSIDY', 'CREE', 'CASS', 'MCCREE', 'GENJI', 'REAPER', 'SOMBRA', 'TRACER', 'ANA', 'BAPTISTE', 'BRIGITTE', 'KIRIKO', 'LUCIO', 'MERCY', 'MOIRA', 'ZENYATTA', 'ZEN']
 
@@ -22,7 +23,7 @@ async def buy_ticket(ctx, amount, BLOCKCHAIN):
     if amount < 1:
         count = 0 
         while True:
-            cost = 1500 + 300*(user_tickets + count)
+            cost = 1000 + 500*(user_tickets + count)
             if cost + total_cost < user_creds:
                 total_cost += cost
                 count += 1
@@ -31,7 +32,7 @@ async def buy_ticket(ctx, amount, BLOCKCHAIN):
                 break
     else:
         for i in range(amount):
-            total_cost += 1500 + 300*(user_tickets + i)
+            total_cost += 1000 + 500*(user_tickets + i)
             
     """Check if User has sufficient amount of uwuCreds"""
     if user_creds - total_cost > 0:
@@ -69,7 +70,7 @@ async def buy_ticket(ctx, amount, BLOCKCHAIN):
             description = f'Poggerz! **+{amount}** ticket(s) were added to your *Wallet*!',
             color = 15697464    
         ).set_thumbnail(url=ctx.author.avatar_url)
-        embed.set_footer(text='@~ powered by oogway desu')
+        embed.set_footer(text='@~ powered by UwUntu')
         await ctx.send(embed=embed)
         
     else:
@@ -78,16 +79,13 @@ async def buy_ticket(ctx, amount, BLOCKCHAIN):
             description = f'Insufficient funds, you require **{total_cost}** uwuCreds!',
             color = 6053215    
         ).set_thumbnail(url='https://66.media.tumblr.com/2d52e78a64b9cc97fac0cb00a48fe676/tumblr_inline_pamkf7AfPf1s2a9fg_500.gif')
-        embed.set_footer(text='@~ powered by oogway desu')
+        embed.set_footer(text='@~ powered by UwUntu')
         await ctx.send(embed=embed)
         
 """Allow moderators to generate one additional submit to a user"""
-async def bonusSubmit(ctx, game, reciever, client, BLOCKCHAIN):
+async def bonusSubmit(ctx, reciever, client, BLOCKCHAIN):
     """1. User will be checked for Moderator status
        2. Blockchain will be validated, new block will be added to the end of Blockchain"""
-    
-    if game == 'V' or game == 'Valorant' or game == 'valorant': game = 'V'
-    if game == 'O' or game == 'Overwatch' or game == 'overwatch': game = 'O'
 
     """Parses Reciever id from <@id>"""
     giver_id, reciever_id = ctx.author.id, reciever
@@ -103,7 +101,7 @@ async def bonusSubmit(ctx, game, reciever, client, BLOCKCHAIN):
             user = reciever_id,
             name = await getName(reciever_id, client),
             timestamp = today(),
-            description = f'Bonus Submit {game}',
+            description = f'Bonus Submit',
             data = 0
         )
         
@@ -122,7 +120,7 @@ async def bonusSubmit(ctx, game, reciever, client, BLOCKCHAIN):
             description = f'Wubba Lubba Dub Dub!\u3000\u3000\u3000\u3000\n**+1** Submit was added to <@{reciever_id}>\'s *Wallet*!',
             color = 16749300    
         ).set_image(url='https://gifimage.net/wp-content/uploads/2017/09/anime-happy-dance-gif-10.gif')
-        embed.set_footer(text='@~ powered by oogway desu')
+        embed.set_footer(text='@~ powered by UwUntu')
         await ctx.send(embed=embed)
     else: 
         embed = discord.Embed(
@@ -130,7 +128,7 @@ async def bonusSubmit(ctx, game, reciever, client, BLOCKCHAIN):
             description = f'Insufficient power, you are not a moderator!',
             color = 6053215    
         ).set_thumbnail(url='https://media1.tenor.com/images/80662c4e35cf12354f65f1d6f7beada8/tenor.gif')
-        embed.set_footer(text='@~ powered by oogway desu')
+        embed.set_footer(text='@~ powered by UwUntu')
         await ctx.send(embed=embed)
         
 """Allow users to view 10 top users, does not display their total uwuCreds"""
@@ -161,44 +159,7 @@ async def leaderboard (ctx, BLOCKCHAIN):
         description = desc,
         color = 6943230    
     ).set_thumbnail(url=ctx.guild.icon_url)
-    embed.set_footer(text='@~ powered by oxygen tax')
-    await ctx.send(embed=embed)
-    
-"""Allow users to view 10 top users"""
-async def top_average (ctx, BLOCKCHAIN):
-    """1. Blockchain will be evaluated, User averages will be checked"""
-
-    leaderboard = user.getAverage(BLOCKCHAIN)
-    desc = 'Here lists the highest performing students in UwUversity!\n\n'
-    desc += '\u3000\u3000\u3000\u2000ACS \u3000 #Subs \u3000 Name\u3000\n'
-    count = 1
-    for member in leaderboard:
-        if member[1] == -1: continue
-        if count == 1:
-            desc += f'\u3000** #{count} ** \u3000   {int(0.75*int(member[1]))} \u3000\u2000 {member[2]} \u3000\u3000\u3000**{member[0]}**\n'
-            count += 1
-            continue
-
-        desc += f'\u3000** #{count} ** '
-        if count > 9: desc += '\u2000'
-        else: desc += '\u3000'
-        desc += f'{int(0.75*int(member[1]))} \u3000\u2000 {member[2]} '
-
-        if member[2] < 10: desc += '\u3000\u3000\u3000'
-        elif member[2] < 100: desc += '\u3000\u3000\u2000'
-        else: desc += '\u3000\u3000'
-
-        desc += f'{member[0]}\n'
-
-        count += 1
-    
-    """Return Message"""
-    embed = discord.Embed(
-        title = f'Top Average',
-        description = desc,
-        color = 6943230    
-    ).set_thumbnail(url=ctx.guild.icon_url)
-    embed.set_footer(text='@~ powered by oxygen tax')
+    embed.set_footer(text='@~ powered by UwUntu')
     await ctx.send(embed=embed)
     
 """Allow users to claim an additional reward after daily submits are used!"""
@@ -209,33 +170,34 @@ async def claimBonus (ctx, client, BLOCKCHAIN):
        
     id, name = ctx.author.id, ctx.author.name
     user_daily = user.getDailyCount(id, BLOCKCHAIN)
-    
-    user_submits_val = user.totalSubsWeek(id, 'V', BLOCKCHAIN)
-    user_submits_ow = user.totalSubsWeek(id, 'O', BLOCKCHAIN)
+    user_submits = user.totalSubsWeek(id, BLOCKCHAIN)
+
+    stamina = getStamina(id, BLOCKCHAIN) + getStar(id, BLOCKCHAIN)
+    fortune = getFortune(id, BLOCKCHAIN) + getStar(id, BLOCKCHAIN)
 
     """Check if User has used daily submits before claim"""
-    if user_submits_val < 3 and user_submits_ow < 6:
+    if user_submits < 6:
         embed = discord.Embed(
             title = f'Bonus',
-            description = f'You must exhaust your daily submits to claim the *Bonus*!',
+            description = f'You must exhaust at least 6 Submissions to claim the *Bonus*!',
             color = 6053215    
         ).set_thumbnail(url='https://media1.tenor.com/images/80662c4e35cf12354f65f1d6f7beada8/tenor.gif')
-        embed.set_footer(text='@~ powered by oxygen tax')
+        embed.set_footer(text='@~ powered by UwUntu')
         await ctx.send(embed=embed)
         return
     
-    if user.hasClaim(id, BLOCKCHAIN) == False:
+    if user.hasClaim(id, BLOCKCHAIN) >= 1 + stamina_benefits2[stamina]:
         embed = discord.Embed(
             title = f'Bonus',
             description = f'You have already claimed your bonus this week!',
             color = 6053215    
         ).set_image(url='https://i.pinimg.com/originals/0d/cc/db/0dccdb5a90ed01d7c7c554deba3f66c3.gif')
-        embed.set_footer(text='@~ powered by oxygen tax')
+        embed.set_footer(text='@~ powered by UwUntu')
         await ctx.send(embed=embed)
         return
 
-    bonus = int(user_daily / 7)
-    bonus_creds = 145 + bonus*135
+    bonus = int(user_daily / 7) + fortune_benefits[fortune]
+    bonus_creds = 150 + bonus*130
     
     """Generate new Block"""
     new_block = block.Block(
@@ -264,7 +226,7 @@ async def claimBonus (ctx, client, BLOCKCHAIN):
         description = desc,
         color = 16700447    
     ).set_image(url='https://i.pinimg.com/originals/de/6b/5d/de6b5df29abaf7124387b9c86ca46a29.gif')
-    embed.set_footer(text='@~ powered by oxygen tax')
+    embed.set_footer(text='@~ powered by UwUntu')
     await ctx.send(embed=embed)
 
 """Allow users to see the list of raffle participants"""
@@ -281,13 +243,13 @@ async def rafflelist (ctx, BLOCKCHAIN):
     count_tickets = 0 
     total_cost = 0
     while True:
-        cost = 1500 + 300*(user_tickets + count_tickets)
+        cost = 1000 + 500*(user_tickets + count_tickets)
         if cost + total_cost < user_creds:
             total_cost += cost
             count_tickets += 1
         else: break
     
-    desc = 'Here lists the participating rafflers, the next drawing is (12/2)!\n\n'
+    desc = 'Here lists the participating rafflers, the next drawing is Sunday (2/5) at 9pm EST!\n\n'
 
     desc += '\u3000\u3000\u3000\u3000\u2000 # \u3000 Name\n'
     count = 1
@@ -302,7 +264,7 @@ async def rafflelist (ctx, BLOCKCHAIN):
         count += 1
 
     desc += f'\n\nYou can currently buy **{count_tickets}** tickets with **{user_creds}** uwuCreds! '
-    desc += f'Your next ticket costs **{1500 + 300*user_tickets}**, Ganbatte!'
+    desc += f'Your next ticket costs **{1000 + 500*user_tickets}**, Ganbatte!'
 
     """Return Message"""
     embed = discord.Embed(
@@ -310,6 +272,6 @@ async def rafflelist (ctx, BLOCKCHAIN):
         description = desc,
         color = 6943230    
     ).set_thumbnail(url=ctx.guild.icon_url)
-    embed.set_footer(text='@~ powered by oxygen tax')
+    embed.set_footer(text='@~ powered by UwUntu')
     await ctx.send(embed=embed)
 

@@ -20,16 +20,12 @@ async def humble_powa(ctx, client, BLOCKCHAIN):
     if user.hasDaily(HUMBLE, BLOCKCHAIN) == False:
         return
     
-    bonus = int(user.getDailyCount(HUMBLE, BLOCKCHAIN) / 9)
+    bonus = int(user.getDailyCount(HUMBLE, BLOCKCHAIN) / 7)
     print(bonus)
     
     """Generate new Block"""
-    uwu_average, uwu_rng = 400, random.randint(0, 100)
+    uwu_average, uwu_rng = 600, random.randint(-50, 350)
     total = uwu_average + uwu_rng + bonus*50
-    
-    val_average = 250
-    val_rng = random.randint(-50, 100)
-    total += val_average + val_rng
     
     new_block = block.Block(
         user = HUMBLE,
@@ -57,7 +53,7 @@ async def humble_powa(ctx, client, BLOCKCHAIN):
         description = desc,
         color = 16700447    
     ).set_thumbnail(url=humble_icon)
-    embed.set_footer(text='@~ powered by oxygen tax')
+    embed.set_footer(text='@~ powered by UwUntu')
     embed.set_image(url='https://i.ytimg.com/vi/m5KFpQYIYmE/maxresdefault.jpg')
 
     await ctx.send(embed=embed)
@@ -71,7 +67,7 @@ async def chaos(ctx, client, bonus, BLOCKCHAIN):
 
     id, name = ctx.author.id, ctx.author.name
     luck = random.random()
-    creds = random.randint(200, 450) + 80*bonus
+    creds = random.randint(150, 450) + 80*bonus
 
     candidates = user.getTopIds(creds, HUMBLE, BLOCKCHAIN)
     humble_name = await getName(HUMBLE, client)
@@ -79,7 +75,7 @@ async def chaos(ctx, client, bonus, BLOCKCHAIN):
     userId1, userName1 = candidates[0][0], candidates[0][1]
     userId2, userName2 = candidates[1][0], candidates[1][1]
 
-    if luck > 0 and luck < 0.15:
+    if luck > 0 and luck < 0.10:
         """Humble gives his own creds to the user"""
         print(f"Humble gives {creds} to {userId1}")
         creds = 0.75*creds
@@ -116,10 +112,10 @@ async def chaos(ctx, client, bonus, BLOCKCHAIN):
             description = f'Humble gave **{creds}** uwuCreds to <@{userId1}>!',
             color = 16700447    
         ).set_image(url='https://c.tenor.com/ieCcnZCXV_QAAAAC/tenor.gif')
-        embed.set_footer(text='@~ powered by oxygen tax')
+        embed.set_footer(text='@~ powered by UwUntu')
         await ctx.send(embed=embed)
 
-    if luck >= 0.15 and luck < 0.65:
+    if luck >= 0.10 and luck < 0.55:
         """Humble takes one random user's creds and gives it to another random user"""
         print(f"Humble moves {creds} from {userId1} to {userId2}")
 
@@ -160,10 +156,10 @@ async def chaos(ctx, client, bonus, BLOCKCHAIN):
             description = desc,
             color = 16700447    
         ).set_image(url='https://c.tenor.com/JHsVtTnvQ48AAAAC/tenor.gif')
-        embed.set_footer(text='@~ powered by oxygen tax')
+        embed.set_footer(text='@~ powered by UwUntu')
         await ctx.send(embed=embed)
 
-    if luck >= 0.65 and luck < 1: 
+    if luck >= 0.55 and luck < 1: 
         """Humble takes a random user's creds"""
         print(f"Humble takes {creds} from {userId1}")
 
@@ -199,5 +195,5 @@ async def chaos(ctx, client, bonus, BLOCKCHAIN):
             description = f'Humble took **{creds}** uwuCreds from <@{userId1}>!',
             color = 16700447    
         ).set_image(url='https://pa1.narvii.com/6306/e69ecf1e4912220c77f1dd9b0e710dedb26639b0_hq.gif')
-        embed.set_footer(text='@~ powered by oxygen tax')
+        embed.set_footer(text='@~ powered by UwUntu')
         await ctx.send(embed=embed) 

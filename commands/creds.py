@@ -5,6 +5,7 @@ import commands.humble as humble
 from discord.utils import get
 from dotenv import load_dotenv
 from commands.helper import today, dailyLuck, dailyFortune, getName, fetchContentList, getIcon
+from commands.stats import getVitality, getStamina, getStar, vitality_benefits, stamina_benefits1, stamina_benefits2
 
 filler = ['<', '>', '!', '@', '&']
 
@@ -26,20 +27,23 @@ async def daily (ctx, client, BLOCKCHAIN):
             description = f'You next **/uwu** is tomorrow, it now resets based on date!',
             color = 6053215    
         ).set_thumbnail(url=ctx.author.avatar_url)
-        embed.set_footer(text='@~ powered by oogway desu')
+        embed.set_footer(text='@~ powered by UwUntu')
         await ctx.send(embed=embed)
         return
     
-    bonus = int(user.getDailyCount(id, BLOCKCHAIN) / 8)
-    
-    """Generate new Block"""
     fortune, status = dailyLuck()
+    bonus = int(user.getDailyCount(id, BLOCKCHAIN) / 7)
+    
+    vitality = getVitality(id, BLOCKCHAIN) + getStar(id, BLOCKCHAIN)
+    stat_bonus = int((fortune + bonus*80)*vitality_benefits[vitality])
+
+    """Generate new Block"""
     new_block = block.Block(
         user = id,
         name = name,
         timestamp = today(),
         description = 'Daily',
-        data = fortune + bonus*100
+        data = fortune + bonus*80 + stat_bonus
     )
     
     """Update Blockchain"""
@@ -63,7 +67,9 @@ async def daily (ctx, client, BLOCKCHAIN):
     
     desc = f'{status} **+{fortune}** creds were added to your *Wallet*!\n'
     if bonus > 0:
-        desc += f'From **+{bonus}** *Bonus*, you get an additional **+{bonus*100}** creds!'
+        desc += f'From **+{bonus}** *Bonus*, you get an additional **+{bonus*80}** creds!\n'
+    if vitality > 0:
+        desc += f'\nFrom **Vitality {vitality}**, you get an additional **+{stat_bonus}** creds!' 
     
     """Return Message"""
     embed = discord.Embed(
@@ -71,7 +77,7 @@ async def daily (ctx, client, BLOCKCHAIN):
         description = desc,
         color = 16700447    
     ).set_thumbnail(url=ctx.author.avatar_url)
-    embed.set_footer(text='@~ powered by oxygen tax')
+    embed.set_footer(text='@~ powered by UwUntu')
     embed.add_field(
         name = f'Fortune\u3000\u3000\u3000\u3000\u3000\u3000\u3000\u3000\u3000\u3000\u3000\u3000\u3000\u3000\u3000\u3000\u3000\u3000-',
         value = read
@@ -93,13 +99,14 @@ async def wallet (ctx, BLOCKCHAIN):
     user_creds = user.totalCreds(id, BLOCKCHAIN)
     user_tickets = user.totalTickets(id, BLOCKCHAIN)
 
-    user_subs_val = user.totalSubsWeek(id, 'V', BLOCKCHAIN)
-    user_subs_ow = user.totalSubsWeek(id, 'O', BLOCKCHAIN)
+    user_subs = user.totalSubsWeek(id, BLOCKCHAIN)
+    user_claim = user.hasClaim(id, BLOCKCHAIN)
+    user_wish = user.hasWish(id, BLOCKCHAIN)
 
-    claim = {True:'Available', False:'Not Available'}[user.hasClaim(id, BLOCKCHAIN) == True]
-    
+    stamina = getStamina(id, BLOCKCHAIN) + getStar(id, BLOCKCHAIN)
+
     daily = {True:'Available', False:'Not Available'}[user.hasDaily(id, BLOCKCHAIN)]
-    desc = f'Daily UwU:\u3000\u3000**{daily}**\nClaim Bonus: \u3000**{claim}**\nSubmissions: \u3000**{10 - user_subs_val}/10** VAL\u3000**{10 - user_subs_ow}/10** OW\n\n'
+    desc = f'Daily UwU:\u3000\u3000**{daily}**\nDaily Wish:\u3000\u3000**{2-user_wish}/2**\nClaim Bonus: \u3000**{(1 + stamina_benefits2[stamina]) - user_claim}/{1 + stamina_benefits2[stamina]}**\nSubmissions: \u3000**{(10 + stamina_benefits1[stamina]) - user_subs}/{10 + stamina_benefits1[stamina]}** \n\n'
     desc += f'Total Creds:\u3000**{user_creds}**\u3000 Total Tickets: \u3000**{user_tickets}**'
 
     BLOCKCHAIN.printChain()
@@ -110,7 +117,7 @@ async def wallet (ctx, BLOCKCHAIN):
         description = desc,
         color = 16700447    
     ).set_thumbnail(url=ctx.author.avatar_url)
-    embed.set_footer(text='@~ powered by oxygen tax')
+    embed.set_footer(text='@~ powered by UwUntu')
     await ctx.send(embed=embed)
    
 """Allow users to give their uwuCreds to another user""" 
@@ -131,7 +138,7 @@ async def give (ctx, reciever, amount, client, BLOCKCHAIN):
             description = f'Insufficient funds, you currently have **+{giver_creds}** uwuCreds!',
             color = 6053215    
         ).set_thumbnail(url='https://66.media.tumblr.com/2d52e78a64b9cc97fac0cb00a48fe676/tumblr_inline_pamkf7AfPf1s2a9fg_500.gif')
-        embed.set_footer(text='@~ powered by oxygen tax')
+        embed.set_footer(text='@~ powered by UwUntu')
         await ctx.send(embed=embed)
         return
     
@@ -170,7 +177,7 @@ async def give (ctx, reciever, amount, client, BLOCKCHAIN):
         description = f'**{amount}** uwuCreds was given to <@{reciever_id}>!',
         color = 16700447    
     ).set_image(url='https://2.bp.blogspot.com/-UMkbGppX02A/UwoAVpunIMI/AAAAAAAAGxo/W9a0M4njhOQ/s1600/4363+-+animated_gif+k-on+k-on!+k-on!!+moe+nakano_azusa.gif')
-    embed.set_footer(text='@~ powered by oxygen tax')
+    embed.set_footer(text='@~ powered by UwUntu')
     await ctx.send(embed=embed)
     
 """Allow moderators to generate specified amount of uwuCreds to another user"""
@@ -218,7 +225,7 @@ async def handout(ctx, reciever, amount, client, BLOCKCHAIN):
             description = f'**{amount}** uwuCreds was handout to <@{reciever_id}>!',
             color = 16749300    
         ).set_image(url='https://i.imgur.com/zVdLFbp.gif')
-        embed.set_footer(text='@~ powered by oxygen tax')
+        embed.set_footer(text='@~ powered by UwUntu')
         await ctx.send(embed=embed)
     else: 
         embed = discord.Embed(
@@ -226,7 +233,7 @@ async def handout(ctx, reciever, amount, client, BLOCKCHAIN):
             description = f'Insufficient power, you are not a moderator!',
             color = 6053215    
         ).set_thumbnail(url='https://media1.tenor.com/images/80662c4e35cf12354f65f1d6f7beada8/tenor.gif')
-        embed.set_footer(text='@~ powered by oxygen tax')
+        embed.set_footer(text='@~ powered by UwUntu')
         await ctx.send(embed=embed)
         
 """Allow moderators to reduce a specified amount of uwuCreds from another user"""
@@ -274,7 +281,7 @@ async def take(ctx, reciever, amount, client, BLOCKCHAIN):
             description = f'**{amount}** uwuCreds was taken from <@{reciever_id}>!',
             color = 16749300    
         ).set_image(url='https://i.gifer.com/7Z7b.gif')
-        embed.set_footer(text='@~ powered by oxygen tax')
+        embed.set_footer(text='@~ powered by UwUntu')
         await ctx.send(embed=embed)
     else: 
         embed = discord.Embed(
@@ -282,7 +289,7 @@ async def take(ctx, reciever, amount, client, BLOCKCHAIN):
             description = f'Insufficient power, you are not a moderator!',
             color = 6053215    
         ).set_thumbnail(url='https://media1.tenor.com/images/80662c4e35cf12354f65f1d6f7beada8/tenor.gif')
-        embed.set_footer(text='@~ powered by oxygen tax')
+        embed.set_footer(text='@~ powered by UwUntu')
         await ctx.send(embed=embed)
 
 "Allow users to view vaguely where another user's creds are at"
@@ -313,7 +320,7 @@ async def snoop (ctx, target, client, BLOCKCHAIN):
         description = desc,
         color = 6943230    
     ).set_thumbnail(url=target_icon)
-    embed.set_footer(text='@~ powered by oxygen tax')
+    embed.set_footer(text='@~ powered by UwUntu')
     embed.set_image(url='https://c.tenor.com/LBkGAkraDxQAAAAC/vtuber-hololive.gif')
     await ctx.send(embed=embed)
 
@@ -332,33 +339,6 @@ async def view_score(ctx, BLOCKCHAIN):
         description = desc,
         color = 6943230    
     ).set_thumbnail(url=ctx.author.avatar_url)
-    embed.set_footer(text='@~ powered by oxygen tax')
+    embed.set_footer(text='@~ powered by UwUntu')
     embed.set_image(url='https://vignette.wikia.nocookie.net/powerlisting/images/d/d7/Giorno_Giovanna_(JoJo)_Gold_Experience.gif')
-    await ctx.send(embed=embed)
-
-async def view_luck(ctx, BLOCKCHAIN):
-    id, name = ctx.author.id, ctx.author.name
-
-    luck_list = user.getLuck(BLOCKCHAIN, HUMBLE)
-    desc = 'Here lists the luckiest people in the server\n\n'
-
-    desc += '\u3000\u3000\u3000\u3000\u2000 Avg \u3000 #s \u3000 Humble  \u3000 #s \u3000 Name\n'
-    count = 1
-    for member in luck_list:
-        if count == 1:
-            desc += '\u3000** #%-2d ** \u3000\u3000 %3.0f \u3000 %02d\u2000\u3000%05.0f \u2000\u3000 %02d \u2000\u3000 **% 20s**\n' % (count, member[1], member[2], member[3], member[4], member[0][:20])
-        elif count > 1 and count < 10:
-            desc += '\u3000** #%-2d ** \u3000\u3000 %3.0f \u3000 %02d\u2000\u3000%05.0f \u2000\u3000 %02d \u2000\u3000 % 20s\n' % (count, member[1], member[2], member[3], member[4], member[0][:20])
-        else: 
-            desc += ' \u3000 ** #%-2d ** \u3000\u2000 %3.0f \u3000 %02d\u2000\u3000%05.0f \u2000\u3000 %02d \u2000\u3000 % 20s\n' % (count, member[1], member[2], member[3], member[4], member[0][:20])
-
-        count += 1
-
-    """Return Message"""
-    embed = discord.Embed(
-        title = f'Top Fortune',
-        description = desc,
-        color = 6943230    
-    ).set_thumbnail(url=ctx.guild.icon_url)
-    embed.set_footer(text='@~ powered by oxygen tax')
     await ctx.send(embed=embed)

@@ -1,4 +1,5 @@
 import random, block, blockchain
+from commands.helper import dailyLuck
 from main import BLOCKCHAIN
 
 BLOCKCHAIN = blockchain.Blockchain()
@@ -37,12 +38,16 @@ def FindAverageUWU (userID):
 
     print('Total: %4d\nAverage: %4.2f\nBonus Total: %4d' % \
         (sum, average, bonuSum))
-    
-print('START')
-num1, num2 = 211, 221
 
-str1 = print('%3d     %3d' % (num1, num2))
+for x in range(100):
+    total = 0
+    for i in range(1): #people
+        for j in range(20): #days
+            for k in range(2): #wishes
+                if random.random() < 0.008:
+                    total += 1
+    print(total)
 
-print(str1)
 
-print('END\n')
+# 362.21 per day for users
+

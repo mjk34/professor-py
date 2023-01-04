@@ -62,18 +62,18 @@ def dailyLuck () -> Iterable[Union[int, str]]:
     luck = random.randint(1, 1006)
     cred_amount, cred_status = 0, ''
 
-    if luck <= 450: 
-        cred_amount = random.randint(100, 200)
-        cred_status = '*Not so jolly...*'
-    if luck > 450 and luck <= 750: 
-        cred_amount = random.randint(200, 400)
-        cred_status = '*A thrill of hope!*.'
-    if luck > 750 and luck <= 950: 
+    if luck <= 350: 
+        cred_amount = random.randint(100, 250)
+        cred_status = '*Nyani desu...*'
+    if luck > 350 and luck <= 600: 
+        cred_amount = random.randint(250, 400)
+        cred_status = '*Very Nyice*.'
+    if luck > 600 and luck <= 800: 
         cred_amount = random.randint(400, 500)
-        cred_status = '**Jolly Indeed!**,'
-    if luck > 950 and luck <= 1000:
+        cred_status = '**P-Pogerz!**,'
+    if luck > 800 and luck <= 1000:
         cred_amount = random.randint(500, 700)
-        cred_status = '***Ho Ho Ho!!***,'
+        cred_status = '***Nyaaaa!!***,'
     if luck > 1000:
         cred_amount = 2000
         cred_status = 'RNJesus has blessed you, '
