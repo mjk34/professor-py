@@ -6,6 +6,7 @@ from dateutil import parser
 from pytz import timezone
 
 est = timezone('EST')
+cst = timezone('US/Central')
 
 """Replaces a character in all string of a list"""
 def replaceList (list_of_strings:list, old:str, new:str) -> list:
@@ -27,6 +28,11 @@ def fetchContent (filename) -> str:
     return f.read(), f
 
 """Fetches today's date"""
+def todayTime () -> str:
+    time = datetime.now(cst)
+    return str(time.strftime('%m-%d-%y %H:%M:%S'))
+
+"""Fetches today's date in depth"""
 def today () -> str:
     time = datetime.now(est)
     return str(time.strftime('%m-%d-%y'))
@@ -70,7 +76,7 @@ def dailyLuck () -> Iterable[Union[int, str]]:
         cred_status = '*Very Nyice*.'
     if luck > 600 and luck <= 800: 
         cred_amount = random.randint(400, 500)
-        cred_status = '**P-Pogerz!**,'
+        cred_status = '**P-Poggerz!**,'
     if luck > 800 and luck <= 1000:
         cred_amount = random.randint(500, 700)
         cred_status = '***Nyaaaa!!***,'

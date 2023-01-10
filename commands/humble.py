@@ -3,7 +3,7 @@ import commands.user as user
 import random
 
 from dotenv import load_dotenv
-from commands.helper import today, getIcon, getName
+from commands.helper import today, getIcon, getName, todayTime
 
 load_dotenv()
 HUMBLE = int(os.getenv('HUMBLE_ID'))
@@ -18,8 +18,10 @@ async def humble_powa(ctx, client, BLOCKCHAIN):
     humble_icon = await getIcon(HUMBLE, client)
     """Check if humble has already recieved its daily"""
     if user.hasDaily(HUMBLE, BLOCKCHAIN) == False:
+        print('Humble Power: %s - already used Daily' % todayTime())
         return
     
+    print('Humble Power: %s - have not used Daily' % todayTime())
     bonus = int(user.getDailyCount(HUMBLE, BLOCKCHAIN) / 7)
     print(bonus)
     
@@ -43,7 +45,7 @@ async def humble_powa(ctx, client, BLOCKCHAIN):
     BLOCKCHAIN.addBlock(new_block)
     if BLOCKCHAIN.isChainValid():
         BLOCKCHAIN.storeChain()           
-    BLOCKCHAIN.printChain()
+    # BLOCKCHAIN.printChain()
 
     desc = f'Beep Boop, I have generated **+{total}** creds, I grow stronger by the moment!\n'
     

@@ -114,6 +114,7 @@ async def levelStat (ctx, stat_name, BLOCKCHAIN):
         stat_costs = fortune_costs
 
     creds = user.totalCreds(id, BLOCKCHAIN)
+    # print('%10s %d - %5d' % (stat_name, stat, stamina_costs[stat + 1]))
 
     if stat >= 6:
         desc = f'Your **{stat_name}** is at its max level, no further upgrades are available.\n\n'
@@ -129,6 +130,7 @@ async def levelStat (ctx, stat_name, BLOCKCHAIN):
         return
 
     cost = stat_costs[stat+1]
+    # print('%s %d - %5d' % (stat_name, stat + 1, cost))
 
     if creds < cost:
         desc = f'Insufficient funds. **{stat_name} {stat}** -> **{stat_name} {stat+1}** requires **{cost}** uwuCreds.\n\n'
@@ -143,35 +145,36 @@ async def levelStat (ctx, stat_name, BLOCKCHAIN):
         await ctx.send(embed=embed)
         return
     
-    """Generate new Block"""
-    new_block = block.Block(
-        user = id,
-        name = name,
-        timestamp = today(),
-        description = f'{stat_name}',
-        data = -cost
-    )
+    else: 
+        """Generate new Block"""
+        new_block = block.Block(
+            user = id,
+            name = name,
+            timestamp = today(),
+            description = f'{stat_name}',
+            data = -cost
+        )
+        
+        """Update Blockchain"""
+        if BLOCKCHAIN.isChainValid() == False:
+            print('The current Blockchain is not valid, performing rollback.')
+            BLOCKCHAIN = blockchain.Blockchain()
     
-    """Update Blockchain"""
-    if BLOCKCHAIN.isChainValid() == False:
-        print('The current Blockchain is not valid, performing rollback.')
-        BLOCKCHAIN = blockchain.Blockchain()
- 
-    BLOCKCHAIN.addBlock(new_block)
-    if BLOCKCHAIN.isChainValid():
-        BLOCKCHAIN.storeChain()           
+        BLOCKCHAIN.addBlock(new_block)
+        if BLOCKCHAIN.isChainValid():
+            BLOCKCHAIN.storeChain()           
 
-    desc = f'Congratulations. **{stat_name} {stat}** -> **{stat_name} {stat+1}**!!!.\n\n'
+        desc = f'Congratulations. **{stat_name} {stat}** -> **{stat_name} {stat+1}**!!!\n\n'
 
-    """Return Message"""
-    embed = discord.Embed(
-        title = f'Level up - {stat_name}',
-        description = desc,
-        color = 2352682,
-    ).set_thumbnail(url=ctx.author.avatar_url)
-    embed.set_footer(text='@~ powered by UwUntu')
-    await ctx.send(embed=embed)
-    return
+        """Return Message"""
+        embed = discord.Embed(
+            title = f'Level up - {stat_name}',
+            description = desc,
+            color = 2352682,
+        ).set_thumbnail(url=ctx.author.avatar_url)
+        embed.set_footer(text='@~ powered by UwUntu')
+        await ctx.send(embed=embed)
+        return
 
 async def wish (ctx, BLOCKCHAIN):
     id, name = ctx.author.id, ctx.author.name
@@ -234,7 +237,6 @@ async def wish (ctx, BLOCKCHAIN):
         BLOCKCHAIN.addBlock(star_block)
     if BLOCKCHAIN.isChainValid():
         BLOCKCHAIN.storeChain()   
-    
 
     if star_flag: 
         desc = f'Congratulations. You gained a Star!!!.\n\n'

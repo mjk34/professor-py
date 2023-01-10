@@ -3,10 +3,12 @@ from commands.helper import dailyLuck
 from main import BLOCKCHAIN
 
 BLOCKCHAIN = blockchain.Blockchain()
+UWU = 158593623632379904
 DYL = 382028628227260418
 JIM = 197049113924075521
 VHC = 390685992194932746
 HYE = 476194100769587201
+HMB = 904409606376263740
 
 def HumbleDyl (userID):
     if len(BLOCKCHAIN.chain) == 1: return '\nGenesis'
@@ -39,15 +41,14 @@ def FindAverageUWU (userID):
     print('Total: %4d\nAverage: %4.2f\nBonus Total: %4d' % \
         (sum, average, bonuSum))
 
-for x in range(100):
-    total = 0
-    for i in range(1): #people
-        for j in range(20): #days
-            for k in range(2): #wishes
-                if random.random() < 0.008:
-                    total += 1
-    print(total)
+def check (userID):
+    if len(BLOCKCHAIN.chain) == 1: return '\nGenesis'
 
+    sum = 0
+    for block in BLOCKCHAIN.chain[1:]:
+        if block.getUser() == userID:
+            sum += block.getData()
+            print('% 4.0f %s %s' % (block.getData(), block.getTime(), block.getDesc()))
+    print('Total: ', sum)     
 
-# 362.21 per day for users
-
+check(HMB)

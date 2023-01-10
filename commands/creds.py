@@ -24,7 +24,7 @@ async def daily (ctx, client, BLOCKCHAIN):
     if user.hasDaily(id, BLOCKCHAIN) == False:
         embed = discord.Embed(
             title = f'Daily',
-            description = f'You next **/uwu** is tomorrow, it now resets based on date!',
+            description = f'You next **/uwu** is tomorrow.',
             color = 6053215    
         ).set_thumbnail(url=ctx.author.avatar_url)
         embed.set_footer(text='@~ powered by UwUntu')
@@ -54,7 +54,7 @@ async def daily (ctx, client, BLOCKCHAIN):
     BLOCKCHAIN.addBlock(new_block)
     if BLOCKCHAIN.isChainValid():
         BLOCKCHAIN.storeChain()           
-    BLOCKCHAIN.printChain()
+    # BLOCKCHAIN.printChain()
 
     orb_url = 'https://assets.dicebreaker.com/pondering-my-orb-header-art.png/BROK/resize/844%3E/format/jpg/quality/80/pondering-my-orb-header-art.png'
     if random.random() < 0.50:
@@ -109,7 +109,7 @@ async def wallet (ctx, BLOCKCHAIN):
     desc = f'Daily UwU:\u3000\u3000**{daily}**\nDaily Wish:\u3000\u3000**{2-user_wish}/2**\nClaim Bonus: \u3000**{(1 + stamina_benefits2[stamina]) - user_claim}/{1 + stamina_benefits2[stamina]}**\nSubmissions: \u3000**{(10 + stamina_benefits1[stamina]) - user_subs}/{10 + stamina_benefits1[stamina]}** \n\n'
     desc += f'Total Creds:\u3000**{user_creds}**\u3000 Total Tickets: \u3000**{user_tickets}**'
 
-    BLOCKCHAIN.printChain()
+    # BLOCKCHAIN.printChain()
 
     """Return Message"""
     embed = discord.Embed(
@@ -327,7 +327,7 @@ async def snoop (ctx, target, client, BLOCKCHAIN):
 async def view_score(ctx, BLOCKCHAIN):
     id, name = ctx.author.id, ctx.author.name
 
-    user_creds = user.totalCreds(id, BLOCKCHAIN)
+    user_creds = user.totalCredScore(id, BLOCKCHAIN)
     user_tickets = user.totalTickets(id, BLOCKCHAIN)
     total = user.totalValue(user_creds, user_tickets)
 

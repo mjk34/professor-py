@@ -73,6 +73,22 @@ def totalCreds(user_id, BLOCKCHAIN) -> int:
 
 """Evaluate Blockchain:
         1. run through each block belonging to user_id
+        2. for each block, add up all cred transactions"""
+def totalCredScore(user_id, BLOCKCHAIN) -> int:
+    if len(BLOCKCHAIN.chain) == 1: return 0
+    
+    desc, total = 'Ticket', 0
+    stats = ['Vitality', 'Stamina', 'Dexterity', 'Strength', 'Fortune', 'Star']
+    for block in BLOCKCHAIN.chain[1:]:
+        if block.getUser() == user_id:
+            if block.getDesc() == desc: continue
+            if block.getDesc() in stats: continue
+            total += block.getData()
+    
+    return int(total)
+
+"""Evaluate Blockchain:
+        1. run through each block belonging to user_id
         2. for each block, add up all ticket transactions"""
 def totalTickets(user_id, BLOCKCHAIN) -> int:
     if len(BLOCKCHAIN.chain) == 1: return 0
@@ -181,7 +197,7 @@ def getTop(BLOCKCHAIN) -> list:
         user_tickets = totalTickets(user_id, BLOCKCHAIN)
         total = totalValue(user_creds, user_tickets)
 
-        print(f'{user_name} {user_creds} {user_tickets} {total}')
+        # print(f'{user_name} {user_creds} {user_tickets} {total}')
         
         leaderboard.append([user_name, total])
         
@@ -216,8 +232,8 @@ def getAverage(BLOCKCHAIN) -> list:
         
     leaderboard.sort(key = lambda x: x[1], reverse=True) 
 
-    for i in leaderboard:
-        print(i)   
+    # for i in leaderboard:
+    #     print(i)   
     return leaderboard[:10]
 
 """Evaluate Blockchain:
@@ -238,7 +254,7 @@ def getTopIds(creds, HUMBLE, BLOCKCHAIN) -> list:
         user_tickets = totalTickets(user_id, BLOCKCHAIN)
         total = totalValue(user_creds, user_tickets)
 
-        print(f'{user_name} {user_creds} {user_tickets} {total}')
+        # print(f'{user_name} {user_creds} {user_tickets} {total}')
         
         leaderboard.append([user_id, user_name])
         
@@ -334,5 +350,5 @@ def getHumbleLove(user_id, BLOCKCHAIN) -> float:
                 sum += block.getData()
                 count += 1
 
-    print(f'user: {user_id}, sum: {sum}')
+    # print(f'user: {user_id}, sum: {sum}')
     return sum, count
