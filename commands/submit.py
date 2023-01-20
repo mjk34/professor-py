@@ -179,7 +179,7 @@ async def claimBonus (ctx, client, BLOCKCHAIN):
     if user_submits < 3:
         embed = discord.Embed(
             title = f'Bonus',
-            description = f'You must exhaust at least 6 Submissions to claim the *Bonus*!',
+            description = f'You must exhaust at least 3 Submissions to claim the *Bonus*!',
             color = 6053215    
         ).set_thumbnail(url='https://media1.tenor.com/images/80662c4e35cf12354f65f1d6f7beada8/tenor.gif')
         embed.set_footer(text='@~ powered by UwUntu')
