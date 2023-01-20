@@ -176,7 +176,7 @@ async def claimBonus (ctx, client, BLOCKCHAIN):
     fortune = getFortune(id, BLOCKCHAIN) + getStar(id, BLOCKCHAIN)
 
     """Check if User has used daily submits before claim"""
-    if user_submits < 6:
+    if user_submits < 3:
         embed = discord.Embed(
             title = f'Bonus',
             description = f'You must exhaust at least 6 Submissions to claim the *Bonus*!',

@@ -6,7 +6,7 @@ from commands.helper import today
 vitality_benefits = [0, 0.10, 0.15, 0.25, 0.30, 0.40, 0.50]
 vitality_costs = [0, 500, 1000, 1800, 2800, 5000, 7000]
 
-stamina_benefits1 = [0, 2, 2, 4, 4, 5, 6]
+stamina_benefits1 = [0, 2, 2, 4, 4, 5, 5]
 stamina_benefits2 = [0, 0, 0, 0, 0, 1, 2]
 stamina_costs = [0, 700, 1400, 2100, 2700, 3500, 6000]
 
