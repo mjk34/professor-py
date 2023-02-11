@@ -26,8 +26,9 @@ async def humble_powa(ctx, client, BLOCKCHAIN):
     print(bonus)
     
     """Generate new Block"""
-    uwu_average, uwu_rng = 600, random.randint(-50, 350)
-    total = uwu_average + uwu_rng + bonus*50
+    uwu_average, uwu_rng = 600, random.randint(-50, 400)
+    submit_rng = random.randint(150, 300)
+    total = uwu_average + uwu_rng + submit_rng + bonus*50
     
     new_block = block.Block(
         user = HUMBLE,
@@ -45,7 +46,6 @@ async def humble_powa(ctx, client, BLOCKCHAIN):
     BLOCKCHAIN.addBlock(new_block)
     if BLOCKCHAIN.isChainValid():
         BLOCKCHAIN.storeChain()           
-    # BLOCKCHAIN.printChain()
 
     desc = f'Beep Boop, I have generated **+{total}** creds, I grow stronger by the moment!\n'
     
@@ -69,7 +69,7 @@ async def chaos(ctx, client, bonus, BLOCKCHAIN):
 
     id, name = ctx.author.id, ctx.author.name
     luck = random.random()
-    creds = random.randint(150, 450) + 80*bonus
+    creds = random.randint(100, 200) + 90*bonus
 
     candidates = user.getTopIds(creds, HUMBLE, BLOCKCHAIN)
     humble_name = await getName(HUMBLE, client)

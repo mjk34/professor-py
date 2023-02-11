@@ -3,73 +3,50 @@ import commands.user as user
 
 from commands.helper import today
 
-vitality_benefits = [0, 0.10, 0.15, 0.25, 0.30, 0.40, 0.50]
-vitality_costs = [0, 500, 1000, 1800, 2800, 5000, 7000]
-
-stamina_benefits1 = [0, 2, 2, 4, 4, 5, 5]
-stamina_benefits2 = [0, 0, 0, 0, 0, 1, 2]
-stamina_costs = [0, 700, 1400, 2100, 2700, 3500, 6000]
-
-strength_benefits = [0, 0.25, 0.50, 0.75, 1.00, 1.25, 1.50]
-strength_costs = [0, 500, 1000, 1800, 2800, 5000, 7000]
-
-dexterity_benefits = [0, 0.25, 0.25, 0.50, 0.50, 0.75, 1.00]
-dexterity_costs = [0, 500, 1000, 1800, 2800, 5000, 7000]
-
-fortune_benefits = [0, 1, 2, 3, 4, 5, 6]
-fortune_costs = [0, 800, 1600, 2400, 3200, 6400, 8000]
-
 """Allow users to view their stat progress and benefits"""
 """Vitality, Stamina, Strength, Dexterity, Fortune, Star"""
-async def stats (ctx, BLOCKCHAIN):
-    
-    id, name = ctx.author.id, ctx.author.name
 
+async def stats (ctx, BLOCKCHAIN):
+    id, name = ctx.author.id, ctx.author.name
     star = getStar(id, BLOCKCHAIN)
-    luc_str = f'gain **+{star}** to all other stats'
 
     vitality = getVitality(id, BLOCKCHAIN)
-    if vitality < 6: vitality += star
-    vit_str = f'*gain* **+{vitality_benefits[vitality]*100}%** *uwuCreds from Dailies, including bonus*'
+    vit_str = f'*gain* **+{10*vitality}%** *uwuCreds from Dailies, including bonus*'
 
     stamina = getStamina(id, BLOCKCHAIN)
-    if stamina < 6: stamina += star
-    sta_str = f'*gain* **+{stamina_benefits1[stamina]}** *submission and* **+{stamina_benefits2[stamina]}** *weekly claim bonus*'
+    sta_str = f'*gain* **+{1*stamina}** *submission and* **+{int(stamina/2)}** *weekly claim bonus*'
 
     strength = getStrength(id, BLOCKCHAIN)
-    if strength < 6: strength += star
-    str_str = f'*gain* **+{strength_benefits[strength]*100}** *additional uwuCreds per submission*'
+    str_str = f'*gain* **+{40*strength}** *additional uwuCreds per submission*'
 
     dexterity = getDexterity(id, BLOCKCHAIN)
-    if dexterity < 6: dexterity += star
-    dex_str = f'*gain* **+{dexterity_benefits[dexterity]*100}%** *uwuCreds from clip reviews bonuses*'
+    dex_str = f'*gain* **+{25*dexterity}%** *uwuCreds from clip reviews bonuses*'
 
     fortune = getFortune(id, BLOCKCHAIN)
-    if fortune < 6: fortune += star
-    for_str = f'*gain* **+{fortune_benefits[fortune]}** *bonus stacks when claiming weekly bonuses*'
+    for_str = f'*gain* **+{1*fortune}** *bonus stacks and* **+{int(fortune/2)}** *daily wishes*'
 
     desc = f'Below lists your current student stats and benefits:\n\n'
     desc += f'**Vitality {vitality}** \u3000 {vit_str}.\n'
-    if vitality < 6: desc += f' \u3000  \u3000  \u3000  \u3000  \u3000(next upgrade: {vitality_costs[vitality-star+1]})\n\n'
+    if vitality < 5: desc += f' \u3000  \u3000  \u3000  \u3000  \u3000(NEXT: {800*(vitality + 1)})\n\n'
     else: desc += ' \u3000  \u3000  \u3000  \u3000  \u3000(MAX Level)\n'
 
     desc += f'**Stamina {stamina}** \u3000 {sta_str}.\n'
-    if stamina < 6: desc += f' \u3000  \u3000  \u3000  \u3000  \u3000(next upgrade: {stamina_costs[stamina-star+1]})\n\n'
+    if stamina < 5: desc += f' \u3000  \u3000  \u3000  \u3000  \u3000(NEXT : {600 + 800*(stamina)})\n\n'
     else: desc += ' \u3000  \u3000  \u3000  \u3000  \u3000(MAX Level)\n'
 
     desc += f'**Strength {strength}** \u3000 {str_str}.\n'
-    if strength < 6: desc += f' \u3000  \u3000  \u3000  \u3000  \u3000(next upgrade: {strength_costs[strength-star+1]})\n\n'
+    if strength < 5: desc += f' \u3000  \u3000  \u3000  \u3000  \u3000(NEXT: {400 + 600*(strength)})\n\n'
     else: desc += ' \u3000  \u3000  \u3000  \u3000  \u3000(MAX Level)\n\n'
 
     desc += f'**Dexterity {dexterity}**\u3000{dex_str}.\n'
-    if dexterity < 6: desc += f' \u3000  \u3000  \u3000  \u3000  \u3000(next upgrade: {dexterity_costs[dexterity-star+1]})\n\n'
+    if dexterity < 5: desc += f' \u3000  \u3000  \u3000  \u3000  \u3000(NEXT: {800 + 600*(dexterity)})\n\n'
     else: desc += ' \u3000  \u3000  \u3000  \u3000  \u3000(MAX Level)\n\n'
 
     desc += f'**Fortune {fortune}** \u3000 {for_str}.\n'
-    if fortune < 6: desc += f' \u3000  \u3000  \u3000  \u3000  \u3000(next upgrade: {fortune_costs[fortune-star+1]})\n\n'
+    if fortune < 5: desc += f' \u3000  \u3000  \u3000  \u3000  \u3000(NEXT: {800 + 900*(fortune)})\n\n'
     else: desc += ' \u3000  \u3000  \u3000  \u3000  \u3000(MAX Level)\n\n'
 
-    desc += f'**Star {star}**\u3000\u3000\u3000{luc_str}. \n\n'
+    desc += f'You have **{star} STAR**(s), bring them to the Starforger with /set_star to upgrade a core stat. \n\n'
 
     """Return Message"""
     embed = discord.Embed(
@@ -96,28 +73,27 @@ async def levelUp (ctx, stat_name, BLOCKCHAIN):
 async def levelStat (ctx, stat_name, BLOCKCHAIN):
     id, name = ctx.author.id, ctx.author.name
 
-    stat, stat_costs = 0, []
+    stat, cost = 0, 0
     if stat_name == 'Vitality':
         stat = getVitality(id, BLOCKCHAIN)
-        stat_costs = vitality_costs
+        cost = 800*(stat + 1)
     if stat_name == 'Stamina':
         stat = getStamina(id, BLOCKCHAIN)
-        stat_costs = stamina_costs
+        cost = 600 + 800*(stat + 1)
     if stat_name == 'Strength':
         stat = getStrength(id, BLOCKCHAIN)
-        stat_costs = strength_costs
+        cost = 400 + 600*(stat + 1)
     if stat_name == 'Dexterity':
         stat = getDexterity(id, BLOCKCHAIN)
-        stat_costs = dexterity_costs
+        cost = 800 + 600*(stat + 1)
     if stat_name == 'Fortune':
         stat = getFortune(id, BLOCKCHAIN)
-        stat_costs = fortune_costs
+        cost = 800 + 900*(stat + 1)
 
     creds = user.totalCreds(id, BLOCKCHAIN)
-    # print('%10s %d - %5d' % (stat_name, stat, stamina_costs[stat + 1]))
 
-    if stat >= 6:
-        desc = f'Your **{stat_name}** is at its max level, no further upgrades are available.\n\n'
+    if stat >= 5:
+        desc = f'Your **{stat_name}** is at MAX level, use STARs to further this stat.\n\n'
 
         """Return Message"""
         embed = discord.Embed(
@@ -128,9 +104,6 @@ async def levelStat (ctx, stat_name, BLOCKCHAIN):
         embed.set_footer(text='@~ powered by UwUntu')
         await ctx.send(embed=embed)
         return
-
-    cost = stat_costs[stat+1]
-    # print('%s %d - %5d' % (stat_name, stat + 1, cost))
 
     if creds < cost:
         desc = f'Insufficient funds. **{stat_name} {stat}** -> **{stat_name} {stat+1}** requires **{cost}** uwuCreds.\n\n'
@@ -179,8 +152,9 @@ async def levelStat (ctx, stat_name, BLOCKCHAIN):
 async def wish (ctx, BLOCKCHAIN):
     id, name = ctx.author.id, ctx.author.name
     creds, cost = user.totalCreds(id, BLOCKCHAIN), 200
+    fortune = getFortune(id, BLOCKCHAIN)
 
-    if user.hasWish(id, BLOCKCHAIN) >= 2:
+    if user.hasWish(id, BLOCKCHAIN) >= 2 + int(fortune/2):
         desc = f'You have no more Wishes left for today.\n\n'
 
         """Return Message"""
@@ -207,7 +181,7 @@ async def wish (ctx, BLOCKCHAIN):
         return
     
     star_flag = False
-    if random.random() < 0.008:
+    if random.random() < 0.035:
         star_flag = True
 
     """Generate new Block"""
@@ -263,7 +237,78 @@ async def wish (ctx, BLOCKCHAIN):
         embed.set_footer(text='@~ powered by UwUntu')
         await ctx.send(embed=embed)
         return
+
+async def setStar (ctx, stat_name, BLOCKCHAIN):
+    id, name = ctx.author.id, ctx.author.name
+    star = getStar(id, BLOCKCHAIN)
+
+    if star < 0:
+        embed = discord.Embed(
+            title = f'Starforger',
+            description = f'The Starforger does not sense the power of a STAR within you, return once you have a STAR.',
+            color = 6053215    
+        ).set_thumbnail(url=ctx.author.avatar_url)
+        embed.set_footer(text='@~ powered by UwUntu')
+        await ctx.send(embed=embed)
+        return
+
+    # Check Spelling
+    stat, stat_level = '', 0
+    if stat_name == 'vitality' or stat_name == 'Vitality' or stat_name == 'VIT':
+        stat = 'Vitality'
+        stat_level = getVitality(id, BLOCKCHAIN) + 1
+    if stat_name == 'stamina' or stat_name == 'Stamina' or stat_name == 'STA':
+        stat = 'Stamina'
+        stat_level = getStamina(id, BLOCKCHAIN) + 1
+    if stat_name == 'strength' or stat_name == 'Strength' or stat_name == 'STR':
+        stat = 'Strength'
+        stat_level = getStrength(id, BLOCKCHAIN) + 1
+    if stat_name == 'dexterity' or stat_name == 'Dexterity' or stat_name == 'DEX':
+        stat = 'Dexterity'
+        stat_level = getDexterity(id, BLOCKCHAIN) + 1
+    if stat_name == 'fortune' or stat_name == 'Fortune' or stat_name == 'FOR':
+        stat = 'Fortune'
+        stat_level = getFortune(id, BLOCKCHAIN) + 1
+
+    """Generate new Block"""
+    anti_block = block.Block(
+        user = id,
+        name = name,
+        timestamp = today(),
+        description = f'-Star',
+        data = 0
+    )
+
+    stat_block = block.Block(
+        user = id,
+        name = name,
+        timestamp = today(),
+        description= stat,
+        data = 0
+    )
+
+    """Update Blockchain"""
+    if BLOCKCHAIN.isChainValid() == False:
+        print('The current Blockchain is not valid, performing rollback.')
+        BLOCKCHAIN = blockchain.Blockchain()
+ 
+    BLOCKCHAIN.addBlock(anti_block)
+    BLOCKCHAIN.addBlock(stat_block)
+    if BLOCKCHAIN.isChainValid():
+        BLOCKCHAIN.storeChain()
     
+    """Return Message"""
+    desc = f'The Starforger shaped your STAR into **{stat} {stat_level}**.\n\n'
+
+    """Return Message"""
+    embed = discord.Embed(
+        title = f'Starforger',
+        description = desc,
+        color = 2352682,
+    ).set_thumbnail(url=ctx.author.avatar_url)
+    embed.set_image(url='https://media.tenor.com/N9tfR3_w9uYAAAAC/gojo-satoru-hollow-purple.gif')
+    embed.set_footer(text='@~ powered by UwUntu')
+    await ctx.send(embed=embed)
 
 def getVitality (user_id, BLOCKCHAIN)-> int:
     if len(BLOCKCHAIN.chain) == 1: return 0
@@ -330,9 +375,11 @@ def getStar (user_id, BLOCKCHAIN)-> int:
 
     star = 0
 
-    desc = 'Star'
+    desc, desc2 = 'Star', '-Star'
     for block in BLOCKCHAIN.chain[1:]:
         if block.getUser() == user_id:
             if block.getDesc() == desc:
                 star += 1
+            if block.getDesc() == desc2:
+                star -= 1
     return star

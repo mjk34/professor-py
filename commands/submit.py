@@ -3,7 +3,7 @@ import commands.user as user
 
 from discord.utils import get
 from commands.helper import today, getName
-from commands.stats import getStamina, getStar, getFortune, stamina_benefits2, fortune_benefits
+from commands.stats import getStamina, getStar, getFortune
 
 heroes = ['DVA', 'D.VA', 'DOOMFIST', 'DOOM', 'WINSTON', 'MONKEY', 'WRECKING BALL', 'BALL', 'HAMMOND', 'JUNKER QUEEN', 'ORISA', 'ROADHOG', 'HOG', 'REINHARDT', 'REIN', 'SIGMA', 'SIG', 'ZARYA', 'BASTION', 'ECHO', 'JUNKRAT', 'MEI', 'PHARAH', 'SOJOURN', 'SOLDIER', 'SOLDIER: 76', '76', 'SOLDIER 76', 'SYMMETRA', "SYM", 'TORBJORN', 'TORB', 'ASHE', 'HANZO', 'CASSIDY', 'CREE', 'CASS', 'MCCREE', 'GENJI', 'REAPER', 'SOMBRA', 'TRACER', 'ANA', 'BAPTISTE', 'BRIGITTE', 'KIRIKO', 'LUCIO', 'MERCY', 'MOIRA', 'ZENYATTA', 'ZEN']
 
@@ -186,7 +186,7 @@ async def claimBonus (ctx, client, BLOCKCHAIN):
         await ctx.send(embed=embed)
         return
     
-    if user.hasClaim(id, BLOCKCHAIN) >= 1 + stamina_benefits2[stamina]:
+    if user.hasClaim(id, BLOCKCHAIN) >= 1 + int(stamina/2):
         embed = discord.Embed(
             title = f'Bonus',
             description = f'You have already claimed your bonus this week!',
@@ -196,8 +196,8 @@ async def claimBonus (ctx, client, BLOCKCHAIN):
         await ctx.send(embed=embed)
         return
 
-    bonus = int(user_daily / 7) + fortune_benefits[fortune]
-    bonus_creds = 150 + bonus*130
+    bonus = int(user_daily / 7) + int(fortune/2)
+    bonus_creds = 250 + bonus*150
     
     """Generate new Block"""
     new_block = block.Block(

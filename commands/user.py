@@ -20,7 +20,7 @@ def hasDaily(user_id, BLOCKCHAIN) -> bool:
     return {True:False, False:True}[date == today()]
 
 def hasWish(user_id, BLOCKCHAIN) -> int:
-    if len(BLOCKCHAIN.chain) == 1: return True
+    if len(BLOCKCHAIN.chain) == 1: return 0
 
     desc, count = 'Wish', 0
     for block in BLOCKCHAIN.chain[1:]:
@@ -47,7 +47,7 @@ def getAvgDaily(user_id, BLOCKCHAIN) -> float:
         1. find the most recent claim based on user_id
         2. check if the date difference is greater than 0"""
 def hasClaim(user_id, BLOCKCHAIN) -> int: 
-    if len(BLOCKCHAIN.chain) == 1: return True
+    if len(BLOCKCHAIN.chain) == 1: return 0
     
     desc, count = 'Claim Bonus', 0
     for block in BLOCKCHAIN.chain[1:]:

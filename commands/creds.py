@@ -5,7 +5,7 @@ import commands.humble as humble
 from discord.utils import get
 from dotenv import load_dotenv
 from commands.helper import today, dailyLuck, dailyFortune, getName, fetchContentList, getIcon
-from commands.stats import getVitality, getStamina, getStar, vitality_benefits, stamina_benefits1, stamina_benefits2
+from commands.stats import getVitality, getStamina, getFortune
 
 filler = ['<', '>', '!', '@', '&']
 
@@ -32,10 +32,10 @@ async def daily (ctx, client, BLOCKCHAIN):
         return
     
     fortune, status = dailyLuck()
-    bonus = int(user.getDailyCount(id, BLOCKCHAIN) / 7)
+    bonus = int(user.getDailyCount(id, BLOCKCHAIN) / 7) + int(getFortune(id, BLOCKCHAIN))
     
-    vitality = getVitality(id, BLOCKCHAIN) + getStar(id, BLOCKCHAIN)
-    stat_bonus = int((fortune + bonus*80)*vitality_benefits[vitality])
+    vitality = getVitality(id, BLOCKCHAIN)
+    stat_bonus = int((fortune + bonus*100)*(0.10*vitality))
 
     """Generate new Block"""
     new_block = block.Block(
@@ -43,7 +43,7 @@ async def daily (ctx, client, BLOCKCHAIN):
         name = name,
         timestamp = today(),
         description = 'Daily',
-        data = fortune + bonus*80 + stat_bonus
+        data = fortune + bonus*100 + stat_bonus
     )
     
     """Update Blockchain"""
@@ -54,7 +54,6 @@ async def daily (ctx, client, BLOCKCHAIN):
     BLOCKCHAIN.addBlock(new_block)
     if BLOCKCHAIN.isChainValid():
         BLOCKCHAIN.storeChain()           
-    # BLOCKCHAIN.printChain()
 
     orb_url = 'https://assets.dicebreaker.com/pondering-my-orb-header-art.png/BROK/resize/844%3E/format/jpg/quality/80/pondering-my-orb-header-art.png'
     if random.random() < 0.50:
@@ -67,9 +66,11 @@ async def daily (ctx, client, BLOCKCHAIN):
     
     desc = f'{status} **+{fortune}** creds were added to your *Wallet*!\n'
     if bonus > 0:
-        desc += f'From **+{bonus}** *Bonus*, you get an additional **+{bonus*80}** creds!\n'
+        desc += f'From **+{bonus}** *Bonus*, you get an additional **+{bonus*100}** creds!\n'
     if vitality > 0:
         desc += f'\nFrom **Vitality {vitality}**, you get an additional **+{stat_bonus}** creds!' 
+
+    desc += f' Net total: {fortune + bonus*100 + stat_bonus}'
     
     """Return Message"""
     embed = discord.Embed(
@@ -103,13 +104,17 @@ async def wallet (ctx, BLOCKCHAIN):
     user_claim = user.hasClaim(id, BLOCKCHAIN)
     user_wish = user.hasWish(id, BLOCKCHAIN)
 
-    stamina = getStamina(id, BLOCKCHAIN) + getStar(id, BLOCKCHAIN)
+    stamina = getStamina(id, BLOCKCHAIN)
+    fortune = getFortune(id, BLOCKCHAIN)
+
+    total_wish = 2 + int(fortune/2)
+    total_claim = 1 + int(stamina/2)
 
     daily = {True:'Available', False:'Not Available'}[user.hasDaily(id, BLOCKCHAIN)]
-    desc = f'Daily UwU:\u3000\u3000**{daily}**\nDaily Wish:\u3000\u3000**{2-user_wish}/2**\nClaim Bonus: \u3000**{(1 + stamina_benefits2[stamina]) - user_claim}/{1 + stamina_benefits2[stamina]}**\nSubmissions: \u3000**{(5 + stamina_benefits1[stamina]) - user_subs}/{5 + stamina_benefits1[stamina]}** \n\n'
+    desc = f'Daily UwU:\u3000\u3000**{daily}**\nDaily Wish:\u3000\u3000**{total_wish - user_wish}/{total_wish}**\nClaim Bonus: \u3000**{total_claim - user_claim}/{total_claim}**\nSubmissions: \u3000**{(5 + stamina) - user_subs}/{5 + stamina}** \n\n'
     desc += f'Total Creds:\u3000**{user_creds}**\u3000 Total Tickets: \u3000**{user_tickets}**'
 
-    # BLOCKCHAIN.printChain()
+    BLOCKCHAIN.printChain()
 
     """Return Message"""
     embed = discord.Embed(
@@ -305,7 +310,7 @@ async def snoop (ctx, target, client, BLOCKCHAIN):
         left = random.random()
         right = random.random()
         
-        if left < 0.25 and right < 0.25 and left != right:
+        if left < 0.20 and right < 0.20 and left != right:
             break
 
     upper = int((1 + left)*user_creds)
@@ -322,23 +327,4 @@ async def snoop (ctx, target, client, BLOCKCHAIN):
     ).set_thumbnail(url=target_icon)
     embed.set_footer(text='@~ powered by UwUntu')
     embed.set_image(url='https://c.tenor.com/LBkGAkraDxQAAAAC/vtuber-hololive.gif')
-    await ctx.send(embed=embed)
-
-async def view_score(ctx, BLOCKCHAIN):
-    id, name = ctx.author.id, ctx.author.name
-
-    user_creds = user.totalCredScore(id, BLOCKCHAIN)
-    user_tickets = user.totalTickets(id, BLOCKCHAIN)
-    total = user.totalValue(user_creds, user_tickets)
-
-    desc = f'Your UwUversity Score is **{total}**!'
-
-    """Return Message"""
-    embed = discord.Embed(
-        title = f'UwUversity Score',
-        description = desc,
-        color = 6943230    
-    ).set_thumbnail(url=ctx.author.avatar_url)
-    embed.set_footer(text='@~ powered by UwUntu')
-    embed.set_image(url='https://vignette.wikia.nocookie.net/powerlisting/images/d/d7/Giorno_Giovanna_(JoJo)_Gold_Experience.gif')
     await ctx.send(embed=embed)

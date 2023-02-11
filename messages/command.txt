@@ -60,4 +60,5 @@ Level Up a stat to recieve benefits
 Vitality, Stamina, Strength, Dexterity, or Fortune
 Gamble 200 uwuCreds to gain the Star Stat
 Rate a gameplay clip 1-5
-1-5, 5 being the highest
+provide the total rating the <user> recieved
+Reforge the star into a stat upgrade

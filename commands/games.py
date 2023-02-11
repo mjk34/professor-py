@@ -3,7 +3,7 @@ import commands.user as user
 
 from discord.utils import get
 from commands.helper import getName
-from commands.stats import getStamina, getStar, getStrength, getDexterity, stamina_benefits1, strength_benefits, dexterity_benefits
+from commands.stats import getStamina, getStrength, getDexterity
 from commands.helper import today
 
 filler = ['<', '>', '!', '@']
@@ -13,14 +13,14 @@ async def submitClip(ctx, title, link, BLOCKCHAIN):
     """1. Blockchain will be evaluated, user submissions will be checked
        2. Blockchain will be validated, new block will be added to the end of Blockchain"""
     id, name = ctx.author.id, ctx.author.name
-    stamina = getStamina(id, BLOCKCHAIN) + getStar(id, BLOCKCHAIN)
-    strength = getStrength(id, BLOCKCHAIN) + getStar(id, BLOCKCHAIN)
+    stamina = getStamina(id, BLOCKCHAIN) 
+    strength = getStrength(id, BLOCKCHAIN)
 
     color = 6053215
 
     """check if the user has submissions left"""
     user_subs = user.totalSubsWeek(id, BLOCKCHAIN)
-    if user_subs >= (5 + stamina_benefits1[stamina]):
+    if user_subs >= (5 + stamina):
         embed = discord.Embed(
             title = f'Submission',
             description = f'Out of Submissions, Submissions will reset every Monday!',
@@ -31,7 +31,6 @@ async def submitClip(ctx, title, link, BLOCKCHAIN):
         return
 
     color = 6943230
-
             
     """Generate new Block"""
     new_block = block.Block(
@@ -39,7 +38,7 @@ async def submitClip(ctx, title, link, BLOCKCHAIN):
         name = name,
         timestamp = today(),
         description = 'Submission',
-        data = 100 + strength_benefits[strength]*100
+        data = 200 + 40*strength
     )
 
     clip_block = block.Block(
@@ -61,20 +60,21 @@ async def submitClip(ctx, title, link, BLOCKCHAIN):
         BLOCKCHAIN.storeChain()           
             
     """Return Message"""
-    desc = 'Overwatch Game:\u3000\u3000\u3000\u3000\u3000\u3000\u3000\u3000\u3000\u3000\n\n'
-    desc += f'Title: \u3000**{title}**\n'
-    desc += f'Link: \u3000**{link}**\n\n'
-    desc += f'Thank you for submitting, **{100}** creds were added to your *Wallet*! If you submitted a clip, they will be reviewed at a later date!\n'
+    desc = f'Title: \u3000**{title}**\n'
+    desc += f'Link: \u3000**{link}**\n'
+    desc2 = f'Thank you for submitting, **{200}** creds were added to your *Wallet*! If you submitted a clip, check the events tab to see when is the next Clip Night!\n'
     
     if strength > 0:
-        desc += f'\nFrom **Strength {strength}**, you get an additional **+{int(strength_benefits[strength]*100)}** creds!'
+        desc2 += f'\nFrom **Strength {strength}**, you get an additional **+{int(40*strength)}** creds!'
     embed = discord.Embed(
         title = f'Submission',
         description = desc,
         color = color    
     ).set_thumbnail(url=ctx.author.avatar_url)
     embed.set_footer(text='@~ powered by UwUntu')
-    message_to_pin = await ctx.send(embed=embed)   
+    message_to_pin = await ctx.send(embed=embed)
+
+    await ctx.send(desc2)
     
     if link == 'NA' or link == 'N/A' or link == 'na': return
     await message_to_pin.pin()
@@ -82,19 +82,14 @@ async def submitClip(ctx, title, link, BLOCKCHAIN):
 async def review(ctx, reciever, rating, client, BLOCKCHAIN):
     """1. User will be checked for Moderator status
        2. Blockchain will be validated, new blocks will be added to the end of Blockchain"""
-
-    if rating < 1 or rating > 5:
-        text = f'Rating out of bounds, you may rate a clip 1-5, 5 being the highest.'
-        await ctx.send(f'```CSS\n[{text}]\n```')
-        return
     
     """Parses Reciever id from <@id>"""
     reciever_id = reciever
     for ch in filler: reciever_id = reciever_id.replace(ch, '')
     reciever_id = int(reciever_id)
 
-    dexterity = getDexterity(reciever_id, BLOCKCHAIN) + getStar(reciever_id, BLOCKCHAIN)
-    dex_bonus = int((40*rating)*dexterity_benefits[dexterity])
+    dexterity = getDexterity(reciever_id, BLOCKCHAIN)
+    dex_bonus = int((40*rating)*(0.25*dexterity))
 
     """Check if the Giver is a moderator"""
     role = get(ctx.guild.roles, name='Moderator')
@@ -118,7 +113,7 @@ async def review(ctx, reciever, rating, client, BLOCKCHAIN):
         if BLOCKCHAIN.isChainValid():
             BLOCKCHAIN.storeChain()           
         
-        desc = f'<@{reciever_id}> recieved a {rating} star review! **{40*rating}** was rewarded.\n\n'
+        desc = f'<@{reciever_id}> recieved {rating} Rating for this Clip Night! **{40*rating}** was rewarded.\n\n'
         if dexterity > 0:
             desc += f'From **Dexterity {dexterity}**, you get an additional **+{dex_bonus}** creds!'
 
