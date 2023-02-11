@@ -222,7 +222,7 @@ async def wish (ctx, BLOCKCHAIN):
             color = 2352682,
         ).set_thumbnail(url=ctx.author.avatar_url)
         embed.set_image(url='https://media0.giphy.com/media/hd1ilw50Zdb8Y/giphy.gif')
-        embed.set_footer(text='@~ powered by UwUntu')
+        embed.set_footer(text='@~ powered by UwUntu, sponsored by Dre\'s Tears')
         await ctx.send(embed=embed)
     else:
         desc = f'You reached for the Stars, but they were too far.\n\n'
@@ -234,7 +234,7 @@ async def wish (ctx, BLOCKCHAIN):
             color = 6053215,
         ).set_thumbnail(url=ctx.author.avatar_url)
         embed.set_image(url='https://media0.giphy.com/media/nWPLGmsjvdQ4g/giphy.gif')
-        embed.set_footer(text='@~ powered by UwUntu')
+        embed.set_footer(text='@~ powered by UwUntu, sponsored by Dre\'s Tears')
         await ctx.send(embed=embed)
         return
 
