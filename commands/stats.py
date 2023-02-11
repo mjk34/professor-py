@@ -46,7 +46,7 @@ async def stats (ctx, BLOCKCHAIN):
     if fortune < 5: desc += f' \u3000  \u3000  \u3000  \u3000  \u3000(NEXT: {800 + 900*(fortune)})\n\n'
     else: desc += ' \u3000  \u3000  \u3000  \u3000  \u3000(MAX Level)\n\n'
 
-    desc += f'You have **{star} STAR**(s), bring them to the Starforger with /set_star to upgrade a core stat. \n\n'
+    desc += f'You have **{star} STAR**(s), bring them to the Starforger with /forge to upgrade a core stat. \n\n'
 
     """Return Message"""
     embed = discord.Embed(
@@ -176,7 +176,7 @@ async def wish (ctx, BLOCKCHAIN):
             description = desc,
             color = 6053215,
         ).set_thumbnail(url=ctx.author.avatar_url)
-        embed.set_footer(text='@~ powered by UwUntu')
+        embed.set_footer(text='@~ powered by UwUntu, sponsored by Dre\'s Tears')
         await ctx.send(embed=embed)
         return
     

@@ -230,10 +230,7 @@ def getAverage(BLOCKCHAIN) -> list:
         user_subs_ow = int(totalSubs(user_id, 'O', BLOCKCHAIN))
         leaderboard.append([user_name, user_avg_val, user_subs_val, user_avg_ow, user_subs_ow])
         
-    leaderboard.sort(key = lambda x: x[1], reverse=True) 
-
-    # for i in leaderboard:
-    #     print(i)   
+    leaderboard.sort(key = lambda x: x[1], reverse=True)
     return leaderboard[:10]
 
 """Evaluate Blockchain:
