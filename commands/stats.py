@@ -242,7 +242,7 @@ async def setStar (ctx, stat_name, BLOCKCHAIN):
     id, name = ctx.author.id, ctx.author.name
     star = getStar(id, BLOCKCHAIN)
 
-    if star < 0:
+    if star <= 0:
         embed = discord.Embed(
             title = f'Starforger',
             description = f'The Starforger does not sense the power of a STAR within you, return once you have a STAR.',
