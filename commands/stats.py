@@ -151,8 +151,11 @@ async def levelStat (ctx, stat_name, BLOCKCHAIN):
 
 async def wish (ctx, BLOCKCHAIN):
     id, name = ctx.author.id, ctx.author.name
-    creds, cost = user.totalCreds(id, BLOCKCHAIN), 200
     fortune = getFortune(id, BLOCKCHAIN)
+    creds= user.totalCreds(id, BLOCKCHAIN)
+
+    wish_count = 2 + int(fortune/2)
+    cost = int(240/wish_count)
 
     if user.hasWish(id, BLOCKCHAIN) >= 2 + int(fortune/2):
         desc = f'You have no more Wishes left for today.\n\n'
@@ -168,7 +171,7 @@ async def wish (ctx, BLOCKCHAIN):
         return
 
     if creds < cost: 
-        desc = f'Insufficient Funds. a wish costs **200** uwuCreds.\n\n'
+        desc = f'Insufficient Funds. a wish costs **{cost}** uwuCreds.\n\n'
 
         """Return Message"""
         embed = discord.Embed(
@@ -190,7 +193,7 @@ async def wish (ctx, BLOCKCHAIN):
         name = name,
         timestamp = today(),
         description = f'Wish',
-        data = -200
+        data = -cost
     )
 
     star_block = block.Block(
