@@ -2,8 +2,6 @@ import random
 
 from commands.helper import today, checkMonday
 
-heroes = ['DVA', 'D.VA', 'DOOMFIST', 'DOOM', 'WINSTON', 'MONKEY', 'WRECKING BALL', 'BALL', 'HAMMOND', 'JUNKER QUEEN', 'ORISA', 'ROADHOG', 'HOG', 'REINHARDT', 'REIN', 'SIGMA', 'SIG', 'ZARYA', 'BASTION', 'ECHO', 'JUNKRAT', 'MEI', 'PHARAH', 'SOJOURN', 'SOLDIER', 'SOLDIER: 76', '76', 'SOLDIER 76', 'SYMMETRA', "SYM", 'TORBJORN', 'TORB', 'ASHE', 'HANZO', 'CASSIDY', 'CREE', 'CASS', 'MCCREE', 'GENJI', 'REAPER', 'SOMBRA', 'TRACER', 'ANA', 'BAPTISTE', 'BRIGITTE', 'KIRIKO', 'LUCIO', 'MERCY', 'MOIRA', 'ZENYATTA', 'ZEN']
-
 """Evaluated Blockchain:
         1. find the most recent daily based on user_id
         2. check if the date difference is greater than 0"""
@@ -56,6 +54,19 @@ def hasClaim(user_id, BLOCKCHAIN) -> int:
             if block.getDesc() == desc:
                 count += 1
     return count
+
+def hasDonated(user_id, reciever_name, BLOCKCHAIN) -> bool:
+    if len(BLOCKCHAIN.chain) == 1: return 0
+    
+    desc = 'Donate'
+    for block in BLOCKCHAIN.chain[1:]:
+        if block.getUser() == user_id:
+            split = block.getDesc().split('$')
+            if len(split) == 2:
+                if split[0] == desc and split[1] == reciever_name:
+                    return True
+
+    return False
 
 """Evaluate Blockchain:
         1. run through each block belonging to user_id

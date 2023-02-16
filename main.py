@@ -73,11 +73,10 @@ async def _(ctx:SlashContext):
 @slash.slash(name='wallet', description=CMD_DESC[15], guild_ids=[GUILD_ID])
 async def _(ctx:SlashContext): await wallet(ctx, BLOCKCHAIN)
 
-@slash.slash(name='give', description=CMD_DESC[17], guild_ids=[GUILD_ID],
-    options=[create_option(name='receiver', description=CMD_DESC[18], option_type=3, required=True),
-             create_option(name='amount', description=CMD_DESC[19], option_type=4, required=True)])
-async def _(ctx:SlashContext, receiver: str, amount: int): 
-    await give(ctx, receiver, amount, client, BLOCKCHAIN)
+@slash.slash(name='donate', description=CMD_DESC[17], guild_ids=[GUILD_ID],
+    options=[create_option(name='receiver', description=CMD_DESC[18], option_type=3, required=True)])
+async def _(ctx:SlashContext, receiver: str): 
+    await give(ctx, receiver, client, BLOCKCHAIN)
 
 @slash.slash(name='handout', description=CMD_DESC[21], guild_ids=[GUILD_ID],
     options=[create_option(name='receiver', description=CMD_DESC[18], option_type=3, required=True),

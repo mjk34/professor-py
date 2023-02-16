@@ -126,7 +126,7 @@ async def wallet (ctx, BLOCKCHAIN):
     await ctx.send(embed=embed)
    
 """Allow users to give their uwuCreds to another user""" 
-async def give (ctx, reciever, amount, client, BLOCKCHAIN):
+async def give (ctx, reciever, client, BLOCKCHAIN):
     """1. Blockchain will be evaluated, user total is checked
        2. Blockchain will be validated, new blocks will be added to the end of Blockchain"""
 
@@ -137,9 +137,9 @@ async def give (ctx, reciever, amount, client, BLOCKCHAIN):
     
     """Check if the Giver has sufficient uwuCreds"""
     giver_creds = user.totalCreds(giver_id, BLOCKCHAIN)
-    if giver_creds < amount:
+    if giver_creds < 200:
         embed = discord.Embed(
-            title = f'Give',
+            title = f'Donate',
             description = f'Insufficient funds, you currently have **+{giver_creds}** uwuCreds!',
             color = 6053215    
         ).set_thumbnail(url='https://66.media.tumblr.com/2d52e78a64b9cc97fac0cb00a48fe676/tumblr_inline_pamkf7AfPf1s2a9fg_500.gif')
@@ -148,22 +148,31 @@ async def give (ctx, reciever, amount, client, BLOCKCHAIN):
         return
     
     reciever_name = await getName(reciever_id, client)
+    if user.hasDonated(giver_id, reciever_name, BLOCKCHAIN):
+        embed = discord.Embed(
+            title = f'Donate',
+            description = f'You have already donated to <@{reciever_id}>!',
+            color = 6053215    
+        ).set_thumbnail(url='https://media.tenor.com/images/90ea198565528e21b8ec47cdae286395/tenor.gif')
+        embed.set_footer(text='@~ powered by UwUntu')
+        await ctx.send(embed=embed)
+        return
 
     """Generate new Blocks"""
     new_block1 = block.Block(
         user = giver_id,
         name = ctx.author.name,
         timestamp = today(),
-        description = f'Gave {amount} to {reciever_name}',
-        data = -amount
+        description = f'Donate${reciever_name}',
+        data = -200
     )
 
     new_block2 = block.Block(
         user = reciever_id,
         name = reciever_name,
         timestamp = today(),
-        description = f'Recieved {amount} from {ctx.author.name}',
-        data = amount
+        description = f'Recieved from {ctx.author.name}',
+        data = 200
     )
     
     """Update Blockchain"""
@@ -179,7 +188,7 @@ async def give (ctx, reciever, amount, client, BLOCKCHAIN):
     """Return Message"""
     embed = discord.Embed(
         title = f'Give',
-        description = f'**{amount}** uwuCreds was given to <@{reciever_id}>!',
+        description = f'A donation of **{200}** was generously given to <@{reciever_id}>!',
         color = 16700447    
     ).set_image(url='https://2.bp.blogspot.com/-UMkbGppX02A/UwoAVpunIMI/AAAAAAAAGxo/W9a0M4njhOQ/s1600/4363+-+animated_gif+k-on+k-on!+k-on!!+moe+nakano_azusa.gif')
     embed.set_footer(text='@~ powered by UwUntu')
