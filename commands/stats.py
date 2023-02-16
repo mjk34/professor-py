@@ -79,16 +79,16 @@ async def levelStat (ctx, stat_name, BLOCKCHAIN):
         cost = 800*(stat + 1)
     if stat_name == 'Stamina':
         stat = getStamina(id, BLOCKCHAIN)
-        cost = 600 + 800*(stat + 1)
+        cost = 600 + 800*(stat)
     if stat_name == 'Strength':
         stat = getStrength(id, BLOCKCHAIN)
-        cost = 400 + 600*(stat + 1)
+        cost = 400 + 600*(stat)
     if stat_name == 'Dexterity':
         stat = getDexterity(id, BLOCKCHAIN)
-        cost = 800 + 600*(stat + 1)
+        cost = 800 + 600*(stat)
     if stat_name == 'Fortune':
         stat = getFortune(id, BLOCKCHAIN)
-        cost = 800 + 900*(stat + 1)
+        cost = 800 + 900*(stat)
 
     creds = user.totalCreds(id, BLOCKCHAIN)
 
