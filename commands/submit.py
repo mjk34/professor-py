@@ -172,8 +172,8 @@ async def claimBonus (ctx, client, BLOCKCHAIN):
     user_daily = user.getDailyCount(id, BLOCKCHAIN)
     user_submits = user.totalSubsWeek(id, BLOCKCHAIN)
 
-    stamina = getStamina(id, BLOCKCHAIN) + getStar(id, BLOCKCHAIN)
-    fortune = getFortune(id, BLOCKCHAIN) + getStar(id, BLOCKCHAIN)
+    stamina = getStamina(id, BLOCKCHAIN)
+    fortune = getFortune(id, BLOCKCHAIN)
 
     """Check if User has used daily submits before claim"""
     if user_submits < 3:
@@ -196,7 +196,7 @@ async def claimBonus (ctx, client, BLOCKCHAIN):
         await ctx.send(embed=embed)
         return
 
-    bonus = int(user_daily / 7) + int(fortune/2)
+    bonus = int(user_daily / 7) + int(fortune)
     bonus_creds = 250 + bonus*150
     
     """Generate new Block"""
