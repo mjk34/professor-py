@@ -38,7 +38,7 @@ async def submitClip(ctx, title, link, BLOCKCHAIN):
         name = name,
         timestamp = today(),
         description = 'Submission',
-        data = 300 + 40*strength
+        data = 300 + 60*strength
     )
 
     clip_block = block.Block(
@@ -65,7 +65,7 @@ async def submitClip(ctx, title, link, BLOCKCHAIN):
     desc2 = f'Thank you for submitting, **{200}** creds were added to your *Wallet*! If you submitted a clip, check the events tab to see when is the next Clip Night!\n'
     
     if strength > 0:
-        desc2 += f'\nFrom **Strength {strength}**, you get an additional **+{int(40*strength)}** creds!'
+        desc2 += f'\nFrom **Strength {strength}**, you get an additional **+{int(60*strength)}** creds!'
     embed = discord.Embed(
         title = f'Submission',
         description = desc,
