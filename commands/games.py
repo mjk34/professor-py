@@ -20,7 +20,7 @@ async def submitClip(ctx, title, link, BLOCKCHAIN):
 
     """check if the user has submissions left"""
     user_subs = user.totalSubsWeek(id, BLOCKCHAIN)
-    if user_subs >= (5 + stamina):
+    if user_subs >= (3 + stamina):
         embed = discord.Embed(
             title = f'Submission',
             description = f'Out of Submissions, Submissions will reset every Monday!',
@@ -38,7 +38,7 @@ async def submitClip(ctx, title, link, BLOCKCHAIN):
         name = name,
         timestamp = today(),
         description = 'Submission',
-        data = 200 + 40*strength
+        data = 300 + 40*strength
     )
 
     clip_block = block.Block(
@@ -89,7 +89,7 @@ async def review(ctx, reciever, rating, client, BLOCKCHAIN):
     reciever_id = int(reciever_id)
 
     dexterity = getDexterity(reciever_id, BLOCKCHAIN)
-    dex_bonus = int((40*rating)*(0.25*dexterity))
+    dex_bonus = int((20*rating)*(0.25*dexterity))
 
     """Check if the Giver is a moderator"""
     role = get(ctx.guild.roles, name='Moderator')
@@ -101,7 +101,7 @@ async def review(ctx, reciever, rating, client, BLOCKCHAIN):
             name = await getName(reciever_id, client),
             timestamp = today(),
             description = f'Review from {ctx.author.name}',
-            data = 40*rating + dex_bonus
+            data = 20*rating + dex_bonus
         )
         
         """Update Blockchain"""
@@ -113,7 +113,7 @@ async def review(ctx, reciever, rating, client, BLOCKCHAIN):
         if BLOCKCHAIN.isChainValid():
             BLOCKCHAIN.storeChain()           
         
-        desc = f'<@{reciever_id}> recieved {rating} Rating for this Clip Night! **{40*rating}** was rewarded.\n\n'
+        desc = f'<@{reciever_id}> recieved {rating} Ratings for this Clip Night! **{20*rating}** was rewarded.\n\n'
         if dexterity > 0:
             desc += f'From **Dexterity {dexterity}**, you get an additional **+{dex_bonus}** creds!'
 

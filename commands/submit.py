@@ -5,8 +5,6 @@ from discord.utils import get
 from commands.helper import today, getName
 from commands.stats import getStamina, getStar, getFortune
 
-heroes = ['DVA', 'D.VA', 'DOOMFIST', 'DOOM', 'WINSTON', 'MONKEY', 'WRECKING BALL', 'BALL', 'HAMMOND', 'JUNKER QUEEN', 'ORISA', 'ROADHOG', 'HOG', 'REINHARDT', 'REIN', 'SIGMA', 'SIG', 'ZARYA', 'BASTION', 'ECHO', 'JUNKRAT', 'MEI', 'PHARAH', 'SOJOURN', 'SOLDIER', 'SOLDIER: 76', '76', 'SOLDIER 76', 'SYMMETRA', "SYM", 'TORBJORN', 'TORB', 'ASHE', 'HANZO', 'CASSIDY', 'CREE', 'CASS', 'MCCREE', 'GENJI', 'REAPER', 'SOMBRA', 'TRACER', 'ANA', 'BAPTISTE', 'BRIGITTE', 'KIRIKO', 'LUCIO', 'MERCY', 'MOIRA', 'ZENYATTA', 'ZEN']
-
 filler = ['<', '>', '!', '@']
 """Exchanges user uwuCreds for (a) raffle ticket(s)"""
 async def buy_ticket(ctx, amount, BLOCKCHAIN):
@@ -23,7 +21,7 @@ async def buy_ticket(ctx, amount, BLOCKCHAIN):
     if amount < 1:
         count = 0 
         while True:
-            cost = 1000 + 500*(user_tickets + count)
+            cost = 1000 + 300*(user_tickets + count)
             if cost + total_cost < user_creds:
                 total_cost += cost
                 count += 1
@@ -32,7 +30,7 @@ async def buy_ticket(ctx, amount, BLOCKCHAIN):
                 break
     else:
         for i in range(amount):
-            total_cost += 1000 + 500*(user_tickets + i)
+            total_cost += 1000 + 300*(user_tickets + i)
             
     """Check if User has sufficient amount of uwuCreds"""
     if user_creds - total_cost > 0:
@@ -141,7 +139,6 @@ async def leaderboard (ctx, BLOCKCHAIN):
     desc = 'Here lists the most active students in UwUversity!\n\n'
     count = 1
     for member in leaderboard:
-        if member[0] in heroes: continue
         if count == 1:
             desc += f'\u3000** #{count} ** \u3000\u3000 **{member[0]}** \u3000~({member[1]})\n'
             count += 1
@@ -176,10 +173,10 @@ async def claimBonus (ctx, client, BLOCKCHAIN):
     fortune = getFortune(id, BLOCKCHAIN)
 
     """Check if User has used daily submits before claim"""
-    if user_submits < 3:
+    if user_submits < 1:
         embed = discord.Embed(
             title = f'Bonus',
-            description = f'You must exhaust at least 3 Submissions to claim the *Bonus*!',
+            description = f'You must exhaust at least 1 Submissions to claim the *Bonus*!',
             color = 6053215    
         ).set_thumbnail(url='https://media1.tenor.com/images/80662c4e35cf12354f65f1d6f7beada8/tenor.gif')
         embed.set_footer(text='@~ powered by UwUntu')
@@ -243,7 +240,7 @@ async def rafflelist (ctx, BLOCKCHAIN):
     count_tickets = 0 
     total_cost = 0
     while True:
-        cost = 1000 + 500*(user_tickets + count_tickets)
+        cost = 1000 + 300*(user_tickets + count_tickets)
         if cost + total_cost < user_creds:
             total_cost += cost
             count_tickets += 1
@@ -264,7 +261,7 @@ async def rafflelist (ctx, BLOCKCHAIN):
         count += 1
 
     desc += f'\n\nYou can currently buy **{count_tickets}** tickets with **{user_creds}** uwuCreds! '
-    desc += f'Your next ticket costs **{1000 + 500*user_tickets}**, Ganbatte!'
+    desc += f'Your next ticket costs **{1000 + 300*user_tickets}**, Ganbatte!'
 
     """Return Message"""
     embed = discord.Embed(
