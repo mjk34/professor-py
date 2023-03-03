@@ -17,7 +17,7 @@ async def stats (ctx, BLOCKCHAIN):
     sta_str = f'*gain* **+{1*stamina}** *submission and* **+{int(stamina/2)}** *weekly claim bonus*'
 
     strength = getStrength(id, BLOCKCHAIN)
-    str_str = f'*gain* **+{40*strength}** *additional uwuCreds per submission*'
+    str_str = f'*gain* **+{60*strength}** *additional uwuCreds per submission*'
 
     dexterity = getDexterity(id, BLOCKCHAIN)
     dex_str = f'*gain* **+{25*dexterity}%** *uwuCreds from clip reviews bonuses*'
