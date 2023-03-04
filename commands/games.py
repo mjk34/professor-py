@@ -62,7 +62,7 @@ async def submitClip(ctx, title, link, BLOCKCHAIN):
     """Return Message"""
     desc = f'Title: \u3000**{title}**\n'
     desc += f'Link: \u3000**{link}**\n'
-    desc2 = f'Thank you for submitting, **{200}** creds were added to your *Wallet*! If you submitted a clip, check the events tab to see when is the next Clip Night!\n'
+    desc2 = f'Thank you for submitting, **{300}** creds were added to your *Wallet*! If you submitted a clip, check the events tab to see when is the next Clip Night!\n'
     
     if strength > 0:
         desc2 += f'\nFrom **Strength {strength}**, you get an additional **+{int(60*strength)}** creds!'
