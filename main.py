@@ -12,7 +12,7 @@ from commands.games import submitClip, review
 from commands.submit import buy_ticket, bonusSubmit, leaderboard, claimBonus, rafflelist
 from commands.helper import fetchContentList
 from commands.humble import humble_powa
-from commands.stats import stats, levelUp, wish, setStar
+from commands.stats import stats, levelUp, wish, setStar, giveStar
 
 load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')
@@ -141,5 +141,10 @@ async def _(ctx:SlashCommand, stat: str):
              create_option(name='rating', description=CMD_DESC[62], option_type=4, required=True)])
 async def _(ctx:SlashCommand, reciever: str, rating: int):
     await review(ctx, reciever, rating, client, BLOCKCHAIN)
+
+@slash.slash(name='bless', description=CMD_DESC[63], guild_ids=[GUILD_ID],
+    options=[create_option(name='reciever', description=CMD_DESC[18], option_type=3, required=True)])
+async def _(ctx:SlashCommand, reciever: str):
+    await giveStar(ctx, reciever, client, BLOCKCHAIN)
 
 client.run(TOKEN)

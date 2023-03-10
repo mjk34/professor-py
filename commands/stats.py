@@ -1,7 +1,16 @@
 import discord, block, blockchain, random, os
 import commands.user as user
 
-from commands.helper import today
+from discord.utils import get
+from dotenv import load_dotenv
+from commands.helper import today, getName
+
+filler = ['<', '>', '!', '@', '&']
+
+load_dotenv()
+HUMBLE = int(os.getenv('HUMBLE_ID'))
+ADMIN = int(os.getenv('ADMIN_ID'))
+HBOT = 904417820899700756
 
 """Allow users to view their stat progress and benefits"""
 """Vitality, Stamina, Strength, Dexterity, Fortune, Star"""
@@ -257,19 +266,19 @@ async def setStar (ctx, stat_name, BLOCKCHAIN):
 
     # Check Spelling
     stat, stat_level = '', 0
-    if stat_name == 'vitality' or stat_name == 'Vitality' or stat_name == 'VIT':
+    if stat_name == 'vitality' or stat_name == 'Vitality' or stat_name == 'VIT' or stat_name == 'vit':
         stat = 'Vitality'
         stat_level = getVitality(id, BLOCKCHAIN) + 1
-    if stat_name == 'stamina' or stat_name == 'Stamina' or stat_name == 'STA':
+    if stat_name == 'stamina' or stat_name == 'Stamina' or stat_name == 'STA' or stat_name == 'sta':
         stat = 'Stamina'
         stat_level = getStamina(id, BLOCKCHAIN) + 1
-    if stat_name == 'strength' or stat_name == 'Strength' or stat_name == 'STR':
+    if stat_name == 'strength' or stat_name == 'Strength' or stat_name == 'STR' or stat_name == 'str':
         stat = 'Strength'
         stat_level = getStrength(id, BLOCKCHAIN) + 1
-    if stat_name == 'dexterity' or stat_name == 'Dexterity' or stat_name == 'DEX':
+    if stat_name == 'dexterity' or stat_name == 'Dexterity' or stat_name == 'DEX' or stat_name == 'dex':
         stat = 'Dexterity'
         stat_level = getDexterity(id, BLOCKCHAIN) + 1
-    if stat_name == 'fortune' or stat_name == 'Fortune' or stat_name == 'FOR':
+    if stat_name == 'fortune' or stat_name == 'Fortune' or stat_name == 'FOR' or stat_name == 'for':
         stat = 'Fortune'
         stat_level = getFortune(id, BLOCKCHAIN) + 1
 
@@ -312,6 +321,55 @@ async def setStar (ctx, stat_name, BLOCKCHAIN):
     embed.set_image(url='https://media.tenor.com/N9tfR3_w9uYAAAAC/gojo-satoru-hollow-purple.gif')
     embed.set_footer(text='@~ powered by UwUntu')
     await ctx.send(embed=embed)
+
+async def giveStar (ctx, reciever, client, BLOCKCHAIN):
+    id, name = ctx.author.id, ctx.author.name
+
+    """Parses Reciever id from <@id>"""
+    reciever_id = reciever
+    for ch in filler: reciever_id = reciever_id.replace(ch, '')
+    reciever_id = int(reciever_id)
+
+    if reciever_id == HBOT: reciever_id = HUMBLE
+
+    """Check if the Giver is a god"""
+    if id == ADMIN:
+
+        """Generate new Block"""
+        new_block = block.Block(
+            user = reciever_id,
+            name = await getName(reciever_id, client),
+            timestamp = today(),
+            description = f'Star',
+            data = 0
+        )
+        
+        """Update Blockchain"""
+        if BLOCKCHAIN.isChainValid() == False:
+            print('The current Blockchain is not valid, performing rollback.')
+            BLOCKCHAIN = blockchain.Blockchain()
+        
+        BLOCKCHAIN.addBlock(new_block)
+        if BLOCKCHAIN.isChainValid():
+            BLOCKCHAIN.storeChain()           
+            
+        """Return Message"""
+        embed = discord.Embed(
+            title = f'Handout',
+            description = f'A blessing from above. <@{reciever_id}> got a **Star**!',
+            color = 16749300    
+        ).set_image(url='https://www.ruru-berryz.com/wp-content/uploads/2017/01/Gabriel-DropOut-01-Pantsu.gif')
+        embed.set_footer(text='@~ powered by UwUntu')
+        await ctx.send(embed=embed)
+    else: 
+        embed = discord.Embed(
+            title = f'Handout',
+            description = f'Insufficient power, you are not *god*!',
+            color = 6053215    
+        ).set_thumbnail(url='https://c.tenor.com/hal0bUXw_mYAAAAC/giyuu-tomioka-demon-slayer.gif')
+        embed.set_footer(text='@~ powered by UwUntu')
+        await ctx.send(embed=embed)
+
 
 def getVitality (user_id, BLOCKCHAIN)-> int:
     if len(BLOCKCHAIN.chain) == 1: return 0
