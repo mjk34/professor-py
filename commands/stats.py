@@ -193,7 +193,7 @@ async def wish (ctx, BLOCKCHAIN):
         return
     
     star_flag = False
-    if random.random() < 0.035:
+    if random.random() < 0.04:
         star_flag = True
 
     """Generate new Block"""
