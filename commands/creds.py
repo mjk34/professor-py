@@ -88,6 +88,34 @@ async def daily (ctx, client, BLOCKCHAIN):
 
     if fortune >= 400:
         await humble.chaos(ctx, client, bonus, BLOCKCHAIN)
+
+    if random.random() < 0.01:
+        """Generate new Block"""
+        star_block = block.Block(
+            user = id,
+            name = name,
+            timestamp = today(),
+            description = 'Star',
+            data = 0
+        )
+
+        """Update Blockchain"""
+        if BLOCKCHAIN.isChainValid() == False:
+            print('The current Blockchain is not valid, performing rollback.')
+            BLOCKCHAIN = blockchain.Blockchain()
+
+        BLOCKCHAIN.addBlock(star_block)
+        if BLOCKCHAIN.isChainValid():
+            BLOCKCHAIN.storeChain()   
+
+        """Return Message"""
+        embed = discord.Embed(
+            title = f'Daily',
+            description = f'Holy ****! <@{id}> got a **Star**!',
+            color = 16700447    
+        ).set_image(url='https://media0.giphy.com/media/v1.Y2lkPTc5MGI3NjExMzk0NDM0MTMxOGY5YTM4NThiYmEzYmE2ZGY2ZWRkZDQyM2JlMjdkMSZjdD1n/PR7J3rrNCrFE4/giphy.gif')
+        embed.set_footer(text='@~ powered by UwUntu')
+        await ctx.send(embed=embed)
     
 """Allow users to check out much uwuCreds they have accumulated"""
 async def wallet (ctx, BLOCKCHAIN):

@@ -355,7 +355,7 @@ async def giveStar (ctx, reciever, client, BLOCKCHAIN):
             
         """Return Message"""
         embed = discord.Embed(
-            title = f'Handout',
+            title = f'Divine Blessing',
             description = f'A blessing from above. <@{reciever_id}> got a **Star**!',
             color = 16749300    
         ).set_image(url='https://www.ruru-berryz.com/wp-content/uploads/2017/01/Gabriel-DropOut-01-Pantsu.gif')
@@ -363,7 +363,7 @@ async def giveStar (ctx, reciever, client, BLOCKCHAIN):
         await ctx.send(embed=embed)
     else: 
         embed = discord.Embed(
-            title = f'Handout',
+            title = f'Divine Blessing',
             description = f'Insufficient power, you are not *god*!',
             color = 6053215    
         ).set_thumbnail(url='https://c.tenor.com/hal0bUXw_mYAAAAC/giyuu-tomioka-demon-slayer.gif')
