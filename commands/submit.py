@@ -147,7 +147,7 @@ async def leaderboard (ctx, BLOCKCHAIN):
         desc += f'\u3000** #{count} ** '
         if count > 9: desc += '\u3000\u2000'
         else: desc += '\u3000\u3000'
-        desc += f'*{member[0]}*\n'
+        desc += f'*{member[0]}* \u3000{member[2]}\n'
         count += 1
     
     """Return Message"""

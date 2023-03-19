@@ -13,7 +13,7 @@ from commands.submit import buy_ticket, bonusSubmit, leaderboard, claimBonus, ra
 from commands.helper import fetchContentList
 from commands.humble import humble_powa
 from commands.stats import profile, upgrade, wish, forge, bless, reforge, consume
-from commands.god import return_to_the_stars, disable_upgrade, hand_all
+from commands.god import disable_upgrade, hand_all #,return_to_the_stars
 
 load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')
@@ -161,9 +161,9 @@ async def _(ctx:SlashCommand, reciever: str, rating: int):
 async def _(ctx:SlashCommand, reciever: str):
     await bless(ctx, reciever, client, BLOCKCHAIN)
 
-@slash.slash(name='return_to_the_stars', description='Turn all stats into Stars, For Everyone', guild_ids=[GUILD_ID])
-async def _(ctx:SlashCommand):
-    await return_to_the_stars(ctx, BLOCKCHAIN)
+# @slash.slash(name='return_to_the_stars', description='Turn all stats into Stars, For Everyone', guild_ids=[GUILD_ID])
+# async def _(ctx:SlashCommand):
+#     await return_to_the_stars(ctx, client, BLOCKCHAIN)
 
 @slash.slash(name='disable_upgrade', description='Disable /Upgrade', guild_ids=[GUILD_ID])
 async def _(ctx:SlashCommand):
