@@ -5,7 +5,7 @@ import commands.humble as humble
 from discord.utils import get
 from dotenv import load_dotenv
 from commands.helper import today, dailyLuck, dailyFortune, getName, fetchContentList, getIcon
-from commands.stats import getVitality, getStamina, getFortune
+from commands.stats import getStat, getStar, getDarkStar, getReforger, stats
 
 filler = ['<', '>', '!', '@', '&']
 
@@ -32,10 +32,12 @@ async def daily (ctx, client, BLOCKCHAIN):
         return
     
     fortune, status = dailyLuck()
-    bonus = int(user.getDailyCount(id, BLOCKCHAIN) / 7) + int(getFortune(id, BLOCKCHAIN))
+    bonus = int(user.getDailyCount(id, BLOCKCHAIN) / 7) + int(getStat(id, stats[3], BLOCKCHAIN))
     
-    vitality = getVitality(id, BLOCKCHAIN)
-    stat_bonus = int((fortune + bonus*100)*(0.10*vitality))
+    vitality = getStat(id, stats[0], BLOCKCHAIN)
+    multiplier = 20 + int(20*vitality)
+    stat_fort = getStat(id, stats[5], BLOCKCHAIN)
+    stat_bonus = int((fortune + bonus*multiplier)*(0.10*vitality))
 
     """Generate new Block"""
     new_block = block.Block(
@@ -43,7 +45,15 @@ async def daily (ctx, client, BLOCKCHAIN):
         name = name,
         timestamp = today(),
         description = 'Daily',
-        data = fortune + bonus*100 + stat_bonus
+        data = fortune + bonus*multiplier + stat_bonus
+    )
+
+    fortune_block = block.Block(
+        user = id,
+        name = name,
+        timestamp = today(),
+        description = 'Luck',
+        data = fortune
     )
     
     """Update Blockchain"""
@@ -52,6 +62,7 @@ async def daily (ctx, client, BLOCKCHAIN):
         BLOCKCHAIN = blockchain.Blockchain()
  
     BLOCKCHAIN.addBlock(new_block)
+    BLOCKCHAIN.addBlock(fortune_block)
     if BLOCKCHAIN.isChainValid():
         BLOCKCHAIN.storeChain()           
 
@@ -66,11 +77,11 @@ async def daily (ctx, client, BLOCKCHAIN):
     
     desc = f'{status} **+{fortune}** creds were added to your *Wallet*!\n'
     if bonus > 0:
-        desc += f'From **+{bonus}** *Bonus*, you get an additional **+{bonus*100}** creds!\n'
+        desc += f'From **+{bonus}** *Bonus*, you get an additional **+{bonus*multiplier}** creds!\n'
     if vitality > 0:
         desc += f'\nFrom **Vitality {vitality}**, you get an additional **+{stat_bonus}** creds!' 
 
-    desc += f' Net total: {fortune + bonus*100 + stat_bonus}'
+    desc += f'\nNet total: {fortune + bonus*multiplier + stat_bonus}'
     
     """Return Message"""
     embed = discord.Embed(
@@ -86,10 +97,11 @@ async def daily (ctx, client, BLOCKCHAIN):
     embed.set_image(url=orb_url)
     await ctx.send(embed=embed)
 
-    if fortune >= 400:
-        await humble.chaos(ctx, client, bonus, BLOCKCHAIN)
+    if fortune >= 420:
+        await humble.chaos(ctx, client, BLOCKCHAIN)
 
-    if random.random() < 0.01:
+    star_probability = 0.005 + 0.005*stat_fort
+    if random.random() < star_probability:
         """Generate new Block"""
         star_block = block.Block(
             user = id,
@@ -132,17 +144,26 @@ async def wallet (ctx, BLOCKCHAIN):
     user_claim = user.hasClaim(id, BLOCKCHAIN)
     user_wish = user.hasWish(id, BLOCKCHAIN)
 
-    stamina = getStamina(id, BLOCKCHAIN)
-    fortune = getFortune(id, BLOCKCHAIN)
+    stamina = getStat(id, stats[1], BLOCKCHAIN)
+    fortune = getStat(id, stats[5], BLOCKCHAIN)
 
     total_wish = 2 + int(fortune/2)
     total_claim = 1 + int(stamina/2)
 
+    user_stars = getStar(id, BLOCKCHAIN)
+    user_dstars = getDarkStar(id, BLOCKCHAIN)
+    user_reforger = getReforger(id, BLOCKCHAIN)
+
+    bonus = int(user.getDailyCount(id, BLOCKCHAIN) / 7) + int(getStat(id, stats[3], BLOCKCHAIN))
+
     daily = {True:'Available', False:'Not Available'}[user.hasDaily(id, BLOCKCHAIN)]
-    desc = f'Daily UwU:\u3000\u3000**{daily}**\nDaily Wish:\u3000\u3000**{total_wish - user_wish}/{total_wish}**\nClaim Bonus: \u3000**{total_claim - user_claim}/{total_claim}**\nSubmissions: \u3000**{(3 + stamina) - user_subs}/{3 + stamina}** \n\n'
-    desc += f'Total Creds:\u3000**{user_creds}**\u3000 Total Tickets: \u3000**{user_tickets}**'
+    desc = f'Daily UwU:\u3000\u3000**{daily}**\nDaily Wish:\u3000\u3000**{total_wish - user_wish}/{total_wish}**\n\nClaim Bonus: \u3000**{total_claim - user_claim}/{total_claim}**\nSubmissions: \u3000**{(3 + stamina) - user_subs}/{3 + stamina}** \n'
+    desc += f'Bonus Stack:\u3000** {bonus}**\n\n'
+    desc += f'Total Creds:\u3000**{user_creds}**\u3000 Total Tickets: \u2000**{user_tickets}**\n'
+    desc += f'Stars:\u2000**{user_stars}**\u3000 Dark Stars:\u2000**{user_dstars}**\u3000Reforgers:\u2000**{user_reforger}**\n\n'
 
     BLOCKCHAIN.printChain()
+    print()
 
     """Return Message"""
     embed = discord.Embed(
@@ -165,7 +186,7 @@ async def give (ctx, reciever, client, BLOCKCHAIN):
     
     """Check if the Giver has sufficient uwuCreds"""
     giver_creds = user.totalCreds(giver_id, BLOCKCHAIN)
-    if giver_creds < 200:
+    if giver_creds < 500:
         embed = discord.Embed(
             title = f'Donate',
             description = f'Insufficient funds, you currently have **+{giver_creds}** uwuCreds!',
@@ -192,7 +213,7 @@ async def give (ctx, reciever, client, BLOCKCHAIN):
         name = ctx.author.name,
         timestamp = today(),
         description = f'Donate${reciever_name}',
-        data = -200
+        data = -500
     )
 
     new_block2 = block.Block(
@@ -200,7 +221,7 @@ async def give (ctx, reciever, client, BLOCKCHAIN):
         name = reciever_name,
         timestamp = today(),
         description = f'Recieved from {ctx.author.name}',
-        data = 200
+        data = 500
     )
     
     """Update Blockchain"""
@@ -227,7 +248,7 @@ async def handout(ctx, reciever, amount, client, BLOCKCHAIN):
     """1. User will be checked for Moderator status
        2. Blockchain will be validated, new blocks will be added to the end of Blockchain"""
     
-    if amount > 5000:
+    if amount > 10000:
         text = f'Oi! This is not a charity, did you really try to give {amount} uwuCreds'
         await ctx.send(f'```CSS\n[{text}]\n```')
         return
@@ -283,7 +304,7 @@ async def take(ctx, reciever, amount, client, BLOCKCHAIN):
     """1. User will be checked for Moderator status
        2. Blockchain will be validated, new blocks will be added to the end of Blockchain"""
     
-    if amount > 5000:
+    if amount > 10000:
         text = f'Oi! This is a bit much, did you really try to take {amount} uwuCreds'
         await ctx.send(f'```CSS\n[{text}]\n```')
         return

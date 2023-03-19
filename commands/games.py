@@ -3,7 +3,7 @@ import commands.user as user
 
 from discord.utils import get
 from commands.helper import getName
-from commands.stats import getStamina, getStrength, getDexterity
+from commands.stats import getStat, stats
 from commands.helper import today
 
 filler = ['<', '>', '!', '@']
@@ -13,9 +13,12 @@ async def submitClip(ctx, title, link, BLOCKCHAIN):
     """1. Blockchain will be evaluated, user submissions will be checked
        2. Blockchain will be validated, new block will be added to the end of Blockchain"""
     id, name = ctx.author.id, ctx.author.name
-    stamina = getStamina(id, BLOCKCHAIN) 
-    strength = getStrength(id, BLOCKCHAIN)
 
+    stamina = getStat(id, stats[1], BLOCKCHAIN)
+    if stamina == 0: stamina = 0
+    else: stamina = int(stamina/2) + 1
+
+    strength = getStat(id, stats[2], BLOCKCHAIN)
     color = 6053215
 
     """check if the user has submissions left"""
@@ -88,7 +91,7 @@ async def review(ctx, reciever, rating, client, BLOCKCHAIN):
     for ch in filler: reciever_id = reciever_id.replace(ch, '')
     reciever_id = int(reciever_id)
 
-    dexterity = getDexterity(reciever_id, BLOCKCHAIN)
+    dexterity = getStat(id, stats[3], BLOCKCHAIN)
     dex_bonus = int((20*rating)*(0.25*dexterity))
 
     """Check if the Giver is a moderator"""

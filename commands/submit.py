@@ -3,7 +3,7 @@ import commands.user as user
 
 from discord.utils import get
 from commands.helper import today, getName
-from commands.stats import getStamina, getStar, getFortune
+from commands.stats import getStat, stats
 
 filler = ['<', '>', '!', '@']
 """Exchanges user uwuCreds for (a) raffle ticket(s)"""
@@ -169,14 +169,18 @@ async def claimBonus (ctx, client, BLOCKCHAIN):
     user_daily = user.getDailyCount(id, BLOCKCHAIN)
     user_submits = user.totalSubsWeek(id, BLOCKCHAIN)
 
-    stamina = getStamina(id, BLOCKCHAIN)
-    fortune = getFortune(id, BLOCKCHAIN)
+    vitality =  getStat(id, stats[0], BLOCKCHAIN)
+    stamina =   getStat(id, stats[1], BLOCKCHAIN)
+    dexterity = getStat(id, stats[3], BLOCKCHAIN)
+    strength =  getStat(id, stats[2], BLOCKCHAIN)
+
+    multiplier = 50 + int(20*vitality)
 
     """Check if User has used daily submits before claim"""
-    if user_submits < 1:
+    if user_submits < 2:
         embed = discord.Embed(
             title = f'Bonus',
-            description = f'You must exhaust at least 1 Submissions to claim the *Bonus*!',
+            description = f'You must exhaust at least 2 Submissions to claim the *Bonus*!',
             color = 6053215    
         ).set_thumbnail(url='https://media1.tenor.com/images/80662c4e35cf12354f65f1d6f7beada8/tenor.gif')
         embed.set_footer(text='@~ powered by UwUntu')
@@ -193,8 +197,10 @@ async def claimBonus (ctx, client, BLOCKCHAIN):
         await ctx.send(embed=embed)
         return
 
-    bonus = int(user_daily / 7) + int(fortune)
-    bonus_creds = 250 + bonus*150
+    bonus = int(user_daily / 7) + int(dexterity)
+    bonus_creds = 150 + bonus*multiplier
+
+    stat_bonus = int((bonus_creds)*(0.10*strength))
     
     """Generate new Block"""
     new_block = block.Block(
@@ -202,7 +208,7 @@ async def claimBonus (ctx, client, BLOCKCHAIN):
         name = name,
         timestamp = today(),
         description = f'Claim Bonus',
-        data = bonus_creds
+        data = bonus_creds + stat_bonus
     )
         
     """Update Blockchain"""
@@ -215,7 +221,9 @@ async def claimBonus (ctx, client, BLOCKCHAIN):
         BLOCKCHAIN.storeChain()           
     
     desc = f'Congratulations on your submits!\n'
-    desc += f'From **+{bonus}** *Bonus*, you claimed **+{bonus_creds}** creds!'
+    desc += f'From **+{bonus}** *Bonus*, you claimed **+{bonus_creds}** creds!\n'
+    if strength > 0:
+        desc += f'\nFrom **Strength {strength}**, you get an additional **+{stat_bonus}** creds!'
         
     """Return Message"""
     embed = discord.Embed(

@@ -13,6 +13,18 @@ async def ping(ctx):
     
     await ctx.send(embed=embed)
 
+"""Checks uwuBot's response to see if it is available"""
+async def pong(ctx):
+    images = fetchContentList('pong.txt')
+    num = random.randint(0, 22)
+    embed = discord.Embed(
+        title = f'Ping!',
+        color = 16251130
+    ).set_image(url= images[num])
+    embed.set_footer(text='@~ powered by UwUntu')
+    
+    await ctx.send(embed=embed)
+
 """Requests for a link to Anichart to see the in season running anime"""
 async def anime (ctx):
     content, f = fetchContent('anichart.txt')

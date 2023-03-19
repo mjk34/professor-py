@@ -58,7 +58,10 @@ Clip link: [Medal Link]
 View your current stats and benefits
 Level Up a stat to recieve benefits
 Vitality, Stamina, Strength, Dexterity, or Fortune
-Gamble 200 uwuCreds to gain the Star Stat
+Gamble uwuCreds to gamble for a Star
 Give a user the total review from this clip night
 provide the total rating the <user> recieved
 Reforge the star into a stat upgrade
+Either corrupt a Star or reforge a Dark Star
+Input 'Star' to get a Dark Star or Input 'Dark Star' to get a Star
+Consume a Dark Star to test your Ultimate luck!

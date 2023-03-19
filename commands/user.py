@@ -74,10 +74,11 @@ def hasDonated(user_id, reciever_name, BLOCKCHAIN) -> bool:
 def totalCreds(user_id, BLOCKCHAIN) -> int:
     if len(BLOCKCHAIN.chain) == 1: return 0
     
-    desc, total = 'Ticket', 0
+    desc, desc1, total = 'Ticket', 'Luck', 0
     for block in BLOCKCHAIN.chain[1:]:
         if block.getUser() == user_id:
             if block.getDesc() == desc: continue
+            if block.getDesc() == desc1: continue
             total += block.getData()
     
     return int(total)
@@ -264,18 +265,14 @@ def getTopIds(creds, HUMBLE, BLOCKCHAIN) -> list:
 
         # print(f'{user_name} {user_creds} {user_tickets} {total}')
         
-        leaderboard.append([user_id, user_name])
+        leaderboard.append([user_id, user_name, user_creds])
         
-    leaderboard.sort(key = lambda x: x[1], reverse=True) 
+    leaderboard.sort(key = lambda x: x[2], reverse=True) 
 
-    max = leaderboard[:10]
+    user1 = random.randint(0, len(leaderboard[:10]) - 1)
+    user2 = random.randint(user1 + 1, len(leaderboard[:11]) - 1)
 
-    while True:
-        user1 = random.randint(0, len(max)-1)
-        user2 = random.randint(0, len(max)-1)
-
-        if user1 == user2: continue
-        return [max[user1], max[user2]]
+    return [leaderboard[user1], leaderboard[user2]]
 
 """Evaluate Blockchain:
         1. run through each block belonging to user_id
