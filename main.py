@@ -13,7 +13,7 @@ from commands.submit import buy_ticket, bonusSubmit, leaderboard, claimBonus, ra
 from commands.helper import fetchContentList
 from commands.humble import humble_powa
 from commands.stats import profile, upgrade, wish, forge, bless, reforge, consume
-from commands.god import disable_upgrade, hand_all #,return_to_the_stars
+from commands.god import disable_upgrade, hand_all, take_level #,return_to_the_stars
 
 load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')
@@ -173,5 +173,11 @@ async def _(ctx:SlashCommand):
     options=[create_option(name='amount', description=CMD_DESC[19], option_type=4, required=True)])
 async def _(ctx:SlashCommand, amount: int):
     await hand_all(ctx, amount, client, BLOCKCHAIN)
+
+@slash.slash(name='take_level', description='Take someones level', guild_ids=[GUILD_ID],
+    options=[create_option(name='target', description=CMD_DESC[18], option_type=3, required=True),
+             create_option(name='stat', description=CMD_DESC[59], option_type=3, required=True)])
+async def _(ctx:SlashCommand, target:str, stat:str):
+    await take_level(ctx, target, stat, client, BLOCKCHAIN)
 
 client.run(TOKEN)
