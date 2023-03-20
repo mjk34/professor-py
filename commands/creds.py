@@ -157,7 +157,13 @@ async def wallet (ctx, BLOCKCHAIN):
     bonus = int(user.getDailyCount(id, BLOCKCHAIN) / 7) + int(getStat(id, stats[3], BLOCKCHAIN))
 
     daily = {True:'Available', False:'Not Available'}[user.hasDaily(id, BLOCKCHAIN)]
-    desc = f'Daily UwU:\u3000\u3000**{daily}**\nDaily Wish:\u3000\u3000**{total_wish - user_wish}/{total_wish}**\n\nClaim Bonus: \u3000**{total_claim - user_claim}/{total_claim}**\nSubmissions: \u3000**{(3 + stamina) - user_subs}/{3 + stamina}** \n'
+    desc = ''
+    
+    if stamina == 0:
+        desc += f'Daily UwU:\u3000\u3000**{daily}**\nDaily Wish:\u3000\u3000**{total_wish - user_wish}/{total_wish}**\n\nClaim Bonus: \u3000**{total_claim - user_claim}/{total_claim}**\nSubmissions: \u3000**{(3) - user_subs}/{3}** \n'
+    else:
+        desc += f'Daily UwU:\u3000\u3000**{daily}**\nDaily Wish:\u3000\u3000**{total_wish - user_wish}/{total_wish}**\n\nClaim Bonus: \u3000**{total_claim - user_claim}/{total_claim}**\nSubmissions: \u3000**{(3 + int(stamina/2)) - user_subs}/{3 + int(stamina/2)}** \n'
+    
     desc += f'Bonus Stack:\u3000** {bonus}**\n\n'
     desc += f'Total Creds:\u3000**{user_creds}**\u3000 Total Tickets: \u2000**{user_tickets}**\n'
     desc += f'Stars:\u2000**{user_stars}**\u3000 Dark Stars:\u2000**{user_dstars}**\u3000Reforgers:\u2000**{user_reforger}**\n\n'
