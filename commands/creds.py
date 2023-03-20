@@ -162,7 +162,7 @@ async def wallet (ctx, BLOCKCHAIN):
     if stamina == 0:
         desc += f'Daily UwU:\u3000\u3000**{daily}**\nDaily Wish:\u3000\u3000**{total_wish - user_wish}/{total_wish}**\n\nClaim Bonus: \u3000**{total_claim - user_claim}/{total_claim}**\nSubmissions: \u3000**{(3) - user_subs}/{3}** \n'
     else:
-        desc += f'Daily UwU:\u3000\u3000**{daily}**\nDaily Wish:\u3000\u3000**{total_wish - user_wish}/{total_wish}**\n\nClaim Bonus: \u3000**{total_claim - user_claim}/{total_claim}**\nSubmissions: \u3000**{(3 + int(stamina/2)) - user_subs}/{3 + int(stamina/2)}** \n'
+        desc += f'Daily UwU:\u3000\u3000**{daily}**\nDaily Wish:\u3000\u3000**{total_wish - user_wish}/{total_wish}**\n\nClaim Bonus: \u3000**{total_claim - user_claim}/{total_claim}**\nSubmissions: \u3000**{(3 + int(stamina/2) + 1) - user_subs}/{3 + int(stamina/2) + 1}** \n'
     
     desc += f'Bonus Stack:\u3000** {bonus}**\n\n'
     desc += f'Total Creds:\u3000**{user_creds}**\u3000 Total Tickets: \u2000**{user_tickets}**\n'
