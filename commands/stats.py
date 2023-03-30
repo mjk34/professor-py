@@ -30,7 +30,7 @@ async def profile (ctx, BLOCKCHAIN):
     dark_star = getDarkStar(id, BLOCKCHAIN)
 
     vitality = getStat(id, stats[0], BLOCKCHAIN)
-    vit_str = f'**+{10*vitality}%** *bonus from Daily and* **+{20*vitality}** *per bonus stack*'
+    vit_str = f'**+{10*vitality}%** *bonus from Daily and* **+{15*vitality}** *per bonus stack*'
 
     stamina = getStat(id, stats[1], BLOCKCHAIN)
     if stamina == 0: 
@@ -46,16 +46,16 @@ async def profile (ctx, BLOCKCHAIN):
 
     ego = getStat(id, stats[4], BLOCKCHAIN)
     if ego == 0:
-        ego_str = f'**+{0}** *corrupted reforger* and **+{40*ego}%** *risk/reward*'
+        ego_str = f'**+{0}** *corrupted reforger* and **+{20*ego}%** *risk/reward*'
     else:
-        ego_str = f'**+{int(ego/2) + 1}** *corrupted reforger* and **+{40*ego}%** *risk/reward*'
+        ego_str = f'**+{int(ego/2) + 1}** *corrupted reforger* and **+{20*ego}%** *risk/reward*'
 
     fortune = getStat(id, stats[5], BLOCKCHAIN)
     for_str = f'**+{1*fortune}%** *Wish Rate and* **+{0.5*fortune}%** *Daily Rate and* **+{int(fortune/2)}** *wish*'
 
     desc = f'Below lists your current student stats and benefits:\n\n'
     desc += f'**VIT {vitality}** \u3000 {vit_str}.\n'
-    if vitality < 5: desc += f' \u3000  \u3000  \u3000 (NEXT: {1000 + 500*(vitality)})\n\n'
+    if vitality < 5: desc += f' \u3000  \u3000  \u3000 (NEXT: {1000 + 800*(vitality)})\n\n'
     else: desc += ' \u3000  \u3000  \u3000 (MAX Level)\n\n'
 
     desc += f'**STA {stamina}** \u3000 {sta_str}.\n'
@@ -123,7 +123,7 @@ async def levelStat (ctx, stat_name, BLOCKCHAIN):
     stat, cost = 0, 0
     if stat_name == 'Vitality':
         stat = getStat(id, stat_name, BLOCKCHAIN)
-        cost = 1000 + 500*(stat)
+        cost = 1000 + 800*(stat)
     if stat_name == 'Stamina':
         stat = getStat(id, stat_name, BLOCKCHAIN)
         cost = 600 + 800*(stat)
@@ -256,7 +256,7 @@ async def wish (ctx, BLOCKCHAIN):
         return
     
     star_flag = False
-    wish_probability = 0.015 + 0.01*fortune
+    wish_probability = 0.005 + 0.01*fortune
     if random.random() < wish_probability:
         star_flag = True
 
@@ -592,7 +592,7 @@ async def consume (ctx, BLOCKCHAIN):
         return
 
     ego = getStat(id, stats[4], BLOCKCHAIN)
-    gamble = int(0.4*ego*user_creds)
+    gamble = int(0.2*ego*user_creds)
 
     if random.random() < 0.4999999999997:
         gamble_block = block.Block(

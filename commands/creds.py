@@ -35,9 +35,9 @@ async def daily (ctx, client, BLOCKCHAIN):
     bonus = int(user.getDailyCount(id, BLOCKCHAIN) / 7) + int(getStat(id, stats[3], BLOCKCHAIN))
     
     vitality = getStat(id, stats[0], BLOCKCHAIN)
-    multiplier = 20 + int(20*vitality)
+    multiplier = int(15*vitality)
     stat_fort = getStat(id, stats[5], BLOCKCHAIN)
-    stat_bonus = int((fortune + bonus*multiplier)*(0.10*vitality))
+    stat_bonus = int((fortune)*(0.10*vitality))
 
     """Generate new Block"""
     new_block = block.Block(
