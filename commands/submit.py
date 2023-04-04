@@ -174,7 +174,7 @@ async def claimBonus (ctx, client, BLOCKCHAIN):
     dexterity = getStat(id, stats[3], BLOCKCHAIN)
     strength =  getStat(id, stats[2], BLOCKCHAIN)
 
-    multiplier = 25 + int(15*vitality)
+    multiplier = 50 + int(30*vitality)
 
     """Check if User has used daily submits before claim"""
     if user_submits < 2:
@@ -200,7 +200,7 @@ async def claimBonus (ctx, client, BLOCKCHAIN):
     bonus = int(user_daily / 7) + int(dexterity)
     bonus_creds = 50 + bonus*multiplier
 
-    stat_bonus = int((bonus_creds)*(0.10*strength))
+    stat_bonus = int((bonus_creds)*(0.20*strength))
     
     """Generate new Block"""
     new_block = block.Block(

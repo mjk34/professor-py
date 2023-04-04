@@ -35,7 +35,7 @@ async def daily (ctx, client, BLOCKCHAIN):
     bonus = int(user.getDailyCount(id, BLOCKCHAIN) / 7) + int(getStat(id, stats[3], BLOCKCHAIN))
     
     vitality = getStat(id, stats[0], BLOCKCHAIN)
-    multiplier = int(15*vitality)
+    multiplier = int(25 + 15*vitality)
     stat_fort = getStat(id, stats[5], BLOCKCHAIN)
     stat_bonus = int((fortune)*(0.10*vitality))
 
