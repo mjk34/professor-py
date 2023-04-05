@@ -35,7 +35,7 @@ BLOCKCHAIN = blockchain.Blockchain()
 
 """Start up bot status message on boot"""
 @client.event
-async def on_ready(): await client.change_presence(activity=discord.Game('TESTING'))#/uwu for fortune!'))
+async def on_ready(): await client.change_presence(activity=discord.Game('/uwu for fortune!'))
 
 """Filter message based on author and occasionally 'uwuify' read message"""
 @client.event

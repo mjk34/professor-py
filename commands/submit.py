@@ -256,7 +256,7 @@ async def rafflelist (ctx, BLOCKCHAIN):
             count_tickets += 1
         else: break
     
-    desc = 'Here lists the participating rafflers, the next drawing is Sunday (4/15) at 4pm EST!\n\n'
+    desc = 'Here lists the participating rafflers, the next drawing is Saturday (6/10) at 6pm EST!\n\n'
 
     desc += '\u3000\u3000\u3000\u3000\u2000 # \u3000 Name\n'
     count = 1
