@@ -65,3 +65,5 @@ Reforge the star into a stat upgrade
 Either corrupt a Star or reforge a Dark Star
 Input 'Star' to get a Dark Star or Input 'Dark Star' to get a Star
 Consume a Dark Star to test your Ultimate luck!
+Ask Professor Bot Something
+Write a prompt [Max 60 Words]
