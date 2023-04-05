@@ -156,7 +156,7 @@ async def _(ctx:SlashCommand):
 async def _(ctx:SlashCommand, reciever: str, rating: int):
     await review(ctx, reciever, rating, client, BLOCKCHAIN)
 
-@slash.slash(name='professorGPT', description=CMD_DESC[67], guild_ids=[GUILD_ID],
+@slash.slash(name='gpt', description=CMD_DESC[67], guild_ids=[GUILD_ID],
     options=[create_option(name='prompt', description=CMD_DESC[68], option_type=3, required=True)])
 async def _(ctx:SlashCommand, prompt: str):
     await gpt(ctx, prompt, client, BLOCKCHAIN)

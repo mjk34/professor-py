@@ -7,6 +7,7 @@ from commands.helper import today, getIcon
 load_dotenv()
 GPT_KEY = os.getenv('API_KEY')
 PROFESSOR = int(os.getenv('PROFESSOR_ID'))
+ADMIN = int(os.getenv('ADMIN_ID'))
 
 openai.api_key = GPT_KEY
 
@@ -17,24 +18,35 @@ async def gpt(ctx, prompt, client, BLOCKCHAIN):
     professor_icon = await getIcon(PROFESSOR, client)
 
     daily_count = getGPTCount(id, BLOCKCHAIN)
-    if daily_count > 15:
+    if daily_count > 15 and not id == ADMIN:
         embed = discord.Embed(
-            title = f'ProfessorGPT',
+            title = f'Professor',
             description = f'Class dismissed, you\'ve reached the maximum amount of requests. Try again tomorrow.',
             color = 6053215    
         ).set_thumbnail(url=professor_icon)
         embed.set_footer(text='@~ powered by UwUntu')
         await ctx.send(embed=embed)
         return
+    
+    embed1 = discord.Embed(
+        title = f'Professor',
+        description = "Cogitating...",
+        color = 6943230    
+    ).set_thumbnail(url=professor_icon)
+    embed1.set_footer(text='@~ powered by UwUntu')
+    thinking = await ctx.send(embed=embed1)
 
-    response = openai.Completion.create(
-        engine='text-davinci-003',
-        prompt=prompt,
-        max_tokens=60,
-        n=1,
-        stop=None,
-        temperature=0.5
+    uwu_prompt = prompt + ' (answer in a cute tone, make sure to insert intersperse "uwu"s and "nyaa"s and ascii emojis like a tsundere)'
+    # ' (answer in a cute tone, inserting random "uwu"s, as a personified cat)'
+    response = openai.ChatCompletion.create(
+        model='gpt-3.5-turbo',
+        messages=[{
+            "role": "assistant",        
+            "content": uwu_prompt
+        }]
     )
+
+    # print(response.choices[0].message.content.strip())
 
     """Generate new Block"""
     gpt_block = block.Block(
@@ -52,18 +64,23 @@ async def gpt(ctx, prompt, client, BLOCKCHAIN):
  
     BLOCKCHAIN.addBlock(gpt_block)
     if BLOCKCHAIN.isChainValid():
-        BLOCKCHAIN.storeChain()   
+        BLOCKCHAIN.storeChain()
 
-    desc = f'**Prompt**: \"{prompt}\"\n\n**Answer**:\n```'
-    desc += response.choices[0].text.strip()
-    desc += f'```\n\n (*Daily Requests Remaining: {int(15 - 1 - daily_count)}*)'
-    embed = discord.Embed(
-        title = f'ProfessorGPT',
+    desc = f'\n\n**Prompt**: \n```{prompt}```\n**Answer**:\n\n'
+    desc += response.choices[0].message.content.strip()
+
+    if not id == ADMIN:
+        desc += f'\n\n (*Daily Requests Remaining: {int(15 - 1 - daily_count)}*)'
+
+    embed2 = discord.Embed(
+        title = f'Professor',
         description = desc,
         color = 6943230    
     ).set_thumbnail(url=professor_icon)
-    embed.set_footer(text='@~ powered by UwUntu')
-    await ctx.send(embed=embed)
+    embed2.set_footer(text='@~ powered by UwUntu')
+
+    await thinking.edit(embed=embed2)
+    # await ctx.send(embed=embed)
     return
 
 def getGPTCount(user_id, BLOCKCHAIN):
