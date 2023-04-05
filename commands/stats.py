@@ -97,6 +97,7 @@ async def profile (ctx, BLOCKCHAIN):
     desc += f'You have **{star} Stars**, bring them to the Starforger with `/forge` to upgrade a core stat. \n\n'
     desc += f'You have **{reforger} Corrupted Reforgers**, you can use `/reforge` to turn **Stars** into **Dark Stars** and vice versa\n\n'
     desc += f'You have **{dark_star} Dark Stars**, you can activate them with `/consume` to gamble your creds, risk/reward is based on **EGO** \n\n'
+    desc += f'Check out the Full Stat Sheet Here: https://discord.com/channels/859993171156140061/938853545992667176/1086749743193018513\n\n'
 
     """Return Message"""
     embed = discord.Embed(
