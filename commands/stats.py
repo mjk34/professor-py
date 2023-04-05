@@ -30,57 +30,73 @@ async def profile (ctx, BLOCKCHAIN):
     dark_star = getDarkStar(id, BLOCKCHAIN)
 
     vitality = getStat(id, stats[0], BLOCKCHAIN)
-    vit_str = f'**+{10*vitality}%** *bonus from Daily and* **+{15*vitality}** *per bonus stack*'
+    vit_scale = int(0.1*vitality - pow(vitality, (0.008*vitality)) + 1)
+
+    vit_str = f' **+{10.0*vit_scale}%** *bonus from DAILY fortunes (ignores bonus stacks)*\n' 
+    vit_str += f' \u3000  \u3000  \u3000 **+{25*vitality}** *per BONUS stack, improves DAILY and CLAIM*'
 
     stamina = getStat(id, stats[1], BLOCKCHAIN)
     if stamina == 0: 
-        sta_str = f'**+{0}** *clip submit(s) and* **+{int(stamina/2)}** *claim bonus per week*'
+        sta_str = f'**+{0}** *additional daily WISH count (also reduces wish cost)*\n'
+        sta_str += f' \u3000  \u3000  \u3000 **+{int(stamina/2)}** *additional weekly SUBMIT count*\n' 
+        sta_str += f' \u3000  \u3000  \u3000 **+{int(stamina/3)}** *additional weekly CLAIM count*'
     else:
-        sta_str = f'**+{int(stamina/2) + 1}** *clip submit(s) and* **+{int(stamina/2)}** *claim bonus per week*'
+        sta_str = f'**+{int(stamina/2) + 1}** *additional daily WISH count*\n'
+        sta_str += f' \u3000  \u3000  \u3000 **+{int(stamina/2)}** *additional weekly SUBMIT count*\n' 
+        sta_str += f' \u3000  \u3000  \u3000 **+{int(stamina/3)}** *additional weekly CLAIM count*'
 
     strength = getStat(id, stats[2], BLOCKCHAIN)
-    str_str = f'**+{60*strength}** *per submit and* **+{10*strength}%** *bonus from claim bonus*'
+    str_str = f'**+{50*strength}** *flat bonus to weekly SUBMIT bounty*\n'
+    str_str += f' \u3000  \u3000  \u3000 **+{50*strength}** *flat bonus to increase weekly CLAIM bounty*'
 
     dexterity = getStat(id, stats[3], BLOCKCHAIN)
-    dex_str = f'**+{25*dexterity}%** *bonus from clip reviews and* **+{dexterity}** *bonus stack*'
+    if dexterity == 0:
+        dex_str = f'**+{60*dexterity}%** *bonus from clip night REVIEW bounty*\n'
+        dex_str += f' \u3000  \u3000  \u3000 **+{20*dexterity}%** *bonus from weekly CLAIM bounty*\n'
+        dex_str += f' \u3000  \u3000  \u3000 **+{0}** *additional BONUS stack(s), improves DAILY and CLAIM*'
+    else:
+        dex_str = f'**+{60*dexterity}%** *bonus from clip night REVIEW bounty*\n'
+        dex_str += f' \u3000  \u3000  \u3000 **+{20*dexterity}%** *bonus from weekly CLAIM bounty*\n'
+        dex_str += f' \u3000  \u3000  \u3000 **+{int(stamina/2) + 1}** *additional BONUS stacks, improves DAILY and CLAIM*'
 
     ego = getStat(id, stats[4], BLOCKCHAIN)
-    if ego == 0:
-        ego_str = f'**+{0}** *corrupted reforger* and **+{20*ego}%** *risk/reward*'
-    else:
-        ego_str = f'**+{int(ego/2) + 1}** *corrupted reforger* and **+{20*ego}%** *risk/reward*'
+    ego_str = f' **+{ego}** *Corrupted Reforger(s) to transform stars*\n'
+    ego_str += f' \u3000  \u3000  \u3000 **+{20*ego}%** *of total creds as risk and reward on CONSUME*\n'
+    ego_str += f' \u3000  \u3000  \u3000 **+{round(0.3*ego, 2)}%** *probability of pulling a* **Dark Star** *on WISH*'
 
     fortune = getStat(id, stats[5], BLOCKCHAIN)
-    for_str = f'**+{1*fortune}%** *Wish Rate and* **+{0.5*fortune}%** *Daily Rate and* **+{int(fortune/2)}** *wish*'
+    for_str = f'**+{0.5*fortune}%** *probability of pulling a* **Star** *on WISH*\n'
+    for_str += f' \u3000  \u3000  \u3000 **+{1.0*fortune}%** *probability of pulling a* **Star** *on DAILY*\n'
+    for_str += f' \u3000  \u3000  \u3000 **-{40*fortune}** *base cost of total wishes*'
 
     desc = f'Below lists your current student stats and benefits:\n\n'
-    desc += f'**VIT {vitality}** \u3000 {vit_str}.\n'
+    desc += f'**VIT {vitality}**\u3000{vit_str}\n'
     if vitality < 5: desc += f' \u3000  \u3000  \u3000 (NEXT: {1000 + 800*(vitality)})\n\n'
     else: desc += ' \u3000  \u3000  \u3000 (MAX Level)\n\n'
 
-    desc += f'**STA {stamina}** \u3000 {sta_str}.\n'
+    desc += f'**STA {stamina}**\u3000{sta_str}\n'
     if stamina < 5: desc += f' \u3000  \u3000  \u3000 (NEXT : {600 + 800*(stamina)})\n\n'
     else: desc += ' \u3000  \u3000  \u3000 (MAX Level)\n\n'
 
-    desc += f'**STR {strength}** \u3000 {str_str}.\n'
+    desc += f'**STR {strength}**\u3000{str_str}\n'
     if strength < 5: desc += f' \u3000  \u3000  \u3000 (NEXT: {700 + 650*(strength)})\n\n'
     else: desc += ' \u3000  \u3000  \u3000 (MAX Level)\n\n'
 
-    desc += f'**DEX {dexterity}**\u3000{dex_str}.\n'
+    desc += f'**DEX {dexterity}**\u3000{dex_str}\n'
     if dexterity < 5: desc += f' \u3000  \u3000  \u3000 (NEXT: {1200 + 400*(dexterity)})\n\n'
     else: desc += ' \u3000  \u3000  \u3000 (MAX Level)\n\n'
 
-    desc += f'**EGO {ego}**\u3000{ego_str}.\n'
+    desc += f'**EGO {ego} **\u2000 {ego_str}\n'
     if ego < 5: desc += f' \u3000  \u3000  \u3000 (NEXT: {2000})\n\n'
     else: desc += ' \u3000  \u3000  \u3000 (MAX Level)\n\n'
 
-    desc += f'**FOR {fortune}** \u3000 {for_str}.\n'
+    desc += f'**FOR {fortune}**\u3000{for_str}\n'
     if fortune < 5: desc += f' \u3000  \u3000  \u3000 (NEXT: {500 + 900*(fortune)})\n\n'
     else: desc += ' \u3000  \u3000  \u3000 (MAX Level)\n\n'
 
-    desc += f'You have **{star} Stars**, bring them to the Starforger with /forge to upgrade a core stat. \n\n'
-    desc += f'You have **{reforger} Corrupted Reforgers**, you can use /reforge to turn **Stars** into **Dark Stars** and vice versa\n\n'
-    desc += f'You have **{dark_star} Dark Stars**, you can activate them with /consume to gamble your creds, risk/reward is based on **EGO** \n\n'
+    desc += f'You have **{star} Stars**, bring them to the Starforger with `/forge` to upgrade a core stat. \n\n'
+    desc += f'You have **{reforger} Corrupted Reforgers**, you can use `/reforge` to turn **Stars** into **Dark Stars** and vice versa\n\n'
+    desc += f'You have **{dark_star} Dark Stars**, you can activate them with `/consume` to gamble your creds, risk/reward is based on **EGO** \n\n'
 
     """Return Message"""
     embed = discord.Embed(
@@ -183,7 +199,7 @@ async def levelStat (ctx, stat_name, BLOCKCHAIN):
             print('The current Blockchain is not valid, performing rollback.')
             BLOCKCHAIN = blockchain.Blockchain()
 
-        if stat_name.lower() == 'ego' and (stat + 1) % 2:
+        if stat_name.lower() == 'ego':
             reforger_block = block.Block(
                 user = id,
                 name = name,
@@ -224,12 +240,21 @@ def disabledUpgrade(BLOCKCHAIN) -> bool:
 async def wish (ctx, BLOCKCHAIN):
     id, name = ctx.author.id, ctx.author.name
     fortune = getStat(id, stats[5], BLOCKCHAIN)
+    stamina = getStat(id, stats[1], BLOCKCHAIN)
+    ego = getStat(id, stats[4])
     creds= user.totalCreds(id, BLOCKCHAIN)
 
-    wish_count = 2 + int(fortune/2)
-    cost = int(300/wish_count)
+    if stamina == 0: wish_count = 2 + int(stamina/2)
+    else: wish_count = 2 + int(stamina/2) + 1
 
-    if user.hasWish(id, BLOCKCHAIN) >= 2 + int(fortune/2):
+    cost = int(600 - 40*fortune)
+    cost = int(cost/wish_count)
+    if cost < 0: cost = 0
+
+    if stamina == 0: wish_count = 2
+    else: wish_count = 2 + int(stamina/2) + 1
+
+    if user.hasWish(id, BLOCKCHAIN) >= wish_count:
         desc = f'You have no more Wishes left for today.\n\n'
 
         """Return Message"""
@@ -256,9 +281,14 @@ async def wish (ctx, BLOCKCHAIN):
         return
     
     star_flag = False
-    wish_probability = 0.005 + 0.01*fortune
+    wish_probability = 0.01 + 0.005*fortune
     if random.random() < wish_probability:
         star_flag = True
+
+    dark_star_flag = False
+    wish2_probability = 0.00 + 0.003*ego
+    if random.random() < wish2_probability:
+        dark_star_flag = True
 
     """Generate new Block"""
     new_block = block.Block(
@@ -276,6 +306,14 @@ async def wish (ctx, BLOCKCHAIN):
         description= 'Star',
         data = 0
     )
+
+    dark_star_block = block.Block(
+        user = id,
+        name = name,
+        timestamp = today(),
+        description= 'Dark Star',
+        data = 0
+    )
     
     """Update Blockchain"""
     if BLOCKCHAIN.isChainValid() == False:
@@ -285,11 +323,13 @@ async def wish (ctx, BLOCKCHAIN):
     BLOCKCHAIN.addBlock(new_block)
     if star_flag: 
         BLOCKCHAIN.addBlock(star_block)
+    if dark_star_flag:
+        BLOCKCHAIN.addBlock(dark_star_block)
     if BLOCKCHAIN.isChainValid():
-        BLOCKCHAIN.storeChain()   
+        BLOCKCHAIN.storeChain()
 
     if star_flag: 
-        desc = f'Congratulations. You gained a Star!!!.\n\n'
+        desc = f'Congratulations. You gained a **Star**!!!.\n\n'
 
         """Return Message"""
         embed = discord.Embed(
@@ -300,19 +340,34 @@ async def wish (ctx, BLOCKCHAIN):
         embed.set_image(url='https://media0.giphy.com/media/hd1ilw50Zdb8Y/giphy.gif')
         embed.set_footer(text='@~ powered by UwUntu, sponsored by Dre\'s Tears')
         await ctx.send(embed=embed)
-    else:
-        desc = f'You reached for the Stars, but they were too far.\n\n'
+        return
+
+    if dark_star_flag: 
+        desc = f'Congratulations. You gained a **Dark Star**!!!.\n\n'
 
         """Return Message"""
         embed = discord.Embed(
             title = f'Wish Upon a Star',
             description = desc,
-            color = 6053215,
+            color = 8388736,
         ).set_thumbnail(url=ctx.author.avatar_url)
-        embed.set_image(url='https://media0.giphy.com/media/nWPLGmsjvdQ4g/giphy.gif')
+        embed.set_image(url='https://media.tenor.com/RUYUmoKQwQAAAAAd/pp-gif-cool.gif')
         embed.set_footer(text='@~ powered by UwUntu, sponsored by Dre\'s Tears')
         await ctx.send(embed=embed)
         return
+
+    desc = f'You reached for the Stars, but they were too far.\n\n'
+
+    """Return Message"""
+    embed = discord.Embed(
+        title = f'Wish Upon a Star',
+        description = desc,
+        color = 6053215,
+    ).set_thumbnail(url=ctx.author.avatar_url)
+    embed.set_image(url='https://media0.giphy.com/media/nWPLGmsjvdQ4g/giphy.gif')
+    embed.set_footer(text='@~ powered by UwUntu, sponsored by Dre\'s Tears')
+    await ctx.send(embed=embed)
+    return
 
 async def forge (ctx, stat_name, BLOCKCHAIN):
     id, name = ctx.author.id, ctx.author.name
@@ -371,7 +426,7 @@ async def forge (ctx, stat_name, BLOCKCHAIN):
         print('The current Blockchain is not valid, performing rollback.')
         BLOCKCHAIN = blockchain.Blockchain()
 
-    if stat_name.lower() == 'ego' and stat_level % 2:
+    if stat_name.lower() == 'ego':
         reforger_block = block.Block(
             user = id,
             name = name,

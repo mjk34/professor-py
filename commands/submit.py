@@ -176,31 +176,33 @@ async def claimBonus (ctx, client, BLOCKCHAIN):
 
     multiplier = 50 + int(30*vitality)
 
-    """Check if User has used daily submits before claim"""
-    if user_submits < 2:
-        embed = discord.Embed(
-            title = f'Bonus',
-            description = f'You must exhaust at least 2 Submissions to claim the *Bonus*!',
-            color = 6053215    
-        ).set_thumbnail(url='https://media1.tenor.com/images/80662c4e35cf12354f65f1d6f7beada8/tenor.gif')
-        embed.set_footer(text='@~ powered by UwUntu')
-        await ctx.send(embed=embed)
-        return
+    # """Check if User has used daily submits before claim"""
+    # if user_submits < 2:
+    #     embed = discord.Embed(
+    #         title = f'Bonus',
+    #         description = f'You must exhaust at least 2 Submissions to claim the *Bonus*!',
+    #         color = 6053215    
+    #     ).set_thumbnail(url='https://media1.tenor.com/images/80662c4e35cf12354f65f1d6f7beada8/tenor.gif')
+    #     embed.set_footer(text='@~ powered by UwUntu')
+    #     await ctx.send(embed=embed)
+    #     return
     
-    if user.hasClaim(id, BLOCKCHAIN) >= 1 + int(stamina/2):
-        embed = discord.Embed(
-            title = f'Bonus',
-            description = f'You have already claimed your bonus this week!',
-            color = 6053215    
-        ).set_image(url='https://i.pinimg.com/originals/0d/cc/db/0dccdb5a90ed01d7c7c554deba3f66c3.gif')
-        embed.set_footer(text='@~ powered by UwUntu')
-        await ctx.send(embed=embed)
-        return
+    # if user.hasClaim(id, BLOCKCHAIN) >= 1 + int(stamina/3):
+    #     embed = discord.Embed(
+    #         title = f'Bonus',
+    #         description = f'You have already claimed your bonus this week!',
+    #         color = 6053215    
+    #     ).set_image(url='https://i.pinimg.com/originals/0d/cc/db/0dccdb5a90ed01d7c7c554deba3f66c3.gif')
+    #     embed.set_footer(text='@~ powered by UwUntu')
+    #     await ctx.send(embed=embed)
+    #     return
 
-    bonus = int(user_daily / 7) + int(dexterity)
-    bonus_creds = 50 + bonus*multiplier
+    if dexterity == 0: bonus = int(user_daily / 7)
+    else: bonus = int(user_daily / 7) + int(dexterity/2) + 1
 
-    stat_bonus = int((bonus_creds)*(0.20*strength))
+    bonus_creds = 50 + 50*strength + bonus*multiplier
+
+    stat_bonus = int((bonus_creds)*(0.20*dexterity))
     
     """Generate new Block"""
     new_block = block.Block(
@@ -221,9 +223,9 @@ async def claimBonus (ctx, client, BLOCKCHAIN):
         BLOCKCHAIN.storeChain()           
     
     desc = f'Congratulations on your submits!\n'
-    desc += f'From **+{bonus}** *Bonus*, you claimed **+{bonus_creds}** creds!\n'
+    desc += f'From **+{bonus} Bonus Stacks** *and* **Strength {strength}**, you claimed **+{bonus_creds}** creds!\n'
     if strength > 0:
-        desc += f'\nFrom **Strength {strength}**, you get an additional **+{stat_bonus}** creds!'
+        desc += f'\nFrom **Dexterity {dexterity}**, you get an additional **+{stat_bonus}** creds!'
         
     """Return Message"""
     embed = discord.Embed(
