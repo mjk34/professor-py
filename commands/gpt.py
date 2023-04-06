@@ -36,15 +36,25 @@ async def gpt(ctx, prompt, client, BLOCKCHAIN):
     embed1.set_footer(text='@~ powered by UwUntu')
     thinking = await ctx.send(embed=embed1)
 
-    uwu_prompt = prompt + ' (answer in a cute tone, make sure to insert intersperse "uwu"s and "nyaa"s and ascii emojis like a tsundere)'
+    uwu_prompt = prompt + ' (answer in a cute tone, make sure to insert intersperse "uwu"s and "nyaa"s and ascii emojis and emoji like a tsundere)'
     # ' (answer in a cute tone, inserting random "uwu"s, as a personified cat)'
-    response = openai.ChatCompletion.create(
-        model='gpt-3.5-turbo',
-        messages=[{
-            "role": "assistant",        
-            "content": uwu_prompt
-        }]
-    )
+    try:
+        response = openai.ChatCompletion.create(
+            model='gpt-3.5-turbo',
+            messages=[{
+                "role": "assistant",        
+                "content": uwu_prompt
+            }]
+        )
+    except: 
+        embed = discord.Embed(
+            title = f'Professor',
+            description = f'Sorry I was sleeping... try again.',
+            color = 6053215    
+        ).set_thumbnail(url=professor_icon)
+        embed.set_footer(text='@~ powered by UwUntu')
+        await ctx.send(embed=embed)
+        return
 
     # print(response.choices[0].message.content.strip())
 
@@ -66,7 +76,8 @@ async def gpt(ctx, prompt, client, BLOCKCHAIN):
     if BLOCKCHAIN.isChainValid():
         BLOCKCHAIN.storeChain()
 
-    desc = f'\n\n**Prompt**: \n```{prompt}```\n**Answer**:\n\n'
+    user = f'<@{id}>'
+    desc = f'\n\n**Prompt**: \n{user}: {prompt}\n\n**Answer**:\n'
     desc += response.choices[0].message.content.strip()
 
     if not id == ADMIN:
@@ -80,7 +91,7 @@ async def gpt(ctx, prompt, client, BLOCKCHAIN):
     embed2.set_footer(text='@~ powered by UwUntu')
 
     await thinking.edit(embed=embed2)
-    # await ctx.send(embed=embed)
+    
     return
 
 def getGPTCount(user_id, BLOCKCHAIN):
