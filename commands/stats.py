@@ -52,11 +52,11 @@ async def profile (ctx, BLOCKCHAIN):
     dexterity = getStat(id, stats[3], BLOCKCHAIN)
     if dexterity == 0:
         dex_str = f'**+{60*dexterity}%** *bonus from clip night REVIEW bounty*\n'
-        dex_str += f' \u3000  \u3000  \u3000 **+{20*dexterity}%** *bonus from weekly CLAIM bounty*\n'
+        dex_str += f' \u3000  \u3000  \u3000 **+{16*dexterity}%** *bonus from weekly CLAIM bounty*\n'
         dex_str += f' \u3000  \u3000  \u3000 **+{0}** *additional BONUS stack(s), improves DAILY and CLAIM*'
     else:
         dex_str = f'**+{60*dexterity}%** *bonus from clip night REVIEW bounty*\n'
-        dex_str += f' \u3000  \u3000  \u3000 **+{20*dexterity}%** *bonus from weekly CLAIM bounty*\n'
+        dex_str += f' \u3000  \u3000  \u3000 **+{16*dexterity}%** *bonus from weekly CLAIM bounty*\n'
         dex_str += f' \u3000  \u3000  \u3000 **+{int(stamina/2) + 1}** *additional BONUS stacks, improves DAILY and CLAIM*'
 
     ego = getStat(id, stats[4], BLOCKCHAIN)
@@ -66,7 +66,7 @@ async def profile (ctx, BLOCKCHAIN):
 
     fortune = getStat(id, stats[5], BLOCKCHAIN)
     for_str = f'**+{0.5*fortune}%** *probability of pulling a* **Star** *on WISH*\n'
-    for_str += f' \u3000  \u3000  \u3000 **+{1.0*fortune}%** *probability of pulling a* **Star** *on DAILY*\n'
+    for_str += f' \u3000  \u3000  \u3000 **+{0.8*fortune}%** *probability of pulling a* **Star** *on DAILY*\n'
     for_str += f' \u3000  \u3000  \u3000 **-{40*fortune}** *base cost of total wishes*'
 
     desc = f'Below lists your current student stats and benefits:\n\n'

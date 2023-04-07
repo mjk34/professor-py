@@ -36,8 +36,19 @@ async def gpt(ctx, prompt, client, BLOCKCHAIN):
     embed1.set_footer(text='@~ powered by UwUntu')
     thinking = await ctx.send(embed=embed1)
 
-    uwu_prompt = prompt + ' (answer in a cute tone, make sure to insert intersperse "uwu"s and "nyaa"s and ascii emojis and emoji like a tsundere)'
+    yandere_flag = False
+    if random.random() < 0.8:
+        # uwu_prompt = prompt + ' (answer in a cute tone, make sure to insert intersperse "uwu"s and "nyaa"s and ascii emojis and emoji like a tsundere)'
+        uwu_prompt = prompt + ' (answer in a cute tone, make sure to insert intersperse "uwu"s and "nyaa"s and emojis like a tsundere)'
+        url = professor_icon
+        yandere_flag = False
+    else:
+        uwu_prompt = prompt + ' (answer in a cute tone, make sure to be a little threatening and insert intersperse emojis like a yandere)'
+        url = 'https://i.pinimg.com/originals/a2/e5/99/a2e599e7e609db48b6f6c99548844ab7.jpg'
+        yandere_flag = True
     # ' (answer in a cute tone, inserting random "uwu"s, as a personified cat)'
+
+
     try:
         response = openai.ChatCompletion.create(
             model='gpt-3.5-turbo',
@@ -77,17 +88,23 @@ async def gpt(ctx, prompt, client, BLOCKCHAIN):
         BLOCKCHAIN.storeChain()
 
     user = f'<@{id}>'
-    desc = f'\n\n**Prompt**: \n{user}: {prompt}\n\n**Answer**:\n'
+    desc = f'\n\n**Prompt**: \n```{prompt}```\n**Answer**:\n```'
+
+    if yandere_flag: desc += 'ansi\n[2;31m'
     desc += response.choices[0].message.content.strip()
+    if yandere_flag: desc += '[0m\n'
 
     if not id == ADMIN:
-        desc += f'\n\n (*Daily Requests Remaining: {int(15 - 1 - daily_count)}*)'
+        desc += f'```\n\n (*Daily Requests Remaining: {int(15 - 1 - daily_count)}*)'
+    else:
+        desc += f'```\n\n'
 
     embed2 = discord.Embed(
         title = f'Professor',
         description = desc,
         color = 6943230    
-    ).set_thumbnail(url=professor_icon)
+    # ).set_thumbnail(url=professor_icon)
+    ).set_thumbnail(url=url)
     embed2.set_footer(text='@~ powered by UwUntu')
 
     await thinking.edit(embed=embed2)

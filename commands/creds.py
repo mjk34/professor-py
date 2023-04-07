@@ -103,7 +103,7 @@ async def daily (ctx, client, BLOCKCHAIN):
     if fortune >= 420:
         await humble.chaos(ctx, client, BLOCKCHAIN)
 
-    star_probability = 0.005 + 0.01*stat_fort
+    star_probability = 0.005 + 0.08*stat_fort
     if random.random() < star_probability:
         """Generate new Block"""
         star_block = block.Block(
