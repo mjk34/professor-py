@@ -90,7 +90,7 @@ def dailyLuck (server_bonus) -> Iterable[Union[int, str]]:
     if int(server_bonus/3) == 3: cred_amount *= 1.75
     if int(server_bonus/3) >= 4: cred_amount *= 2.00
     
-    return cred_amount, cred_status
+    return int(cred_amount), cred_status
 
 """Randomly generate fortune readings from fortune-api"""
 def dailyFortune () -> str:
