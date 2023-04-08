@@ -187,7 +187,7 @@ async def claimBonus (ctx, client, BLOCKCHAIN):
         await ctx.send(embed=embed)
         return
     
-    if user.hasClaim(id, BLOCKCHAIN) >= 1 + int(stamina/2):
+    if user.hasClaim(id, BLOCKCHAIN) >= 1 + int(stamina/3):
         embed = discord.Embed(
             title = f'Bonus',
             description = f'You have already claimed your bonus this week!',
@@ -197,10 +197,12 @@ async def claimBonus (ctx, client, BLOCKCHAIN):
         await ctx.send(embed=embed)
         return
 
-    bonus = int(user_daily / 7) + int(dexterity)
-    bonus_creds = 50 + bonus*multiplier
+    if dexterity == 0: bonus = int(user_daily / 7)
+    else: bonus = int(user_daily / 7) + int(dexterity/2) + 1
 
-    stat_bonus = int((bonus_creds)*(0.20*strength))
+    bonus_creds = 250 + 50*strength + bonus*multiplier
+
+    stat_bonus = int((bonus_creds)*(0.16*dexterity))
     
     """Generate new Block"""
     new_block = block.Block(
@@ -221,9 +223,9 @@ async def claimBonus (ctx, client, BLOCKCHAIN):
         BLOCKCHAIN.storeChain()           
     
     desc = f'Congratulations on your submits!\n'
-    desc += f'From **+{bonus}** *Bonus*, you claimed **+{bonus_creds}** creds!\n'
+    desc += f'From **+{bonus} Bonus Stacks** *and* **Strength {strength}**, you claimed **+{bonus_creds}** creds!\n'
     if strength > 0:
-        desc += f'\nFrom **Strength {strength}**, you get an additional **+{stat_bonus}** creds!'
+        desc += f'\nFrom **Dexterity {dexterity}**, you get an additional **+{stat_bonus}** creds!'
         
     """Return Message"""
     embed = discord.Embed(
@@ -254,7 +256,7 @@ async def rafflelist (ctx, BLOCKCHAIN):
             count_tickets += 1
         else: break
     
-    desc = 'Here lists the participating rafflers, the next drawing is Sunday (4/15) at 4pm EST!\n\n'
+    desc = 'Here lists the participating rafflers, the next drawing is Saturday (6/10) at 6pm EST!\n\n'
 
     desc += '\u3000\u3000\u3000\u3000\u2000 # \u3000 Name\n'
     count = 1

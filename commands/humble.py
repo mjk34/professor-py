@@ -26,9 +26,9 @@ async def humble_powa(ctx, client, BLOCKCHAIN):
     print(bonus)
     
     """Generate new Block"""
-    uwu_average, uwu_rng = 500, random.randint(-50, 200)
-    submit_rng = random.randint(100, 200)
-    total = uwu_average + uwu_rng + submit_rng + bonus*50
+    uwu_average, uwu_rng = 600, random.randint(-100, 300)
+    submit_rng = random.randint(50, 250)
+    total = uwu_average + uwu_rng + submit_rng + bonus*75
     
     new_block = block.Block(
         user = HUMBLE,
@@ -79,7 +79,7 @@ async def chaos(ctx, client, BLOCKCHAIN):
     userId1, userName1 = candidates[0][0], candidates[0][1] # the hated one
     userId2, userName2 = candidates[1][0], candidates[1][1] # the favored one
 
-    if luck >= 0 and luck < 0.20:
+    if luck >= 0 and luck < 0.15:
         """Humble gives his own creds to the user"""
         print(f"Humble gives {creds} to {userId2}")
 
@@ -118,7 +118,7 @@ async def chaos(ctx, client, BLOCKCHAIN):
         embed.set_footer(text='@~ powered by UwUntu')
         await ctx.send(embed=embed)
 
-    if luck >= 0.20 and luck < 0.80:
+    if luck >= 0.15 and luck < 0.80:
         """Humble takes one random user's creds and gives it to another random user"""
         print(f"Humble moves {creds} from {userId1} to {userId2}")
 

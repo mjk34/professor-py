@@ -64,8 +64,9 @@ def checkMonday (block_date) -> bool:
 
 
 """Randomly generate luck based on values 1-1001"""
-def dailyLuck () -> Iterable[Union[int, str]]:
+def dailyLuck (server_bonus) -> Iterable[Union[int, str]]:
     luck = random.randint(1, 956)
+    multiplier = [0, 1.25, 1.50, 1.75, 2.0]
     cred_amount, cred_status = 0, ''
 
     if luck <= 300: 
@@ -83,7 +84,13 @@ def dailyLuck () -> Iterable[Union[int, str]]:
     if luck > 925:
         cred_amount = 2000
         cred_status = 'You  are  the  **biggest**  *bird*.'
-    return cred_amount, cred_status
+
+    if int(server_bonus/3) == 1: cred_amount *= 1.25
+    if int(server_bonus/3) == 2: cred_amount *= 1.50
+    if int(server_bonus/3) == 3: cred_amount *= 1.75
+    if int(server_bonus/3) >= 4: cred_amount *= 2.00
+    
+    return int(cred_amount), cred_status
 
 """Randomly generate fortune readings from fortune-api"""
 def dailyFortune () -> str:

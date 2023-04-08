@@ -6,6 +6,7 @@ from discord.utils import get
 from dotenv import load_dotenv
 from commands.helper import today, dailyLuck, dailyFortune, getName, fetchContentList, getIcon
 from commands.stats import getStat, getStar, getDarkStar, getReforger, stats
+from commands.user import getServerBonus
 
 filler = ['<', '>', '!', '@', '&']
 
@@ -31,13 +32,18 @@ async def daily (ctx, client, BLOCKCHAIN):
         await ctx.send(embed=embed)
         return
     
-    fortune, status = dailyLuck()
-    bonus = int(user.getDailyCount(id, BLOCKCHAIN) / 7) + int(getStat(id, stats[3], BLOCKCHAIN))
+    dexterity = int(getStat(id, stats[3], BLOCKCHAIN))
+                  
+    if dexterity == 0: bonus = int(user.getDailyCount(id, BLOCKCHAIN) / 7)
+    else: bonus = int(user.getDailyCount(id, BLOCKCHAIN) / 7) + int(dexterity/2) + 1
     
+    server_bonus = getServerBonus(BLOCKCHAIN)
+    fortune, status = dailyLuck(server_bonus)
+
     vitality = getStat(id, stats[0], BLOCKCHAIN)
     multiplier = int(25 + 15*vitality)
     stat_fort = getStat(id, stats[5], BLOCKCHAIN)
-    stat_bonus = int((fortune)*(0.10*vitality))
+    stat_bonus = int((fortune)*(0.10*vitality - pow(vitality, 0.008*vitality) + 1))
 
     """Generate new Block"""
     new_block = block.Block(
@@ -100,7 +106,7 @@ async def daily (ctx, client, BLOCKCHAIN):
     if fortune >= 420:
         await humble.chaos(ctx, client, BLOCKCHAIN)
 
-    star_probability = 0.005 + 0.005*stat_fort
+    star_probability = 0.005 + 0.08*stat_fort
     if random.random() < star_probability:
         """Generate new Block"""
         star_block = block.Block(
@@ -145,25 +151,26 @@ async def wallet (ctx, BLOCKCHAIN):
     user_wish = user.hasWish(id, BLOCKCHAIN)
 
     stamina = getStat(id, stats[1], BLOCKCHAIN)
-    fortune = getStat(id, stats[5], BLOCKCHAIN)
+    dexterity = int(getStat(id, stats[3], BLOCKCHAIN))
 
-    total_wish = 2 + int(fortune/2)
-    total_claim = 1 + int(stamina/2)
+    total_wish = 2 + int(stamina/2) + 1
+    total_claim = 1 + int(stamina/3)
 
     user_stars = getStar(id, BLOCKCHAIN)
     user_dstars = getDarkStar(id, BLOCKCHAIN)
     user_reforger = getReforger(id, BLOCKCHAIN)
 
-    bonus = int(user.getDailyCount(id, BLOCKCHAIN) / 7) + int(getStat(id, stats[3], BLOCKCHAIN))
+    if dexterity == 0: bonus = int(user.getDailyCount(id, BLOCKCHAIN) / 7)
+    else: bonus = int(user.getDailyCount(id, BLOCKCHAIN) / 7) + int(dexterity/2) + 1
 
     daily = {True:'Available', False:'Not Available'}[user.hasDaily(id, BLOCKCHAIN)]
     desc = ''
     
     if stamina == 0:
-        desc += f'Daily UwU:\u3000\u3000**{daily}**\nDaily Wish:\u3000\u3000**{total_wish - user_wish}/{total_wish}**\n\nClaim Bonus: \u3000**{total_claim - user_claim}/{total_claim}**\nSubmissions: \u3000**{(3) - user_subs}/{3}** \n'
+        desc += f'Daily UwU:\u3000\u3000**{daily}**\nDaily Wish:\u3000\u3000**{total_wish - user_wish}/{total_wish}**\n\nClaim Bonus: \u3000**{total_claim - user_claim}/{total_claim}**\nSubmissions: \u3000**{(2) - user_subs}/{2}** \n'
     else:
-        desc += f'Daily UwU:\u3000\u3000**{daily}**\nDaily Wish:\u3000\u3000**{total_wish - user_wish}/{total_wish}**\n\nClaim Bonus: \u3000**{total_claim - user_claim}/{total_claim}**\nSubmissions: \u3000**{(3 + int(stamina/2) + 1) - user_subs}/{3 + int(stamina/2) + 1}** \n'
-    
+        desc += f'Daily UwU:\u3000\u3000**{daily}**\nDaily Wish:\u3000\u3000**{total_wish - user_wish}/{total_wish}**\n\nClaim Bonus: \u3000**{total_claim - user_claim}/{total_claim}**\nSubmissions: \u3000**{(2 + int(stamina/2) + 1) - user_subs}/{2 + int(stamina/2) + 1}** \n'
+
     desc += f'Bonus Stack:\u3000** {bonus}**\n\n'
     desc += f'Total Creds:\u3000**{user_creds}**\u3000 Total Tickets: \u2000**{user_tickets}**\n'
     desc += f'Stars:\u2000**{user_stars}**\u3000 Dark Stars:\u2000**{user_dstars}**\u3000Reforgers:\u2000**{user_reforger}**\n\n'
@@ -374,7 +381,7 @@ async def snoop (ctx, target, client, BLOCKCHAIN):
         left = random.random()
         right = random.random()
         
-        if left < 0.20 and right < 0.20 and left != right:
+        if left < 0.15 and right < 0.15 and left != right:
             break
 
     upper = int((1 + left)*user_creds)
