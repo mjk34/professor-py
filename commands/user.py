@@ -1,7 +1,7 @@
 import random
 
 from commands.helper import today, checkMonday
-from commands.stats import getStar
+from commands.stats import getStar, getStat, stats
 
 """Evaluated Blockchain:
         1. find the most recent daily based on user_id
@@ -359,3 +359,24 @@ def getHumbleLove(user_id, BLOCKCHAIN) -> float:
 
     # print(f'user: {user_id}, sum: {sum}')
     return sum, count
+
+def getServerBonus(BLOCKCHAIN) -> int:
+    if len(BLOCKCHAIN.chain) == 1: return []
+    
+    unique_ids = []
+    for block in BLOCKCHAIN.chain[1:]:
+        unique_ids.append(block.getUser())
+    unique_ids = list(set(unique_ids))
+    
+    leaderboard = []
+    for user_id in unique_ids:
+        if user_id == 69: continue
+        user_dex = int(getStat(user_id, stats[3], BLOCKCHAIN))
+        user_bonus = int(getDailyCount(user_id, BLOCKCHAIN)/7)
+        leaderboard.append([user_id, user_bonus + user_dex])
+        
+    leaderboard.sort(key = lambda x: x[1], reverse=True)
+    print(leaderboard[:10])
+    print(f'Highest bonus stack is: {leaderboard[0][1]}')
+
+    return leaderboard[0][1]

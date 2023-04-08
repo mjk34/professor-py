@@ -6,6 +6,7 @@ from discord.utils import get
 from dotenv import load_dotenv
 from commands.helper import today, dailyLuck, dailyFortune, getName, fetchContentList, getIcon
 from commands.stats import getStat, getStar, getDarkStar, getReforger, stats
+from commands.user import getServerBonus
 
 filler = ['<', '>', '!', '@', '&']
 
@@ -31,12 +32,14 @@ async def daily (ctx, client, BLOCKCHAIN):
         await ctx.send(embed=embed)
         return
     
-    fortune, status = dailyLuck()
     dexterity = int(getStat(id, stats[3], BLOCKCHAIN))
                   
     if dexterity == 0: bonus = int(user.getDailyCount(id, BLOCKCHAIN) / 7)
     else: bonus = int(user.getDailyCount(id, BLOCKCHAIN) / 7) + int(dexterity/2) + 1
     
+    server_bonus = getServerBonus(BLOCKCHAIN)
+    fortune, status = dailyLuck(server_bonus)
+
     vitality = getStat(id, stats[0], BLOCKCHAIN)
     multiplier = int(25 + 15*vitality)
     stat_fort = getStat(id, stats[5], BLOCKCHAIN)
