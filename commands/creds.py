@@ -250,7 +250,7 @@ async def give (ctx, reciever, client, BLOCKCHAIN):
     """Return Message"""
     embed = discord.Embed(
         title = f'Give',
-        description = f'A donation of **{200}** was generously given to <@{reciever_id}>!',
+        description = f'A donation of **{500}** was generously given to <@{reciever_id}>!',
         color = 16700447    
     ).set_image(url='https://2.bp.blogspot.com/-UMkbGppX02A/UwoAVpunIMI/AAAAAAAAGxo/W9a0M4njhOQ/s1600/4363+-+animated_gif+k-on+k-on!+k-on!!+moe+nakano_azusa.gif')
     embed.set_footer(text='@~ powered by UwUntu')
