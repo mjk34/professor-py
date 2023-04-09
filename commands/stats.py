@@ -30,9 +30,9 @@ async def profile (ctx, BLOCKCHAIN):
     dark_star = getDarkStar(id, BLOCKCHAIN)
 
     vitality = getStat(id, stats[0], BLOCKCHAIN)
-    vit_scale = int(0.1*vitality - pow(vitality, (0.008*vitality)) + 1)
+    vit_scale = 0.1*vitality - pow(vitality, (0.008*vitality)) + 1
 
-    vit_str = f' **+{10.0*vit_scale}%** *bonus from DAILY fortunes (ignores bonus stacks)*\n' 
+    vit_str = f' **+{int(100*vit_scale)}%** *bonus from DAILY fortunes (ignores bonus stacks)*\n' 
     vit_str += f' \u3000  \u3000  \u3000 **+{25*vitality}** *per BONUS stack, improves DAILY and CLAIM*'
 
     stamina = getStat(id, stats[1], BLOCKCHAIN)
@@ -242,7 +242,7 @@ async def wish (ctx, BLOCKCHAIN):
     id, name = ctx.author.id, ctx.author.name
     fortune = getStat(id, stats[5], BLOCKCHAIN)
     stamina = getStat(id, stats[1], BLOCKCHAIN)
-    ego = getStat(id, stats[4])
+    ego = getStat(id, stats[4], BLOCKCHAIN)
     creds= user.totalCreds(id, BLOCKCHAIN)
 
     if stamina == 0: wish_count = 2 + int(stamina/2)
