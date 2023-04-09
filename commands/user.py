@@ -361,7 +361,7 @@ def getHumbleLove(user_id, BLOCKCHAIN) -> float:
     return sum, count
 
 def getServerBonus(BLOCKCHAIN) -> int:
-    if len(BLOCKCHAIN.chain) == 1: return []
+    if len(BLOCKCHAIN.chain) == 1: return 0
     
     unique_ids = []
     for block in BLOCKCHAIN.chain[1:]:
