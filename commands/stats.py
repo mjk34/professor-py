@@ -53,11 +53,11 @@ async def profile (ctx, BLOCKCHAIN):
     if dexterity == 0:
         dex_str = f'**+{60*dexterity}%** *bonus from clip night REVIEW bounty*\n'
         dex_str += f' \u3000  \u3000  \u3000 **+{16*dexterity}%** *bonus from weekly CLAIM bounty*\n'
-        dex_str += f' \u3000  \u3000  \u3000 **+{0}** *additional BONUS stack(s), improves DAILY and CLAIM*'
+        dex_str += f' \u3000  \u3000  \u3000 **+{0}** *additional BONUS stack, improves DAILY and CLAIM*'
     else:
         dex_str = f'**+{60*dexterity}%** *bonus from clip night REVIEW bounty*\n'
         dex_str += f' \u3000  \u3000  \u3000 **+{16*dexterity}%** *bonus from weekly CLAIM bounty*\n'
-        dex_str += f' \u3000  \u3000  \u3000 **+{int(stamina/2) + 1}** *additional BONUS stacks, improves DAILY and CLAIM*'
+        dex_str += f' \u3000  \u3000  \u3000 **+{int(stamina/2) + 1}** *additional BONUS stack, improves DAILY and CLAIM*'
 
     ego = getStat(id, stats[4], BLOCKCHAIN)
     ego_str = f' **+{ego}** *Corrupted Reforger(s) to transform stars*\n'
