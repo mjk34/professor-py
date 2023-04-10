@@ -85,7 +85,7 @@ async def daily (ctx, client, BLOCKCHAIN):
     if bonus > 0:
         desc += f'From **+{bonus}** *Bonus*, you get an additional **+{bonus*multiplier}** creds!\n'
     if vitality > 0:
-        desc += f'\nFrom **Vitality {vitality}**, you get an additional **+{stat_bonus}** creds!' 
+        desc += f'\nFrom **Vitality {vitality}**, you get an additional **+{stat_bonus}** creds!\n' 
 
     desc += f'\nNet total: {fortune + bonus*multiplier + stat_bonus}'
     
@@ -153,7 +153,7 @@ async def wallet (ctx, BLOCKCHAIN):
     stamina = getStat(id, stats[1], BLOCKCHAIN)
     dexterity = int(getStat(id, stats[3], BLOCKCHAIN))
 
-    total_wish = 2 + int(stamina/2) + 1
+    total_wish = 2 + int(stamina/2)
     total_claim = 1 + int(stamina/3)
 
     user_stars = getStar(id, BLOCKCHAIN)
