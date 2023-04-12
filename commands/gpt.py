@@ -11,6 +11,24 @@ ADMIN = int(os.getenv('ADMIN_ID'))
 
 openai.api_key = GPT_KEY
 
+async def gpt_string(context, prompt):
+    if random.random() < 0.8:
+        uwu_prompt = prompt + f' (make it simple and answer in a cute tone with uwu emojis like a tsundere)'
+    else: uwu_prompt = prompt + f' (make it simple and answer in a cute tone with murderous emojis like a yandere)'
+
+    try:
+        response = openai.ChatCompletion.create(
+            model='gpt-3.5-turbo',
+            messages=[
+                {"role": "system", "content": context},
+                {"role": 'user', "content": uwu_prompt}
+            ]
+        )
+    except: 
+        return "yo mama"
+
+    return response.choices[0].message.content.strip()
+
 """Allow users to use Davinci API to Generate responses"""
 async def gpt(ctx, prompt, client, BLOCKCHAIN):
 
@@ -38,7 +56,6 @@ async def gpt(ctx, prompt, client, BLOCKCHAIN):
 
     yandere_flag = False
     if random.random() < 0.8:
-        # uwu_prompt = prompt + ' (answer in a cute tone, make sure to insert intersperse "uwu"s and "nyaa"s and ascii emojis and emoji like a tsundere)'
         uwu_prompt = prompt + ' (answer in a cute tone, make sure to insert intersperse "uwu"s and "nyaa"s and emojis like a tsundere)'
         url = professor_icon
         yandere_flag = False
@@ -46,8 +63,6 @@ async def gpt(ctx, prompt, client, BLOCKCHAIN):
         uwu_prompt = prompt + ' (answer in a cute tone, make sure to be a little threatening and insert intersperse emojis like a yandere)'
         url = 'https://i.pinimg.com/originals/a2/e5/99/a2e599e7e609db48b6f6c99548844ab7.jpg'
         yandere_flag = True
-    # ' (answer in a cute tone, inserting random "uwu"s, as a personified cat)'
-
 
     try:
         response = openai.ChatCompletion.create(
@@ -66,8 +81,6 @@ async def gpt(ctx, prompt, client, BLOCKCHAIN):
         embed.set_footer(text='@~ powered by UwUntu')
         await ctx.send(embed=embed)
         return
-
-    # print(response.choices[0].message.content.strip())
 
     """Generate new Block"""
     gpt_block = block.Block(

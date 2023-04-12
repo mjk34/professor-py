@@ -6,13 +6,13 @@ from discord.ext.commands import Bot
 from discord_slash import SlashCommand, SlashContext
 from discord_slash.utils.manage_commands import create_option
 
-from commands.cmd import ping, anime, uwuify, pong
+from commands.cmd import ping, anime, pong
 from commands.creds import daily, wallet, give, handout, take, snoop
 from commands.games import submitClip, review
 from commands.submit import buy_ticket, bonusSubmit, leaderboard, claimBonus, rafflelist
 from commands.helper import fetchContentList
 from commands.humble import humble_powa
-from commands.gpt import gpt
+from commands.gpt import gpt, gpt_string
 from commands.stats import profile, upgrade, wish, forge, bless, reforge, consume
 from commands.god import hand_all, take_level #,return_to_the_stars, disable_upgrade
 
@@ -21,6 +21,7 @@ TOKEN = os.getenv('DISCORD_TOKEN')
 GUILD = os.getenv('DISCORD_GUILD')
 GUILD_ID = int(os.getenv('GUILD_ID'))
 CHANNEL = int(os.getenv('BOT_CMD'))
+GENERAL = int(os.getenv('GENERAL'))
 CMD_DESC = fetchContentList('command.txt')
 
 client = Bot(command_prefix='!', intents=discord.Intents.all())
@@ -41,18 +42,56 @@ async def on_ready(): await client.change_presence(activity=discord.Game('/uwu f
 @client.event
 async def on_message(message):
     if message.author.name in ['Assistant', 'Professor', 'humble', 'valuwu', 'RoleBot']: return
-    if message.author == client.user: return                # checks if professor
-    if message.channel.id != CHANNEL: return                # checks if from bot channel
+    if message.author == client.user: return                # checks if professor  
     if message.content.split(' ')[0] in keywords: return    # checks for keywords (commands)
 
-    if random.random() < 0.12:                              # 12% chance to get uwufied
-        replace_message = uwuify(message.content)
-        resend_message = f'{message.author.name}: ' + replace_message
+    content = message.content
+    temp_msg = ['Typing...', 'Ummm...', 'Hmmm...', 'Thinking...']
+    msg = random.randint(0, 3)
+
+    ping = '<@787353505132183592>'
+    token = 'hey professor'
+    if ping in content:
+            print(f'Pinged Professor: \"{content}\"')
+            reply = await message.reply(f'{temp_msg[msg]}')
+            gpt_str = await gpt_string('', content[len(token):])
+            await reply.edit(content=gpt_str)
+            return
+    
+    print('\ncheck 1')
+    try:
+        print('check 2')
+        m_id = message.reference.message_id
+        m_cid = message.reference.channel_id
+        r_message = await client.get_channel(m_cid).fetch_message(m_id)
+
+        m_aname = r_message.author.name
+        m_context = r_message.content
+        print(m_aname)
+        if m_aname == 'Professor':
+            print(f'Replying to Professor: \"{content}\"')
+            reply = await message.reply(f'{temp_msg[msg]}')
+            gpt_str = await gpt_string(m_context, content)
+            await reply.edit(content=gpt_str)
+            return
+    except:
+        print('check 3')
+        return
+
+    if message.channel.id == GENERAL:
+        if token in content.lower():
+            print(f'Hey Professor: \"{content}\"')
+            reply = await message.reply(f'{temp_msg[msg]}')
+            gpt_str = await gpt_string('', content[len(token):])
+            await reply.edit(content=gpt_str)
+            return
         
-        if message.author.name in ['Assistant', 'Professor']: return
-        
-        await message.delete()
-        await client.get_channel(CHANNEL).send(resend_message)
+        if random.random() < 0.15:
+            print(f'Random Professor: \"{content}\"')
+            gpt_str = await gpt_string('', content[len(token):])
+            await client.get_channel(GENERAL).send(gpt_str)
+            return
+    
 
 """Non-Blockchain dependent commands"""
 @slash.slash(name='ping', description=CMD_DESC[0], guild_ids=[GUILD_ID])
