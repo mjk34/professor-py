@@ -12,7 +12,7 @@ from commands.games import submitClip, review
 from commands.submit import buy_ticket, bonusSubmit, leaderboard, claimBonus, rafflelist
 from commands.helper import fetchContentList
 from commands.humble import humble_powa
-from commands.gpt import gpt, gpt_string
+from commands.gpt import gpt_string
 from commands.stats import profile, upgrade, wish, forge, bless, reforge, consume
 from commands.god import hand_all, take_level #,return_to_the_stars, disable_upgrade
 
@@ -194,11 +194,6 @@ async def _(ctx:SlashCommand):
              create_option(name='rating', description=CMD_DESC[62], option_type=4, required=True)])
 async def _(ctx:SlashCommand, reciever: str, rating: int):
     await review(ctx, reciever, rating, client, BLOCKCHAIN)
-
-@slash.slash(name='gpt', description=CMD_DESC[67], guild_ids=[GUILD_ID],
-    options=[create_option(name='prompt', description=CMD_DESC[68], option_type=3, required=True)])
-async def _(ctx:SlashCommand, prompt: str):
-    await gpt(ctx, prompt, client, BLOCKCHAIN)
 
 """Special Case Commands"""
 @slash.slash(name='bless', description=CMD_DESC[63], guild_ids=[GUILD_ID],
