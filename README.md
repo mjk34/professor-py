@@ -1,4 +1,4 @@
-# uwuBot
+# professorBot
 
 ## Summary:
 This is the coding behind Uwuversity's Professor bot for Discord.
