@@ -153,7 +153,7 @@ async def wallet (ctx, BLOCKCHAIN):
     stamina = getStat(id, stats[1], BLOCKCHAIN)
     dexterity = int(getStat(id, stats[3], BLOCKCHAIN))
 
-    total_wish = 2 + int(stamina/2)
+    total_wish = 2 + int(stamina/2) + 1
     total_claim = 1 + int(stamina/3)
 
     user_stars = getStar(id, BLOCKCHAIN)
@@ -167,7 +167,7 @@ async def wallet (ctx, BLOCKCHAIN):
     desc = ''
     
     if stamina == 0:
-        desc += f'Daily UwU:\u3000\u3000**{daily}**\nDaily Wish:\u3000\u3000**{total_wish - user_wish}/{total_wish}**\n\nClaim Bonus: \u3000**{total_claim - user_claim}/{total_claim}**\nSubmissions: \u3000**{(2) - user_subs}/{2}** \n'
+        desc += f'Daily UwU:\u3000\u3000**{daily}**\nDaily Wish:\u3000\u3000**{2 - user_wish}/{2}**\n\nClaim Bonus: \u3000**{total_claim - user_claim}/{total_claim}**\nSubmissions: \u3000**{(2) - user_subs}/{2}** \n'
     else:
         desc += f'Daily UwU:\u3000\u3000**{daily}**\nDaily Wish:\u3000\u3000**{total_wish - user_wish}/{total_wish}**\n\nClaim Bonus: \u3000**{total_claim - user_claim}/{total_claim}**\nSubmissions: \u3000**{(2 + int(stamina/2) + 1) - user_subs}/{2 + int(stamina/2) + 1}** \n'
 
