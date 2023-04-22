@@ -86,12 +86,11 @@ async def on_message(message):
             await reply.edit(content=gpt_str)
             return
         
-        if random.random() < 0.20:
+        if random.random() < 0.75 and '?' in content:
             print(f'Random Professor: \"{content}\"')
             gpt_str = await gpt_string('', content[len(token):])
             await client.get_channel(GENERAL).send(gpt_str)
             return
-    
 
 """Non-Blockchain dependent commands"""
 @slash.slash(name='ping', description=CMD_DESC[0], guild_ids=[GUILD_ID])
