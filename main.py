@@ -14,7 +14,7 @@ from commands.helper import fetchContentList
 from commands.humble import humble_powa
 from commands.gpt import gpt_string
 from commands.stats import profile, upgrade, wish, forge, bless, reforge, consume
-from commands.god import hand_all, take_level #,return_to_the_stars, disable_upgrade
+from commands.god import hand_all, take_level, give_level #,return_to_the_stars, disable_upgrade
 
 load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')
@@ -218,5 +218,11 @@ async def _(ctx:SlashCommand, amount: int):
              create_option(name='stat', description=CMD_DESC[59], option_type=3, required=True)])
 async def _(ctx:SlashCommand, target:str, stat:str):
     await take_level(ctx, target, stat, client, BLOCKCHAIN)
+
+@slash.slash(name='give_level', description='Give someone a level', guild_ids=[GUILD_ID],
+    options=[create_option(name='target', description=CMD_DESC[18], option_type=3, required=True),
+             create_option(name='stat', description=CMD_DESC[59], option_type=3, required=True)])
+async def _(ctx:SlashCommand, target:str, stat:str):
+    await give_level(ctx, target, stat, client, BLOCKCHAIN)
 
 client.run(TOKEN)

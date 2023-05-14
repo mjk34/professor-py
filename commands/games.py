@@ -23,7 +23,7 @@ async def submitClip(ctx, title, link, BLOCKCHAIN):
 
     """check if the user has submissions left"""
     user_subs = user.totalSubsWeek(id, BLOCKCHAIN)
-    if user_subs >= (2 + stamina):
+    if user_subs >= (2 + int(stamina/2)):
         embed = discord.Embed(
             title = f'Submission',
             description = f'Out of Submissions, Submissions will reset every Monday!',

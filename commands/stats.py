@@ -253,7 +253,8 @@ async def wish (ctx, BLOCKCHAIN):
     if cost < 0: cost = 0
 
     if stamina == 0: wish_count = 2
-    else: wish_count = 2 + int(stamina/2) + 1
+    if stamina == 1: wish_count = 3
+    else: wish_count = 3 + int(stamina/3)
 
     if user.hasWish(id, BLOCKCHAIN) >= wish_count:
         desc = f'You have no more Wishes left for today.\n\n'
