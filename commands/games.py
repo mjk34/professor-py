@@ -12,12 +12,9 @@ filler = ['<', '>', '!', '@']
 async def submitClip(ctx, title, link, BLOCKCHAIN):
     """1. Blockchain will be evaluated, user submissions will be checked
        2. Blockchain will be validated, new block will be added to the end of Blockchain"""
+    
     id, name = ctx.author.id, ctx.author.name
-
     stamina = getStat(id, stats[1], BLOCKCHAIN)
-    if stamina == 0: stamina = 0
-    else: stamina = int(stamina/2) + 1
-
     strength = getStat(id, stats[2], BLOCKCHAIN)
     color = 6053215
 

@@ -43,6 +43,7 @@ async def daily (ctx, client, BLOCKCHAIN):
     vitality = getStat(id, stats[0], BLOCKCHAIN)
     multiplier = int(25 + 15*vitality)
     stat_fort = getStat(id, stats[5], BLOCKCHAIN)
+    stat_ego = getStat(id, stats[4], BLOCKCHAIN)
     stat_bonus = int((fortune)*(0.10*vitality - pow(vitality, 0.008*vitality) + 1))
 
     """Generate new Block"""
@@ -135,7 +136,7 @@ async def daily (ctx, client, BLOCKCHAIN):
         embed.set_footer(text='@~ powered by UwUntu')
         await ctx.send(embed=embed)
 
-    dark_star_probability = 0.003*stat_fort
+    dark_star_probability = 0.003*stat_ego
     if random.random() < dark_star_probability:
         """Generate new Block"""
         dark_star_block = block.Block(
