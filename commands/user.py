@@ -207,13 +207,13 @@ def getTop(BLOCKCHAIN) -> list:
         if user_id == 69: continue
         user_name = findRecentName(user_id, BLOCKCHAIN)
         user_creds = totalCreds(user_id, BLOCKCHAIN)
-        user_tickets = totalTickets(user_id, BLOCKCHAIN)
-        total = totalValue(user_creds, user_tickets)
+        # user_tickets = totalTickets(user_id, BLOCKCHAIN)
+        # total = totalValue(user_creds, user_tickets)
         
         user_stars = getStar(user_id, BLOCKCHAIN)
         # print(f'{user_name} {user_creds} {user_tickets} {total}')
         
-        leaderboard.append([user_name, total, user_stars])
+        leaderboard.append([user_name, user_creds, user_stars])
         
     leaderboard.sort(key = lambda x: x[1], reverse=True) 
 

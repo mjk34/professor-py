@@ -135,7 +135,7 @@ async def leaderboard (ctx, BLOCKCHAIN):
        2. Blockchain will be evaluated, User tickets will be checked"""
 
     leaderboard = user.getTop(BLOCKCHAIN)
-    # print(leaderboard)
+
     desc = 'Here lists the most active students in UwUversity!\n\n'
     count = 1
     for member in leaderboard:
