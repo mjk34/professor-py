@@ -86,7 +86,7 @@ async def bonusSubmit(ctx, reciever, client, BLOCKCHAIN):
        2. Blockchain will be validated, new block will be added to the end of Blockchain"""
 
     """Parses Reciever id from <@id>"""
-    giver_id, reciever_id = ctx.author.id, reciever
+    reciever_id = reciever
     for ch in filler: reciever_id = reciever_id.replace(ch, '')
     reciever_id = int(reciever_id)
     
@@ -135,7 +135,6 @@ async def leaderboard (ctx, BLOCKCHAIN):
        2. Blockchain will be evaluated, User tickets will be checked"""
 
     leaderboard = user.getTop(BLOCKCHAIN)
-
     desc = 'Here lists the most active students in UwUversity!\n\n'
     count = 1
     for member in leaderboard:
@@ -160,7 +159,7 @@ async def leaderboard (ctx, BLOCKCHAIN):
     await ctx.send(embed=embed)
     
 """Allow users to claim an additional reward after daily submits are used!"""
-async def claimBonus (ctx, client, BLOCKCHAIN):
+async def claimBonus (ctx, BLOCKCHAIN):
     """1. Blockchain will be evaluated, User daily will be checked
        2. Blockchain will be evaluated, User submits will be checked
        3. Blockchain will be validated, new block will be added to the end of Blockchain"""
@@ -170,7 +169,6 @@ async def claimBonus (ctx, client, BLOCKCHAIN):
     user_submits = user.totalSubsWeek(id, BLOCKCHAIN)
 
     vitality =  getStat(id, stats[0], BLOCKCHAIN)
-    stamina =   getStat(id, stats[1], BLOCKCHAIN)
     dexterity = getStat(id, stats[3], BLOCKCHAIN)
     strength =  getStat(id, stats[2], BLOCKCHAIN)
 
@@ -187,22 +185,19 @@ async def claimBonus (ctx, client, BLOCKCHAIN):
         await ctx.send(embed=embed)
         return
     
-    if user.hasClaim(id, BLOCKCHAIN) >= 1 + int(stamina/3):
+    if user.claimedCount(id, BLOCKCHAIN) == 1:
         embed = discord.Embed(
             title = f'Bonus',
             description = f'You have already claimed your bonus this week!',
-            color = 6053215    
+            color = 6053215
         ).set_image(url='https://i.pinimg.com/originals/0d/cc/db/0dccdb5a90ed01d7c7c554deba3f66c3.gif')
         embed.set_footer(text='@~ powered by UwUntu')
         await ctx.send(embed=embed)
         return
 
-    if dexterity == 0: bonus = int(user_daily / 7)
-    else: bonus = int(user_daily / 7) + int(dexterity/2) + 1
-
+    bonus = int(user_daily / 7)
     bonus_creds = 250 + 50*strength + bonus*multiplier
-
-    stat_bonus = int((bonus_creds)*(0.16*dexterity))
+    stat_bonus = int((bonus_creds)*(0.14*dexterity))
     
     """Generate new Block"""
     new_block = block.Block(
@@ -241,7 +236,7 @@ async def rafflelist (ctx, BLOCKCHAIN):
     """1. Blockchain will be evaluated, User uwuCreds will be checked
        2. Blockchain will be evaluated, User tickets will be checked"""
 
-    id, name = ctx.author.id, ctx.author.name
+    id = ctx.author.id
 
     rafflelist = user.getRaffle(BLOCKCHAIN)
     user_creds = user.totalCreds(id, BLOCKCHAIN)
@@ -267,7 +262,6 @@ async def rafflelist (ctx, BLOCKCHAIN):
             desc += '\u3000** #%-2d ** \u3000\u3000 %3.0f \u3000 %-20s\n' % (count, member[1], member[0][:20])
         else: 
             desc += '\u3000** #%-2d ** \u3000\u2000 %3.0f \u3000 %-20s\n' % (count, member[1], member[0][:20])
-
         count += 1
 
     desc += f'\n\nYou can currently buy **{count_tickets}** tickets with **{user_creds}** uwuCreds! '
@@ -281,4 +275,3 @@ async def rafflelist (ctx, BLOCKCHAIN):
     ).set_thumbnail(url=ctx.guild.icon_url)
     embed.set_footer(text='@~ powered by UwUntu')
     await ctx.send(embed=embed)
-

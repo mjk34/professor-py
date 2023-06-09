@@ -31,19 +31,13 @@ async def daily (ctx, client, BLOCKCHAIN):
         embed.set_footer(text='@~ powered by UwUntu')
         await ctx.send(embed=embed)
         return
-    
-    dexterity = int(getStat(id, stats[3], BLOCKCHAIN))
-                  
-    if dexterity == 0: bonus = int(user.getDailyCount(id, BLOCKCHAIN) / 7)
-    else: bonus = int(user.getDailyCount(id, BLOCKCHAIN) / 7) + int(dexterity/2) + 1
-    
+        
+    bonus = int(user.getDailyCount(id, BLOCKCHAIN) / 7)
     server_bonus = getServerBonus(BLOCKCHAIN)
     fortune, status = dailyLuck(server_bonus)
 
     vitality = getStat(id, stats[0], BLOCKCHAIN)
     multiplier = int(25 + 15*vitality)
-    stat_fort = getStat(id, stats[5], BLOCKCHAIN)
-    stat_ego = getStat(id, stats[4], BLOCKCHAIN)
     stat_bonus = int((fortune)*(0.10*vitality - pow(vitality, 0.008*vitality) + 1))
 
     """Generate new Block"""
@@ -104,66 +98,9 @@ async def daily (ctx, client, BLOCKCHAIN):
     embed.set_image(url=orb_url)
     await ctx.send(embed=embed)
 
-    if fortune >= 420:
+    if status == '**Fortune favors you**,' or status == '***The currents of Causality bends for you***,' or status == 'You  are  the  **biggest**  *bird*.': 
         await humble.chaos(ctx, client, BLOCKCHAIN)
 
-    star_probability = 0.005 + 0.008*stat_fort
-    if random.random() < star_probability:
-        """Generate new Block"""
-        star_block = block.Block(
-            user = id,
-            name = name,
-            timestamp = today(),
-            description = 'Star',
-            data = 0
-        )
-
-        """Update Blockchain"""
-        if BLOCKCHAIN.isChainValid() == False:
-            print('The current Blockchain is not valid, performing rollback.')
-            BLOCKCHAIN = blockchain.Blockchain()
-
-        BLOCKCHAIN.addBlock(star_block)
-        if BLOCKCHAIN.isChainValid():
-            BLOCKCHAIN.storeChain()   
-
-        """Return Message"""
-        embed = discord.Embed(
-            title = f'Daily',
-            description = f'Holy ****! <@{id}> got a **Star**!',
-            color = 16700447    
-        ).set_image(url='https://media0.giphy.com/media/v1.Y2lkPTc5MGI3NjExMzk0NDM0MTMxOGY5YTM4NThiYmEzYmE2ZGY2ZWRkZDQyM2JlMjdkMSZjdD1n/PR7J3rrNCrFE4/giphy.gif')
-        embed.set_footer(text='@~ powered by UwUntu')
-        await ctx.send(embed=embed)
-
-    dark_star_probability = 0.003*stat_ego
-    if random.random() < dark_star_probability:
-        """Generate new Block"""
-        dark_star_block = block.Block(
-            user = id,
-            name = name,
-            timestamp = today(),
-            description = 'Dark Star',
-            data = 0
-        )
-
-        """Update Blockchain"""
-        if BLOCKCHAIN.isChainValid() == False:
-            print('The current Blockchain is not valid, performing rollback.')
-            BLOCKCHAIN = blockchain.Blockchain()
-
-        BLOCKCHAIN.addBlock(dark_star_block)
-        if BLOCKCHAIN.isChainValid():
-            BLOCKCHAIN.storeChain()   
-
-        """Return Message"""
-        embed = discord.Embed(
-            title = f'Daily',
-            description = f'Destruction Erupts! <@{id}> obtained a **Dark Star**!',
-            color = 16700447    
-        ).set_image(url='https://vignette1.wikia.nocookie.net/fairytailfanon/images/5/5d/Satura_power.gif')
-        embed.set_footer(text='@~ powered by UwUntu')
-        await ctx.send(embed=embed)
     
 """Allow users to check out much uwuCreds they have accumulated"""
 async def wallet (ctx, BLOCKCHAIN):
@@ -177,36 +114,22 @@ async def wallet (ctx, BLOCKCHAIN):
     user_tickets = user.totalTickets(id, BLOCKCHAIN)
 
     user_subs = user.totalSubsWeek(id, BLOCKCHAIN)
-    user_claim = user.hasClaim(id, BLOCKCHAIN)
-    user_wish = user.hasWish(id, BLOCKCHAIN)
+    user_claim = user.claimedCount(id, BLOCKCHAIN)
+    user_wish = user.wishCount(id, BLOCKCHAIN)
 
     stamina = getStat(id, stats[1], BLOCKCHAIN)
-    dexterity = int(getStat(id, stats[3], BLOCKCHAIN))
 
-    if stamina == 0: total_wish = 2
-    if stamina == 1: total_wish = 3
-    else: total_wish = 3 + int(stamina/3)
-
-    total_claim = 1 + int(stamina/3)
-
-    user_stars = getStar(id, BLOCKCHAIN)
-    user_dstars = getDarkStar(id, BLOCKCHAIN)
-    user_reforger = getReforger(id, BLOCKCHAIN)
-
-    if dexterity == 0: bonus = int(user.getDailyCount(id, BLOCKCHAIN) / 7)
-    else: bonus = int(user.getDailyCount(id, BLOCKCHAIN) / 7) + int(dexterity/2) + 1
-
+    bonus = int(user.getDailyCount(id, BLOCKCHAIN) / 7)
     daily = {True:'Available', False:'Not Available'}[user.hasDaily(id, BLOCKCHAIN)]
     desc = ''
     
     if stamina == 0:
-        desc += f'Daily UwU:\u3000\u3000**{daily}**\nDaily Wish:\u3000\u3000**{2 - user_wish}/{2}**\n\nClaim Bonus: \u3000**{total_claim - user_claim}/{total_claim}**\nSubmissions: \u3000**{(2) - user_subs}/{2}** \n'
+        desc += f'Daily UwU:\u3000\u3000**{daily}**\nWish:\u3000\u3000**{user_wish}**\n\nClaim Bonus: \u3000**{1 - user_claim}/{1}**\nSubmissions: \u3000**{(2) - user_subs}/{2}** \n'
     else:
-        desc += f'Daily UwU:\u3000\u3000**{daily}**\nDaily Wish:\u3000\u3000**{total_wish - user_wish}/{total_wish}**\n\nClaim Bonus: \u3000**{total_claim - user_claim}/{total_claim}**\nSubmissions: \u3000**{(2 + int(stamina/2)) - user_subs}/{2 + int(stamina/2)}** \n'
+        desc += f'Daily UwU:\u3000\u3000**{daily}**\nWish:\u3000\u3000**{user_wish}**\n\nClaim Bonus: \u3000**{1 - user_claim}/{1}**\nSubmissions: \u3000**{(2 + int(stamina/2)) - user_subs}/{2 + int(stamina/2)}** \n'
 
     desc += f'Bonus Stack:\u3000** {bonus}**\n\n'
-    desc += f'Total Creds:\u3000**{user_creds}**\u3000 Total Tickets: \u2000**{user_tickets}**\n'
-    desc += f'Stars:\u2000**{user_stars}**\u3000 Dark Stars:\u2000**{user_dstars}**\u3000Reforgers:\u2000**{user_reforger}**\n\n'
+    desc += f'Total Creds:\u3000**{user_creds}**\u3000 Total Tickets: \u2000**{user_tickets}**\n\n'
 
     """Return Message"""
     embed = discord.Embed(

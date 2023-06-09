@@ -127,11 +127,15 @@ async def _(ctx:SlashContext, receiver: str):
 async def _(ctx:SlashContext, receiver: str, amount: int): 
     await handout(ctx, receiver, amount, client, BLOCKCHAIN)
 
+# create handoutmulti for multiple users
+
 @slash.slash(name='take', description=CMD_DESC[11], guild_ids=[GUILD_ID],
     options=[create_option(name='victim', description=CMD_DESC[8], option_type=3, required=True),
              create_option(name='amount', description=CMD_DESC[10], option_type=4, required=True)])
 async def _(ctx:SlashContext, victim: str, amount: int):
     await take(ctx, victim, amount, client, BLOCKCHAIN)
+
+# create takemulti for multiple users
 
 @slash.slash(name='submit_clip', description=CMD_DESC[12], guild_ids=[GUILD_ID],
     options=[create_option(name='title', description=CMD_DESC[13], option_type=3, required=True),
@@ -150,7 +154,7 @@ async def _(ctx:SlashContext, reciever: str):
 
 @slash.slash(name='claim_bonus', description=CMD_DESC[17], guild_ids=[GUILD_ID])
 async def _(ctx:SlashCommand):
-    await claimBonus(ctx, client, BLOCKCHAIN)
+    await claimBonus(ctx, BLOCKCHAIN)
 
 @slash.slash(name='raffle', description=CMD_DESC[18], guild_ids=[GUILD_ID])
 async def _(ctx:SlashCommand):
@@ -170,6 +174,7 @@ async def _(ctx:SlashCommand):
 async def _(ctx:SlashCommand, stat: str):
     await upgrade(ctx, stat, BLOCKCHAIN)
 
+# rework wish into its own file
 @slash.slash(name='wish', description=CMD_DESC[23], guild_ids=[GUILD_ID])
 async def _(ctx:SlashCommand):
     await wish(ctx, BLOCKCHAIN)
@@ -185,8 +190,8 @@ async def _(ctx:SlashCommand):
 
 @slash.slash(name='consume', description=CMD_DESC[26], guild_ids=[GUILD_ID],
     options=[create_option(name='amount', description=CMD_DESC[27], option_type=4, required=True)])
-async def _(ctx:SlashCommand):
-    await consume(ctx, BLOCKCHAIN)
+async def _(ctx:SlashCommand, amount:int):
+    await consume(ctx, amount, BLOCKCHAIN)
 
 @slash.slash(name='review', description=CMD_DESC[28], guild_ids=[GUILD_ID],
     options=[create_option(name='reciever', description=CMD_DESC[8], option_type=3, required=True),

@@ -55,7 +55,6 @@ async def submitClip(ctx, title, link, BLOCKCHAIN):
         BLOCKCHAIN = blockchain.Blockchain()
         
     BLOCKCHAIN.addBlock(new_block)
-    BLOCKCHAIN.addBlock(clip_block)
     if BLOCKCHAIN.isChainValid():
         BLOCKCHAIN.storeChain()           
             
@@ -79,6 +78,15 @@ async def submitClip(ctx, title, link, BLOCKCHAIN):
     if link == 'NA' or link == 'N/A' or link == 'na': return
     await message_to_pin.pin()
 
+    """Update Blockchain"""
+    if BLOCKCHAIN.isChainValid() == False:
+        print('The current Blockchain is not valid, performing rollback.')
+        BLOCKCHAIN = blockchain.Blockchain()
+
+    BLOCKCHAIN.addBlock(clip_block)
+    if BLOCKCHAIN.isChainValid():
+        BLOCKCHAIN.storeChain() 
+
 async def review(ctx, reciever, rating, client, BLOCKCHAIN):
     """1. User will be checked for Moderator status
        2. Blockchain will be validated, new blocks will be added to the end of Blockchain"""
@@ -89,7 +97,17 @@ async def review(ctx, reciever, rating, client, BLOCKCHAIN):
     reciever_id = int(reciever_id)
 
     dexterity = getStat(reciever_id, stats[3], BLOCKCHAIN)
-    dex_bonus = int((25*rating)*(0.75*dexterity))
+    weight = user.totalSubsCount(reciever_id, BLOCKCHAIN)
+
+    # create weight class 1-30, 30-80, >80
+    if weight <= 7:                   # class 1
+        rating = rating
+    if weight > 7 and weight <= 14:   # class 2
+        rating = int(rating*0.9)
+    if weight > 14:                   # class 3
+        rating = int(rating*0.75)
+
+    dex_bonus = int((25*rating)*(0.60*dexterity))
 
     """Check if the Giver is a moderator"""
     role = get(ctx.guild.roles, name='Moderator')

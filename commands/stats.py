@@ -36,32 +36,24 @@ async def profile (ctx, BLOCKCHAIN):
 
     stamina = getStat(id, stats[1], BLOCKCHAIN)
     if stamina == 0: 
-        sta_str = f'**+{0}** *additional daily WISH count (also reduces wish cost)*\n'
-        sta_str += f' \u3000  \u3000  \u3000 **+{int(stamina/2)}** *additional weekly SUBMIT count*\n' 
-        sta_str += f' \u3000  \u3000  \u3000 **+{int(stamina/3)}** *additional weekly CLAIM count*'
+        sta_str = f'**+{0}** *additional daily WISH count*\n'
+    elif stamina == 1:
+        sta_str = f'**+{1}** *additional daily WISH count*\n'
     else:
-        sta_str = f'**+{int(stamina/2) + 1}** *additional daily WISH count*\n'
-        sta_str += f' \u3000  \u3000  \u3000 **+{int(stamina/2)}** *additional weekly SUBMIT count*\n' 
-        sta_str += f' \u3000  \u3000  \u3000 **+{int(stamina/3)}** *additional weekly CLAIM count*'
+        sta_str = f'**+{int(stamina/3)}** *additional daily WISH count*\n'
+    
+    sta_str += f' \u3000  \u3000  \u3000 **+{int(stamina/2)}** *additional weekly SUBMIT count*' 
 
     strength = getStat(id, stats[2], BLOCKCHAIN)
     str_str = f'**+{50*strength}** *flat bonus to weekly SUBMIT bounty*\n'
     str_str += f' \u3000  \u3000  \u3000 **+{50*strength}** *flat bonus to increase weekly CLAIM bounty*'
 
     dexterity = getStat(id, stats[3], BLOCKCHAIN)
-    if dexterity == 0:
-        dex_str = f'**+{60*dexterity}%** *bonus from clip night REVIEW bounty*\n'
-        dex_str += f' \u3000  \u3000  \u3000 **+{16*dexterity}%** *bonus from weekly CLAIM bounty*\n'
-        dex_str += f' \u3000  \u3000  \u3000 **+{0}** *additional BONUS stack, improves DAILY and CLAIM*'
-    else:
-        dex_str = f'**+{60*dexterity}%** *bonus from clip night REVIEW bounty*\n'
-        dex_str += f' \u3000  \u3000  \u3000 **+{16*dexterity}%** *bonus from weekly CLAIM bounty*\n'
-        dex_str += f' \u3000  \u3000  \u3000 **+{int(stamina/2) + 1}** *additional BONUS stack, improves DAILY and CLAIM*'
+    dex_str = f'**+{60*dexterity}%** *bonus from clip night REVIEW bounty*\n'
+    dex_str += f' \u3000  \u3000  \u3000 **+{24*dexterity}%** *bonus from weekly CLAIM bounty*'
 
     ego = getStat(id, stats[4], BLOCKCHAIN)
-    ego_str = f' **+{ego}** *Corrupted Reforger(s) to transform stars*\n'
-    ego_str += f' \u3000  \u3000  \u3000 **+{20*ego}%** *of total creds as risk and reward on CONSUME*\n'
-    ego_str += f' \u3000  \u3000  \u3000 **+{round(0.3*ego, 2)}%** *probability of pulling a* **Dark Star** *on WISH*'
+    ego_str = f' \u3000  \u3000  \u3000 **+{14*ego}%** *probability of winning the consume*'
 
     desc = f'Below lists your current student stats and benefits:\n\n'
     desc += f'**VIT {vitality}**\u3000{vit_str}\n'
@@ -483,12 +475,12 @@ async def reforge (ctx, item, BLOCKCHAIN):
         await ctx.send(embed=embed)
         return
 
-async def consume (ctx, BLOCKCHAIN):
+async def consume (ctx, amount, BLOCKCHAIN):
     id, name = ctx.author.id, ctx.author.name
 
-    dark_star = getDarkStar(id, BLOCKCHAIN)
-    if dark_star <= 0:
-        desc = f'You do not possess a **Dark Star** to consume.'
+    star = getStar(id, BLOCKCHAIN)
+    if star >= amount:
+        desc = f'You do not possess enough **Star**s to Consume'
 
         """Return Message"""
         embed = discord.Embed(
@@ -517,14 +509,14 @@ async def consume (ctx, BLOCKCHAIN):
         return
 
     ego = getStat(id, stats[4], BLOCKCHAIN)
-    gamble = int(0.2*ego*user_creds)
+    gamble = int(0.20*star*user_creds)
 
-    if random.random() < 0.4999999999997:
+    if random.random() < 0.14*ego:
         gamble_block = block.Block(
             user = id,
             name = name,
             timestamp = today(),
-            description = 'Won the 50-50',
+            description = 'Won the Consume',
             data = gamble
         )
 
@@ -544,7 +536,7 @@ async def consume (ctx, BLOCKCHAIN):
             user = id,
             name = name,
             timestamp = today(),
-            description = 'Lost the 50-50',
+            description = 'Lost the Consume',
             data = -gamble
         )
 
@@ -560,11 +552,11 @@ async def consume (ctx, BLOCKCHAIN):
         embed.set_footer(text='@~ powered by UwUntu')
         await ctx.send(embed=embed)
 
-    dark_star = block.Block (
+    star = block.Block (
         user = id,
         name = name,
         timestamp = today(),
-        description = '-Dark Star',
+        description = '-Star',
         data = 0
     )
 
@@ -573,7 +565,7 @@ async def consume (ctx, BLOCKCHAIN):
         print('The current Blockchain is not valid, performing rollback.')
         BLOCKCHAIN = blockchain.Blockchain()
     
-    BLOCKCHAIN.addBlock(dark_star)
+    for i in amount: BLOCKCHAIN.addBlock(star)
     BLOCKCHAIN.addBlock(gamble_block)
     if BLOCKCHAIN.isChainValid():
         BLOCKCHAIN.storeChain() 
