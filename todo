@@ -1,0 +1,85 @@
+implement wish star pity
+    - 63 soft pity
+    - 77 hard pity
+    - 90 max pity
+    - every 10 pull, you can get one of the following:
+        + creds (300 base * rate)                   20%
+        + token (1) shield 200, steal 250               50%
+        + torn ticket (need 5 to make a full ticket)    10%
+        + a submit (temporary for the week)             10%
+        + reforger                                      10%
+    - 50/50 for hitting a star or dark star 
+      (dark stars require reforgers to purify into usable stars)
+    - single wish (1x) 10-20 creds
+    - multi wish (10x)
+
+changing wish count
+    - wishes do not cost creds
+    - 2 wishes will be earned per daily
+    - 1 wish will be earned for upgrading, forging, submitting, buying ticket,   
+      claim bonusing, daily poll responses, donating
+
+implementing activity tracker:
+    - general chat, bot-cmd, submit-clips, developers, gymnasium, net-pawger channels will generate xp for users to signal their activity in the server
+
+    - 5xp per message
+
+    - start level 0
+    - level 1 5xp gain 1 wish
+    - level 2 75xp gain 2 wish
+    - level 3 150xp gain 2 wish
+    - level 4 300xp gain 3 wish
+    - level 5 600xp gain 3 wishes
+    - level 6 1000xp gain 5 wishes
+    - level 7 1500xp gain 5 wishes
+    - level 8 2000xp gain 5 wishes
+    - level 9 2500xp gain 5 wishes
+    - level 10 3000xp gain 10 wishes
+    - level 11 3500xp gain 10 wishes
+    - level 12 4000xp gain 10 wishes
+    - level 13 4500xp gain 10 wishes
+    - level 14 5000xp gain 10 wishes
+    - level 15 5500xp gain 10 wishes (max)
+    
+    mods time out users that spam
+
+remove fortune stat
+
+ego stat changes:
+    - ego level provides 16.5/33.0/49.5/66.0/82.5 percent to succeed consume
+    - ego will require stars, each star is 20% risk/reward, 5 stars is 100% risk/reward, no cap
+
+token system:
+    - tokens can be used for stealing 250 base creds from any user
+    - tokens can be used for shielding 200 base creds
+    - shields last until the end of the week
+    - shields also protect against humble chaos
+    - both token values scale with based on server bonus level
+    - invest token for 100 at another player at 1% return
+
+new stat sheet:
+
+Stat        Purchasable Levels         Max Purchasable Effects        Star Level
+--------    -----------------------    ---------------------------    ---------------
+VIT gain     10/  19/  27/  35/  43    43%   creds from Dailies       +0.1x - x^(0.008x) + 1 %
+             15/  30/  45/  60/  75     75   creds per bonus          +15
+costs      1000/1800/2600/3400/4200    11500                          1000 + 800x
+
+STA gain      1/   0/   2/   0/   3    3     additional wishes        +1 every odd level  
+              0/   1/   0/   2/   0    2     additional submits       +1 every 2 levels    
+costs       600/1400/2200/3000/3800    11000                          600 + 800x
+
+STR gain     50/ 100/ 150/ 200/ 250    250   creds per submit         +50  
+             50/ 100/ 150/ 200/ 250    250   base bonus for claim     +50                 
+costs       700/1350/2000/2650/3300    10000                          700 + 650x
+
+DEX gain     60/ 120/ 180/ 240/ 300    300%  creds from clip reviews  +60%
+             16/  32/  48/  64/  80     80%  bonus weekly claim       +16% 
+costs      1200/1600/2000/2400/2800    10000                          1200 + 400x
+
+EGO gain   16.5/33.0/49.5/66.0/82.5    82.5%  success rate            +20%                
+costs      2000/2000/2000/2000/2000    10000                          2000
+  
+NOTE:      
+   Purchasable Stats MAX at level 5
+   STAR, invest to gain 1 free level in a specific Stat (unlimited Levels)

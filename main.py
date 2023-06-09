@@ -14,7 +14,7 @@ from commands.helper import fetchContentList
 from commands.humble import humble_powa
 from commands.gpt import gpt_string
 from commands.stats import profile, upgrade, wish, forge, bless, reforge, consume
-from commands.god import hand_all, take_level, give_level #,return_to_the_stars, disable_upgrade
+from commands.god import hand_all, take_level, give_level
 
 load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')
@@ -96,132 +96,124 @@ async def on_message(message):
 @slash.slash(name='ping', description=CMD_DESC[0], guild_ids=[GUILD_ID])
 async def _(ctx:SlashContext): await ping(ctx)
 
-@slash.slash(name='pong', description=CMD_DESC[0], guild_ids=[GUILD_ID])
+@slash.slash(name='pong', description=CMD_DESC[1], guild_ids=[GUILD_ID])
 async def _(ctx:SlashContext): await pong(ctx)
 
-@slash.slash(name='anime', description=CMD_DESC[4], guild_ids=[GUILD_ID])
+@slash.slash(name='anime', description=CMD_DESC[2], guild_ids=[GUILD_ID])
 async def _(ctx:SlashContext): await anime(ctx)
 
 """Blockchin dependent commands"""
-@slash.slash(name='buy_ticket', description=CMD_DESC[32], guild_ids=[GUILD_ID],
-    options=[create_option(name='amount', description=CMD_DESC[36], option_type=4, required=True)])
+@slash.slash(name='buy_ticket', description=CMD_DESC[3], guild_ids=[GUILD_ID],
+    options=[create_option(name='amount', description=CMD_DESC[4], option_type=4, required=True)])
 async def _(ctx:SlashContext, amount: int): 
     await buy_ticket(ctx, amount, BLOCKCHAIN)
 
-@slash.slash(name='uwu', description=CMD_DESC[14], guild_ids=[GUILD_ID])
+@slash.slash(name='uwu', description=CMD_DESC[5], guild_ids=[GUILD_ID])
 async def _(ctx:SlashContext): 
     await daily (ctx, client, BLOCKCHAIN)
     await humble_powa (ctx, client, BLOCKCHAIN)
 
-@slash.slash(name='wallet', description=CMD_DESC[15], guild_ids=[GUILD_ID])
+@slash.slash(name='wallet', description=CMD_DESC[6], guild_ids=[GUILD_ID])
 async def _(ctx:SlashContext): await wallet(ctx, BLOCKCHAIN)
 
-@slash.slash(name='donate', description=CMD_DESC[17], guild_ids=[GUILD_ID],
-    options=[create_option(name='receiver', description=CMD_DESC[18], option_type=3, required=True)])
+@slash.slash(name='donate', description=CMD_DESC[7], guild_ids=[GUILD_ID],
+    options=[create_option(name='receiver', description=CMD_DESC[8], option_type=3, required=True)])
 async def _(ctx:SlashContext, receiver: str): 
     await give(ctx, receiver, client, BLOCKCHAIN)
 
-@slash.slash(name='handout', description=CMD_DESC[21], guild_ids=[GUILD_ID],
-    options=[create_option(name='receiver', description=CMD_DESC[18], option_type=3, required=True),
-             create_option(name='amount', description=CMD_DESC[19], option_type=4, required=True)])
+@slash.slash(name='handout', description=CMD_DESC[9], guild_ids=[GUILD_ID],
+    options=[create_option(name='receiver', description=CMD_DESC[8], option_type=3, required=True),
+             create_option(name='amount', description=CMD_DESC[10], option_type=4, required=True)])
 async def _(ctx:SlashContext, receiver: str, amount: int): 
     await handout(ctx, receiver, amount, client, BLOCKCHAIN)
 
-@slash.slash(name='take', description=CMD_DESC[23], guild_ids=[GUILD_ID],
-    options=[create_option(name='victim', description=CMD_DESC[18], option_type=3, required=True),
-             create_option(name='amount', description=CMD_DESC[19], option_type=4, required=True)])
+@slash.slash(name='take', description=CMD_DESC[11], guild_ids=[GUILD_ID],
+    options=[create_option(name='victim', description=CMD_DESC[8], option_type=3, required=True),
+             create_option(name='amount', description=CMD_DESC[10], option_type=4, required=True)])
 async def _(ctx:SlashContext, victim: str, amount: int):
     await take(ctx, victim, amount, client, BLOCKCHAIN)
 
-@slash.slash(name='submit_clip', description=CMD_DESC[24], guild_ids=[GUILD_ID],
-    options=[create_option(name='title', description=CMD_DESC[55], option_type=3, required=True),
-             create_option(name='link', description=CMD_DESC[56], option_type=3, required=True)])
+@slash.slash(name='submit_clip', description=CMD_DESC[12], guild_ids=[GUILD_ID],
+    options=[create_option(name='title', description=CMD_DESC[13], option_type=3, required=True),
+             create_option(name='link', description=CMD_DESC[14], option_type=3, required=True)])
 async def _(ctx:SlashContext, title: str, link: str):
     await submitClip(ctx, title, link, BLOCKCHAIN)
     
-@slash.slash(name='leaderboard', description=CMD_DESC[34], guild_ids=[GUILD_ID])
+@slash.slash(name='leaderboard', description=CMD_DESC[15], guild_ids=[GUILD_ID])
 async def _(ctx:SlashContext):
     await leaderboard(ctx, BLOCKCHAIN)
 
-@slash.slash(name='give_submit', description=CMD_DESC[35], guild_ids=[GUILD_ID],
-    options=[create_option(name='reciever', description=CMD_DESC[18], option_type=3, required=True)])
+@slash.slash(name='give_submit', description=CMD_DESC[16], guild_ids=[GUILD_ID],
+    options=[create_option(name='reciever', description=CMD_DESC[8], option_type=3, required=True)])
 async def _(ctx:SlashContext, reciever: str): 
     await bonusSubmit(ctx, reciever, client, BLOCKCHAIN)
 
-@slash.slash(name='claim_bonus', description=CMD_DESC[37], guild_ids=[GUILD_ID])
+@slash.slash(name='claim_bonus', description=CMD_DESC[17], guild_ids=[GUILD_ID])
 async def _(ctx:SlashCommand):
     await claimBonus(ctx, client, BLOCKCHAIN)
 
-@slash.slash(name='raffle', description=CMD_DESC[43], guild_ids=[GUILD_ID])
+@slash.slash(name='raffle', description=CMD_DESC[18], guild_ids=[GUILD_ID])
 async def _(ctx:SlashCommand):
     await rafflelist(ctx, BLOCKCHAIN)
 
-@slash.slash(name='snoop', description=CMD_DESC[22], guild_ids=[GUILD_ID],
-    options=[create_option(name='target', description=CMD_DESC[18], option_type=3, required=True)])
+@slash.slash(name='snoop', description=CMD_DESC[19], guild_ids=[GUILD_ID],
+    options=[create_option(name='target', description=CMD_DESC[8], option_type=3, required=True)])
 async def _(ctx:SlashCommand, target: str):
     await snoop(ctx, target, client, BLOCKCHAIN)
 
-@slash.slash(name="profile", description=CMD_DESC[57], guild_ids=[GUILD_ID])
+@slash.slash(name="profile", description=CMD_DESC[20], guild_ids=[GUILD_ID])
 async def _(ctx:SlashCommand):
     await profile(ctx, BLOCKCHAIN)
 
-@slash.slash(name='upgrade', description=CMD_DESC[58], guild_ids=[GUILD_ID],
-    options=[create_option(name='stat', description=CMD_DESC[59], option_type=3, required=True)])
+@slash.slash(name='upgrade', description=CMD_DESC[21], guild_ids=[GUILD_ID],
+    options=[create_option(name='stat', description=CMD_DESC[22], option_type=3, required=True)])
 async def _(ctx:SlashCommand, stat: str):
     await upgrade(ctx, stat, BLOCKCHAIN)
 
-@slash.slash(name='wish', description=CMD_DESC[60], guild_ids=[GUILD_ID])
+@slash.slash(name='wish', description=CMD_DESC[23], guild_ids=[GUILD_ID])
 async def _(ctx:SlashCommand):
     await wish(ctx, BLOCKCHAIN)
 
-@slash.slash(name='forge', description=CMD_DESC[63], guild_ids=[GUILD_ID],
-    options=[create_option(name='stat', description=CMD_DESC[59], option_type=3, required=True)])
+@slash.slash(name='forge', description=CMD_DESC[24], guild_ids=[GUILD_ID],
+    options=[create_option(name='stat', description=CMD_DESC[22], option_type=3, required=True)])
 async def _(ctx:SlashCommand, stat: str):
     await forge(ctx, stat, BLOCKCHAIN)
 
-@slash.slash(name='reforge', description=CMD_DESC[64], guild_ids=[GUILD_ID],
-    options=[create_option(name='item', description=CMD_DESC[65], option_type=3, required=True)])
-async def _(ctx:SlashCommand, item: str):
-    await reforge(ctx, item, BLOCKCHAIN)
+@slash.slash(name='reforge', description=CMD_DESC[25], guild_ids=[GUILD_ID])
+async def _(ctx:SlashCommand):
+    await reforge(ctx, BLOCKCHAIN)
 
-@slash.slash(name='consume', description=CMD_DESC[66], guild_ids=[GUILD_ID])
+@slash.slash(name='consume', description=CMD_DESC[26], guild_ids=[GUILD_ID],
+    options=[create_option(name='amount', description=CMD_DESC[27], option_type=4, required=True)])
 async def _(ctx:SlashCommand):
     await consume(ctx, BLOCKCHAIN)
 
-@slash.slash(name='review', description=CMD_DESC[61], guild_ids=[GUILD_ID],
-    options=[create_option(name='reciever', description=CMD_DESC[18], option_type=3, required=True),
-             create_option(name='rating', description=CMD_DESC[62], option_type=4, required=True)])
+@slash.slash(name='review', description=CMD_DESC[28], guild_ids=[GUILD_ID],
+    options=[create_option(name='reciever', description=CMD_DESC[8], option_type=3, required=True),
+             create_option(name='rating', description=CMD_DESC[29], option_type=4, required=True)])
 async def _(ctx:SlashCommand, reciever: str, rating: int):
     await review(ctx, reciever, rating, client, BLOCKCHAIN)
 
 """Special Case Commands"""
-@slash.slash(name='bless', description=CMD_DESC[63], guild_ids=[GUILD_ID],
-    options=[create_option(name='reciever', description=CMD_DESC[18], option_type=3, required=True)])
+@slash.slash(name='bless', description=CMD_DESC[30], guild_ids=[GUILD_ID],
+    options=[create_option(name='reciever', description=CMD_DESC[8], option_type=3, required=True)])
 async def _(ctx:SlashCommand, reciever: str):
     await bless(ctx, reciever, client, BLOCKCHAIN)
 
-# @slash.slash(name='return_to_the_stars', description='Turn all stats into Stars, For Everyone', guild_ids=[GUILD_ID])
-# async def _(ctx:SlashCommand):
-#     await return_to_the_stars(ctx, client, BLOCKCHAIN)
-
-# @slash.slash(name='disable_upgrade', description='Disable /Upgrade', guild_ids=[GUILD_ID])
-# async def _(ctx:SlashCommand):
-#     await disable_upgrade(ctx, BLOCKCHAIN)
-
-@slash.slash(name='hand_all', description='Give all', guild_ids=[GUILD_ID],
-    options=[create_option(name='amount', description=CMD_DESC[19], option_type=4, required=True)])
+@slash.slash(name='hand_all', description=CMD_DESC[31], guild_ids=[GUILD_ID],
+    options=[create_option(name='amount', description=CMD_DESC[10], option_type=4, required=True)])
 async def _(ctx:SlashCommand, amount: int):
     await hand_all(ctx, amount, client, BLOCKCHAIN)
 
-@slash.slash(name='take_level', description='Take someones level', guild_ids=[GUILD_ID],
-    options=[create_option(name='target', description=CMD_DESC[18], option_type=3, required=True),
-             create_option(name='stat', description=CMD_DESC[59], option_type=3, required=True)])
+@slash.slash(name='take_level', description=CMD_DESC[32], guild_ids=[GUILD_ID],
+    options=[create_option(name='target', description=CMD_DESC[8], option_type=3, required=True),
+             create_option(name='stat', description=CMD_DESC[22], option_type=3, required=True)])
 async def _(ctx:SlashCommand, target:str, stat:str):
     await take_level(ctx, target, stat, client, BLOCKCHAIN)
 
-@slash.slash(name='give_level', description='Give someone a level', guild_ids=[GUILD_ID],
-    options=[create_option(name='target', description=CMD_DESC[18], option_type=3, required=True),
-             create_option(name='stat', description=CMD_DESC[59], option_type=3, required=True)])
+@slash.slash(name='give_level', description=CMD_DESC[33], guild_ids=[GUILD_ID],
+    options=[create_option(name='target', description=CMD_DESC[1], option_type=3, required=True),
+             create_option(name='stat', description=CMD_DESC[22], option_type=3, required=True)])
 async def _(ctx:SlashCommand, target:str, stat:str):
     await give_level(ctx, target, stat, client, BLOCKCHAIN)
 

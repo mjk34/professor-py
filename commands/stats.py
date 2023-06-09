@@ -11,7 +11,6 @@ stats = [
     'Strength',     #2
     'Dexterity',    #3 
     'Ego',          #4
-    'Fortune',      #5
 ]
 
 load_dotenv()
@@ -20,7 +19,7 @@ ADMIN = int(os.getenv('ADMIN_ID'))
 HBOT = 904417820899700756
 
 """Allow users to view their stat progress and benefits"""
-"""Vitality, Stamina, Strength, Dexterity, Fortune, Star"""
+"""Vitality, Stamina, Strength, Dexterity, Ego"""
 
 async def profile (ctx, BLOCKCHAIN):
     id, name = ctx.author.id, ctx.author.name
@@ -64,11 +63,6 @@ async def profile (ctx, BLOCKCHAIN):
     ego_str += f' \u3000  \u3000  \u3000 **+{20*ego}%** *of total creds as risk and reward on CONSUME*\n'
     ego_str += f' \u3000  \u3000  \u3000 **+{round(0.3*ego, 2)}%** *probability of pulling a* **Dark Star** *on WISH*'
 
-    fortune = getStat(id, stats[5], BLOCKCHAIN)
-    for_str = f'**+{0.5*fortune}%** *probability of pulling a* **Star** *on WISH*\n'
-    for_str += f' \u3000  \u3000  \u3000 **+{0.8*fortune}%** *probability of pulling a* **Star** *on DAILY*\n'
-    for_str += f' \u3000  \u3000  \u3000 **-{40*fortune}** *base cost of total wishes*'
-
     desc = f'Below lists your current student stats and benefits:\n\n'
     desc += f'**VIT {vitality}**\u3000{vit_str}\n'
     if vitality < 5: desc += f' \u3000  \u3000  \u3000 (NEXT: {1000 + 800*(vitality)})\n\n'
@@ -90,13 +84,9 @@ async def profile (ctx, BLOCKCHAIN):
     if ego < 5: desc += f' \u3000  \u3000  \u3000 (NEXT: {2000})\n\n'
     else: desc += ' \u3000  \u3000  \u3000 (MAX Level)\n\n'
 
-    desc += f'**FOR {fortune}**\u3000{for_str}\n'
-    if fortune < 5: desc += f' \u3000  \u3000  \u3000 (NEXT: {500 + 900*(fortune)})\n\n'
-    else: desc += ' \u3000  \u3000  \u3000 (MAX Level)\n\n'
-
     desc += f'You have **{star} Stars**, bring them to the Starforger with `/forge` to upgrade a core stat. \n\n'
-    desc += f'You have **{reforger} Corrupted Reforgers**, you can use `/reforge` to turn **Stars** into **Dark Stars** and vice versa\n\n'
-    desc += f'You have **{dark_star} Dark Stars**, you can activate them with `/consume` to gamble your creds, risk/reward is based on **EGO** \n\n'
+    desc += f'You have **{reforger} Reforgers**, you can use `/reforge` to turn **Dark Stars** into **Stars**. \n\n'
+    desc += f'You have **{dark_star} Dark Stars**, **Dark Stars** must be purified to be used. \n\n'
     desc += f'Check out the Full Stat Sheet Here: https://discord.com/channels/859993171156140061/938853545992667176/1086749743193018513\n\n'
 
     """Return Message"""
@@ -123,16 +113,24 @@ async def upgrade (ctx, stat_name, BLOCKCHAIN):
 
     if stat_name.lower() == 'vitality' or stat_name.lower() == 'vit':
         await levelStat(ctx, 'Vitality', BLOCKCHAIN)
-    if stat_name.lower() == 'stamina' or stat_name.lower() == 'sta':
+    elif stat_name.lower() == 'stamina' or stat_name.lower() == 'sta':
         await levelStat(ctx, 'Stamina', BLOCKCHAIN)
-    if stat_name.lower() == 'strength' or stat_name.lower() == 'str':
+    elif stat_name.lower() == 'strength' or stat_name.lower() == 'str':
         await levelStat(ctx, 'Strength', BLOCKCHAIN)
-    if stat_name.lower() == 'dexterity' or stat_name.lower() == 'dex':
+    elif stat_name.lower() == 'dexterity' or stat_name.lower() == 'dex':
         await levelStat(ctx, 'Dexterity', BLOCKCHAIN)
-    if stat_name.lower() == 'ego':
+    elif stat_name.lower() == 'ego':
         await levelStat(ctx, 'Ego', BLOCKCHAIN)
-    if stat_name.lower() == 'fortune' or stat_name.lower() == 'for':
-        await levelStat(ctx, 'Fortune', BLOCKCHAIN)
+    else:
+        """Return Message"""
+        embed = discord.Embed(
+            title = f'Level Up - {stat_name}',
+            description = f'Upgrade failed, Unknown stat: {stat_name}',
+            color = 6053215,
+        ).set_thumbnail(url=ctx.author.avatar_url)
+        embed.set_footer(text='@~ powered by UwUntu')
+        await ctx.send(embed=embed)
+        return
 
 async def levelStat (ctx, stat_name, BLOCKCHAIN):
     id, name = ctx.author.id, ctx.author.name
@@ -153,9 +151,6 @@ async def levelStat (ctx, stat_name, BLOCKCHAIN):
     if stat_name == 'Ego':
         stat = getStat(id, stat_name, BLOCKCHAIN)
         cost = 2000
-    if stat_name == 'Fortune':
-        stat = getStat(id, stat_name, BLOCKCHAIN)
-        cost = 500 + 900*(stat)
 
     creds = user.totalCreds(id, BLOCKCHAIN)
 
@@ -238,139 +233,6 @@ def disabledUpgrade(BLOCKCHAIN) -> bool:
     print('returning ', count%2)
     return count%2
 
-async def wish (ctx, BLOCKCHAIN):
-    id, name = ctx.author.id, ctx.author.name
-    fortune = getStat(id, stats[5], BLOCKCHAIN)
-    stamina = getStat(id, stats[1], BLOCKCHAIN)
-    ego = getStat(id, stats[4], BLOCKCHAIN)
-    creds= user.totalCreds(id, BLOCKCHAIN)
-
-    if stamina == 0: wish_count = 2 + int(stamina/2)
-    else: wish_count = 2 + int(stamina/2) + 1
-
-    cost = int(600 - 40*fortune)
-    cost = int(cost/wish_count)
-    if cost < 0: cost = 0
-
-    if stamina == 0: wish_count = 2
-    if stamina == 1: wish_count = 3
-    else: wish_count = 3 + int(stamina/3)
-
-    if user.hasWish(id, BLOCKCHAIN) >= wish_count:
-        desc = f'You have no more Wishes left for today.\n\n'
-
-        """Return Message"""
-        embed = discord.Embed(
-            title = f'Wish Upon a Star',
-            description = desc,
-            color = 6053215,
-        ).set_thumbnail(url=ctx.author.avatar_url)
-        embed.set_footer(text='@~ powered by UwUntu')
-        await ctx.send(embed=embed)
-        return
-
-    if creds < cost: 
-        desc = f'Insufficient Funds. a wish costs **{cost}** uwuCreds.\n\n'
-
-        """Return Message"""
-        embed = discord.Embed(
-            title = f'Wish Upon a Star',
-            description = desc,
-            color = 6053215,
-        ).set_thumbnail(url=ctx.author.avatar_url)
-        embed.set_footer(text='@~ powered by UwUntu, sponsored by Dre\'s Tears')
-        await ctx.send(embed=embed)
-        return
-    
-    star_flag = False
-    wish_probability = 0.01 + 0.005*fortune
-    if random.random() < wish_probability:
-        star_flag = True
-
-    dark_star_flag = False
-    wish2_probability = 0.00 + 0.003*ego
-    if random.random() < wish2_probability:
-        dark_star_flag = True
-
-    """Generate new Block"""
-    new_block = block.Block(
-        user = id,
-        name = name,
-        timestamp = today(),
-        description = f'Wish',
-        data = -cost
-    )
-
-    star_block = block.Block(
-        user = id,
-        name = name,
-        timestamp = today(),
-        description= 'Star',
-        data = 0
-    )
-
-    dark_star_block = block.Block(
-        user = id,
-        name = name,
-        timestamp = today(),
-        description= 'Dark Star',
-        data = 0
-    )
-    
-    """Update Blockchain"""
-    if BLOCKCHAIN.isChainValid() == False:
-        print('The current Blockchain is not valid, performing rollback.')
-        BLOCKCHAIN = blockchain.Blockchain()
- 
-    BLOCKCHAIN.addBlock(new_block)
-    if star_flag: 
-        BLOCKCHAIN.addBlock(star_block)
-    if dark_star_flag:
-        BLOCKCHAIN.addBlock(dark_star_block)
-    if BLOCKCHAIN.isChainValid():
-        BLOCKCHAIN.storeChain()
-
-    if star_flag: 
-        desc = f'Congratulations. You gained a **Star**!!!.\n\n'
-
-        """Return Message"""
-        embed = discord.Embed(
-            title = f'Wish Upon a Star',
-            description = desc,
-            color = 2352682,
-        ).set_thumbnail(url=ctx.author.avatar_url)
-        embed.set_image(url='https://media0.giphy.com/media/hd1ilw50Zdb8Y/giphy.gif')
-        embed.set_footer(text='@~ powered by UwUntu, sponsored by Dre\'s Tears')
-        await ctx.send(embed=embed)
-        return
-
-    if dark_star_flag: 
-        desc = f'Congratulations. You gained a **Dark Star**!!!.\n\n'
-
-        """Return Message"""
-        embed = discord.Embed(
-            title = f'Wish Upon a Star',
-            description = desc,
-            color = 8388736,
-        ).set_thumbnail(url=ctx.author.avatar_url)
-        embed.set_image(url='https://media.tenor.com/RUYUmoKQwQAAAAAd/pp-gif-cool.gif')
-        embed.set_footer(text='@~ powered by UwUntu, sponsored by Dre\'s Tears')
-        await ctx.send(embed=embed)
-        return
-
-    desc = f'You reached for the Stars, but they were too far.\n\n'
-
-    """Return Message"""
-    embed = discord.Embed(
-        title = f'Wish Upon a Star',
-        description = desc,
-        color = 6053215,
-    ).set_thumbnail(url=ctx.author.avatar_url)
-    embed.set_image(url='https://media0.giphy.com/media/nWPLGmsjvdQ4g/giphy.gif')
-    embed.set_footer(text='@~ powered by UwUntu, sponsored by Dre\'s Tears')
-    await ctx.send(embed=embed)
-    return
-
 async def forge (ctx, stat_name, BLOCKCHAIN):
     id, name = ctx.author.id, ctx.author.name
     star = getStar(id, BLOCKCHAIN)
@@ -390,21 +252,27 @@ async def forge (ctx, stat_name, BLOCKCHAIN):
     if stat_name == 'vitality' or stat_name == 'Vitality' or stat_name == 'VIT' or stat_name == 'vit':
         stat = 'Vitality'
         stat_level = getStat(id, stats[0], BLOCKCHAIN) + 1
-    if stat_name == 'stamina' or stat_name == 'Stamina' or stat_name == 'STA' or stat_name == 'sta':
+    elif stat_name == 'stamina' or stat_name == 'Stamina' or stat_name == 'STA' or stat_name == 'sta':
         stat = 'Stamina'
         stat_level = getStat(id, stats[1], BLOCKCHAIN) + 1
-    if stat_name == 'strength' or stat_name == 'Strength' or stat_name == 'STR' or stat_name == 'str':
+    elif stat_name == 'strength' or stat_name == 'Strength' or stat_name == 'STR' or stat_name == 'str':
         stat = 'Strength'
         stat_level = getStat(id, stats[2], BLOCKCHAIN) + 1
-    if stat_name == 'dexterity' or stat_name == 'Dexterity' or stat_name == 'DEX' or stat_name == 'dex':
+    elif stat_name == 'dexterity' or stat_name == 'Dexterity' or stat_name == 'DEX' or stat_name == 'dex':
         stat = 'Dexterity'
         stat_level = getStat(id, stats[3], BLOCKCHAIN) + 1
-    if stat_name == 'ego' or stat_name == 'Ego' or stat_name == 'EGO':
+    elif stat_name == 'ego' or stat_name == 'Ego' or stat_name == 'EGO':
         stat = 'Ego'
         stat_level = getStat(id, stats[4], BLOCKCHAIN) + 1
-    if stat_name == 'fortune' or stat_name == 'Fortune' or stat_name == 'FOR' or stat_name == 'for':
-        stat = 'Fortune'
-        stat_level = getStat(id, stats[5], BLOCKCHAIN) + 1
+    else:
+        embed = discord.Embed(
+            title = f'Starforger',
+            description = f'Upgrade failed, Unknown stat: {stat_name}',
+            color = 6053215    
+        ).set_thumbnail(url=ctx.author.avatar_url)
+        embed.set_footer(text='@~ powered by UwUntu')
+        await ctx.send(embed=embed)
+        return
 
     """Generate new Block"""
     anti_block = block.Block(
