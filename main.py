@@ -9,12 +9,13 @@ from discord_slash.utils.manage_commands import create_option
 from commands.cmd import ping, anime, pong
 from commands.creds import daily, wallet, give, handout, take, snoop
 from commands.games import submitClip, review
-from commands.submit import buy_ticket, bonusSubmit, leaderboard, claimBonus, rafflelist
+from commands.god import hand_all, take_level, give_level
+from commands.gpt import gpt_string
 from commands.helper import fetchContentList
 from commands.humble import humble_powa
-from commands.gpt import gpt_string
-from commands.stats import profile, upgrade, wish, forge, bless, reforge, consume
-from commands.god import hand_all, take_level, give_level
+from commands.stats import profile, upgrade, forge, bless, reforge, consume
+from commands.submit import buy_ticket, bonusSubmit, leaderboard, claimBonus, rafflelist
+from commands.wish import wish
 
 load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')
@@ -174,10 +175,10 @@ async def _(ctx:SlashCommand):
 async def _(ctx:SlashCommand, stat: str):
     await upgrade(ctx, stat, BLOCKCHAIN)
 
-# rework wish into its own file
-@slash.slash(name='wish', description=CMD_DESC[23], guild_ids=[GUILD_ID])
-async def _(ctx:SlashCommand):
-    await wish(ctx, BLOCKCHAIN)
+@slash.slash(name='wish', description=CMD_DESC[23], guild_ids=[GUILD_ID],
+    options=[create_option(name='mode', description=CMD_DESC[34])])
+async def _(ctx:SlashCommand, mode:str):
+    await wish(ctx, mode, BLOCKCHAIN)
 
 @slash.slash(name='forge', description=CMD_DESC[24], guild_ids=[GUILD_ID],
     options=[create_option(name='stat', description=CMD_DESC[22], option_type=3, required=True)])

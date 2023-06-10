@@ -32,3 +32,4 @@ Total rating from all clips
 !! GOD COMMAND: GIVE ALL USERS IN THE BLOCKCHAIN CREDS !!
 !! GOD COMMAND: TAKE A USERS STAT LEVEL !!
 !! GOD COMMAND: GIVE A USER A STAT LEVEL !!
+Input "Single" for 1 pull and "Multi" for 10 pulls

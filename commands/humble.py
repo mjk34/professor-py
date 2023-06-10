@@ -4,6 +4,7 @@ import random
 
 from dotenv import load_dotenv
 from commands.helper import today, getIcon, getName, todayTime
+from commands.manager import pushBlock
 
 load_dotenv()
 HUMBLE = int(os.getenv('HUMBLE_ID'))
@@ -39,13 +40,7 @@ async def humble_powa(ctx, client, BLOCKCHAIN):
     )
     
     """Update Blockchain"""
-    if BLOCKCHAIN.isChainValid() == False:
-        print('The current Blockchain is not valid, performing rollback.')
-        BLOCKCHAIN = blockchain.Blockchain()
- 
-    BLOCKCHAIN.addBlock(new_block)
-    if BLOCKCHAIN.isChainValid():
-        BLOCKCHAIN.storeChain()           
+    pushBlock(new_block, BLOCKCHAIN)
 
     desc = f'Beep Boop, I have generated **+{total}** creds, I grow stronger by the moment!\n'
     
@@ -100,14 +95,8 @@ async def chaos(ctx, client, BLOCKCHAIN):
         )
 
         """Update Blockchain"""
-        if BLOCKCHAIN.isChainValid() == False:
-            print('The current Blockchain is not valid, performing rollback.')
-            BLOCKCHAIN = blockchain.Blockchain()
-    
-        BLOCKCHAIN.addBlock(new_block1)
-        BLOCKCHAIN.addBlock(new_block2)
-        if BLOCKCHAIN.isChainValid():
-            BLOCKCHAIN.storeChain()    
+        pushBlock(new_block1, BLOCKCHAIN)
+        pushBlock(new_block2, BLOCKCHAIN)
 
         """Return Message"""
         embed = discord.Embed(
@@ -139,14 +128,8 @@ async def chaos(ctx, client, BLOCKCHAIN):
         )
 
         """Update Blockchain"""
-        if BLOCKCHAIN.isChainValid() == False:
-            print('The current Blockchain is not valid, performing rollback.')
-            BLOCKCHAIN = blockchain.Blockchain()
-    
-        BLOCKCHAIN.addBlock(new_block1)
-        BLOCKCHAIN.addBlock(new_block2)
-        if BLOCKCHAIN.isChainValid():
-            BLOCKCHAIN.storeChain()
+        pushBlock(new_block1, BLOCKCHAIN)
+        pushBlock(new_block2, BLOCKCHAIN)
 
         desc = ''
         if userId1 == HUMBLE: desc = f'Humble donated **{creds}** uwuCreds to <@{userId2}>!'
@@ -183,14 +166,8 @@ async def chaos(ctx, client, BLOCKCHAIN):
         )
 
         """Update Blockchain"""
-        if BLOCKCHAIN.isChainValid() == False:
-            print('The current Blockchain is not valid, performing rollback.')
-            BLOCKCHAIN = blockchain.Blockchain()
-    
-        BLOCKCHAIN.addBlock(new_block1)
-        BLOCKCHAIN.addBlock(new_block2)
-        if BLOCKCHAIN.isChainValid():
-            BLOCKCHAIN.storeChain()   
+        pushBlock(new_block1, BLOCKCHAIN)
+        pushBlock(new_block2, BLOCKCHAIN)
 
         """Return Message"""
         embed = discord.Embed(

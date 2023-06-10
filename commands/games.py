@@ -2,9 +2,9 @@ import discord, block, blockchain
 import commands.user as user
 
 from discord.utils import get
-from commands.helper import getName
+from commands.helper import getName, today
+from commands.manager import pushBlock, pushWish
 from commands.stats import getStat, stats
-from commands.helper import today
 
 filler = ['<', '>', '!', '@']
         
@@ -33,7 +33,7 @@ async def submitClip(ctx, title, link, BLOCKCHAIN):
     color = 6943230
             
     """Generate new Block"""
-    new_block = block.Block(
+    submit_block = block.Block(
         user = id,
         name = name,
         timestamp = today(),
@@ -48,15 +48,9 @@ async def submitClip(ctx, title, link, BLOCKCHAIN):
         description = f'{title}^{link}',
         data = 0
     )
-            
+
     """Update Blockchain"""
-    if BLOCKCHAIN.isChainValid() == False:
-        print('The current Blockchain is not valid, performing rollback.')
-        BLOCKCHAIN = blockchain.Blockchain()
-        
-    BLOCKCHAIN.addBlock(new_block)
-    if BLOCKCHAIN.isChainValid():
-        BLOCKCHAIN.storeChain()           
+    pushBlock(submit_block, BLOCKCHAIN)
             
     """Return Message"""
     desc = f'Title: \u3000**{title}**\n'
@@ -72,20 +66,15 @@ async def submitClip(ctx, title, link, BLOCKCHAIN):
     ).set_thumbnail(url=ctx.author.avatar_url)
     embed.set_footer(text='@~ powered by UwUntu')
     message_to_pin = await ctx.send(embed=embed)
-
     await ctx.send(desc2)
     
     if link == 'NA' or link == 'N/A' or link == 'na': return
     await message_to_pin.pin()
 
-    """Update Blockchain"""
-    if BLOCKCHAIN.isChainValid() == False:
-        print('The current Blockchain is not valid, performing rollback.')
-        BLOCKCHAIN = blockchain.Blockchain()
+    pushBlock(clip_block, BLOCKCHAIN)
 
-    BLOCKCHAIN.addBlock(clip_block)
-    if BLOCKCHAIN.isChainValid():
-        BLOCKCHAIN.storeChain() 
+    """Give One Wish"""
+    pushWish(id, name, BLOCKCHAIN) 
 
 async def review(ctx, reciever, rating, client, BLOCKCHAIN):
     """1. User will be checked for Moderator status
@@ -99,12 +88,11 @@ async def review(ctx, reciever, rating, client, BLOCKCHAIN):
     dexterity = getStat(reciever_id, stats[3], BLOCKCHAIN)
     weight = user.totalSubsCount(reciever_id, BLOCKCHAIN)
 
-    # create weight class 1-30, 30-80, >80
-    if weight <= 7:                   # class 1
+    if weight <= 10:                  # class 1
         rating = rating
-    if weight > 7 and weight <= 14:   # class 2
+    if weight > 10 and weight <= 14:  # class 2
         rating = int(rating*0.9)
-    if weight > 14:                   # class 3
+    if weight > 20:                   # class 3
         rating = int(rating*0.75)
 
     dex_bonus = int((25*rating)*(0.60*dexterity))
@@ -114,7 +102,7 @@ async def review(ctx, reciever, rating, client, BLOCKCHAIN):
     if role.id in [y.id for y in ctx.author.roles]:
         
         """Generate new Block"""
-        new_block = block.Block(
+        review_block = block.Block(
             user = reciever_id,
             name = await getName(reciever_id, client),
             timestamp = today(),
@@ -123,13 +111,7 @@ async def review(ctx, reciever, rating, client, BLOCKCHAIN):
         )
         
         """Update Blockchain"""
-        if BLOCKCHAIN.isChainValid() == False:
-            print('The current Blockchain is not valid, performing rollback.')
-            BLOCKCHAIN = blockchain.Blockchain()
-    
-        BLOCKCHAIN.addBlock(new_block)
-        if BLOCKCHAIN.isChainValid():
-            BLOCKCHAIN.storeChain()           
+        pushBlock(review_block, BLOCKCHAIN)          
         
         desc = f'<@{reciever_id}> recieved **{rating}** Ratings for this Clip Night! **{25*rating}** was rewarded.\n\n'
         if dexterity > 0:

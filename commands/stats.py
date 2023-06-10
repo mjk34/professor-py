@@ -3,6 +3,7 @@ import commands.user as user
 
 from dotenv import load_dotenv
 from commands.helper import today, getName
+from commands.manager import pushBlock, pushItem, pushWish
 
 filler = ['<', '>', '!', '@', '&']
 stats = [
@@ -174,33 +175,16 @@ async def levelStat (ctx, stat_name, BLOCKCHAIN):
     
     else: 
         """Generate new Block"""
-        new_block = block.Block(
+        stat_block = block.Block(
             user = id,
             name = name,
             timestamp = today(),
             description = f'{stat_name}',
             data = -cost
         )
-        
-        """Update Blockchain"""
-        if BLOCKCHAIN.isChainValid() == False:
-            print('The current Blockchain is not valid, performing rollback.')
-            BLOCKCHAIN = blockchain.Blockchain()
 
-        if stat_name.lower() == 'ego':
-            reforger_block = block.Block(
-                user = id,
-                name = name,
-                timestamp = today(),
-                description = 'Reforger',
-                data = 0
-            )
-            BLOCKCHAIN.addBlock(reforger_block)
+        pushBlock(stat_block, BLOCKCHAIN)
     
-        BLOCKCHAIN.addBlock(new_block)
-        if BLOCKCHAIN.isChainValid():
-            BLOCKCHAIN.storeChain()           
-
         desc = f'Congratulations. **{stat_name} {stat}** -> **{stat_name} {stat+1}**!!!\n\n'
 
         """Return Message"""
@@ -211,7 +195,9 @@ async def levelStat (ctx, stat_name, BLOCKCHAIN):
         ).set_thumbnail(url=ctx.author.avatar_url)
         embed.set_footer(text='@~ powered by UwUntu')
         await ctx.send(embed=embed)
-        return
+        
+        """Give One Wish"""
+        pushWish(id, name, BLOCKCHAIN)
     
 def disabledUpgrade(BLOCKCHAIN) -> bool:
     if len(BLOCKCHAIN.chain) == 1: return True
@@ -284,24 +270,8 @@ async def forge (ctx, stat_name, BLOCKCHAIN):
     )
 
     """Update Blockchain"""
-    if BLOCKCHAIN.isChainValid() == False:
-        print('The current Blockchain is not valid, performing rollback.')
-        BLOCKCHAIN = blockchain.Blockchain()
-
-    if stat_name.lower() == 'ego':
-        reforger_block = block.Block(
-            user = id,
-            name = name,
-            timestamp = today(),
-            description = 'Reforger',
-            data = 0
-        )
-        BLOCKCHAIN.addBlock(reforger_block)
-
-    BLOCKCHAIN.addBlock(anti_block)
-    BLOCKCHAIN.addBlock(stat_block)
-    if BLOCKCHAIN.isChainValid():
-        BLOCKCHAIN.storeChain()
+    pushBlock(anti_block, BLOCKCHAIN)
+    pushBlock(stat_block, BLOCKCHAIN)
     
     desc = f'The Starforger shaped your STAR into **{stat} {stat_level}**.\n\n'
 
@@ -315,7 +285,10 @@ async def forge (ctx, stat_name, BLOCKCHAIN):
     embed.set_footer(text='@~ powered by UwUntu')
     await ctx.send(embed=embed)
 
-async def reforge (ctx, item, BLOCKCHAIN):
+    """Give One Wish"""
+    pushWish(id, name, BLOCKCHAIN)
+
+async def reforge (ctx, BLOCKCHAIN):
     id, name = ctx.author.id, ctx.author.name
 
     reforger = getReforger(id, BLOCKCHAIN)
@@ -333,137 +306,10 @@ async def reforge (ctx, item, BLOCKCHAIN):
         await ctx.send(embed=embed)
         return
 
-    star = getStar(id, BLOCKCHAIN)
     dark_star = getDarkStar(id, BLOCKCHAIN)
 
-    if item.lower() == 'star':
-        if star <= 0:
-            desc = f'You do not possess a **Star**.'
-
-            """Return Message"""
-            embed = discord.Embed(
-                title = f'Reforger',
-                description = desc,
-                color = 6053215,
-            ).set_thumbnail(url=ctx.author.avatar_url)
-            embed.set_image(url='https://i.pinimg.com/originals/7b/02/82/7b0282a6b7054873ac77bca879261aeb.gif')
-            embed.set_footer(text='@~ powered by UwUntu')
-            await ctx.send(embed=embed)
-            return
-        
-        star_block = block.Block(
-            user = id,
-            name = name,
-            timestamp = today(),
-            description = '-Star',
-            data = 0
-        )
-        
-        dark_star_block = block.Block(
-            user = id,
-            name = name,
-            timestamp = today(),
-            description = 'Dark Star',
-            data = 0
-        )
-
-        reforger_block = block.Block(
-            user = id,
-            name = name,
-            timestamp = today(),
-            description = '-Reforger',
-            data = 0
-        )
-
-        """Update Blockchain"""
-        if BLOCKCHAIN.isChainValid() == False:
-            print('The current Blockchain is not valid, performing rollback.')
-            BLOCKCHAIN = blockchain.Blockchain()
-        
-        BLOCKCHAIN.addBlock(star_block)
-        BLOCKCHAIN.addBlock(dark_star_block)
-        BLOCKCHAIN.addBlock(reforger_block)
-        if BLOCKCHAIN.isChainValid():
-            BLOCKCHAIN.storeChain() 
-
-        desc = f'Your **Star** has corrupted into a **Dark Star**.'
-
-        """Return Message"""
-        embed = discord.Embed(
-            title = f'Reforger',
-            description = desc,
-            color = 2352682,
-        ).set_thumbnail(url=ctx.author.avatar_url)
-        embed.set_image(url='https://media.tenor.com/otlNc3em_hAAAAPo/limule-grand-sage.gif')
-        embed.set_footer(text='@~ powered by UwUntu')
-        await ctx.send(embed=embed)
-        return
-
-    elif item.lower() == 'dark star':
-        if dark_star <= 0:
-            desc = f'You do not possess a **Dark Star**.'
-
-            """Return Message"""
-            embed = discord.Embed(
-                title = f'Reforger',
-                description = desc,
-                color = 6053215,
-            ).set_thumbnail(url=ctx.author.avatar_url)
-            embed.set_image(url='https://i.pinimg.com/originals/7b/02/82/7b0282a6b7054873ac77bca879261aeb.gif')
-            embed.set_footer(text='@~ powered by UwUntu')
-            await ctx.send(embed=embed)
-            return
-
-        star_block = block.Block(
-            user = id,
-            name = name,
-            timestamp = today(),
-            description = 'Star',
-            data = 0
-        )
-        
-        dark_star_block = block.Block(
-            user = id,
-            name = name,
-            timestamp = today(),
-            description = '-Dark Star',
-            data = 0
-        )
-
-        reforger_block = block.Block(
-            user = id,
-            name = name,
-            timestamp = today(),
-            description = '-Reforger',
-            data = 0
-        )
-
-        """Update Blockchain"""
-        if BLOCKCHAIN.isChainValid() == False:
-            print('The current Blockchain is not valid, performing rollback.')
-            BLOCKCHAIN = blockchain.Blockchain()
-        
-        BLOCKCHAIN.addBlock(star_block)
-        BLOCKCHAIN.addBlock(dark_star_block)
-        BLOCKCHAIN.addBlock(reforger_block)
-        if BLOCKCHAIN.isChainValid():
-            BLOCKCHAIN.storeChain() 
-
-        desc = f'Your **Dark Star** has reforged into a **Star**.'
-
-        """Return Message"""
-        embed = discord.Embed(
-            title = f'Reforger',
-            description = desc,
-            color = 2352682,
-        ).set_thumbnail(url=ctx.author.avatar_url)
-        embed.set_image(url='https://media.tenor.com/otlNc3em_hAAAAPo/limule-grand-sage.gif')
-        embed.set_footer(text='@~ powered by UwUntu')
-        await ctx.send(embed=embed)
-        return
-
-    else:
-        desc = f'Bad Item. Please input a **Star** to convert to a **Dark Star** or vice versa.'
+    if dark_star <= 0:
+        desc = f'You do not possess a **Dark Star**.'
 
         """Return Message"""
         embed = discord.Embed(
@@ -471,9 +317,30 @@ async def reforge (ctx, item, BLOCKCHAIN):
             description = desc,
             color = 6053215,
         ).set_thumbnail(url=ctx.author.avatar_url)
+        embed.set_image(url='https://i.pinimg.com/originals/7b/02/82/7b0282a6b7054873ac77bca879261aeb.gif')
         embed.set_footer(text='@~ powered by UwUntu')
         await ctx.send(embed=embed)
         return
+
+    """Update Blockchain"""
+    pushItem(id, name, 'Star', BLOCKCHAIN)
+    pushItem(id, name, '-Dark Star', BLOCKCHAIN)
+    pushItem(id, name, '-Reforger', BLOCKCHAIN)
+
+    desc = f'Your **Dark Star** has reforged into a **Star**.'
+
+    """Return Message"""
+    embed = discord.Embed(
+        title = f'Reforger',
+        description = desc,
+        color = 2352682,
+    ).set_thumbnail(url=ctx.author.avatar_url)
+    embed.set_image(url='https://media.tenor.com/otlNc3em_hAAAAPo/limule-grand-sage.gif')
+    embed.set_footer(text='@~ powered by UwUntu')
+    await ctx.send(embed=embed)
+    
+    """Give One Wish"""
+    pushWish(id, name, BLOCKCHAIN)
 
 async def consume (ctx, amount, BLOCKCHAIN):
     id, name = ctx.author.id, ctx.author.name
@@ -561,16 +428,10 @@ async def consume (ctx, amount, BLOCKCHAIN):
     )
 
     """Update Blockchain"""
-    if BLOCKCHAIN.isChainValid() == False:
-        print('The current Blockchain is not valid, performing rollback.')
-        BLOCKCHAIN = blockchain.Blockchain()
-    
-    for i in amount: BLOCKCHAIN.addBlock(star)
-    BLOCKCHAIN.addBlock(gamble_block)
-    if BLOCKCHAIN.isChainValid():
-        BLOCKCHAIN.storeChain() 
-    
-    return
+    pushBlock(gamble_block, BLOCKCHAIN)
+
+    """Give One Wish"""
+    pushWish(id, name, BLOCKCHAIN)
 
 async def bless (ctx, reciever, client, BLOCKCHAIN):
     id, name = ctx.author.id, ctx.author.name
@@ -586,7 +447,7 @@ async def bless (ctx, reciever, client, BLOCKCHAIN):
     if id == ADMIN:
 
         """Generate new Block"""
-        new_block = block.Block(
+        star_block = block.Block(
             user = reciever_id,
             name = await getName(reciever_id, client),
             timestamp = today(),
@@ -595,13 +456,7 @@ async def bless (ctx, reciever, client, BLOCKCHAIN):
         )
         
         """Update Blockchain"""
-        if BLOCKCHAIN.isChainValid() == False:
-            print('The current Blockchain is not valid, performing rollback.')
-            BLOCKCHAIN = blockchain.Blockchain()
-        
-        BLOCKCHAIN.addBlock(new_block)
-        if BLOCKCHAIN.isChainValid():
-            BLOCKCHAIN.storeChain()           
+        pushBlock(star_block, BLOCKCHAIN)          
             
         """Return Message"""
         embed = discord.Embed(

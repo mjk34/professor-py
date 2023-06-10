@@ -1,14 +1,20 @@
-import discord, block, blockchain, random, os
+import discord, block, random, os
 import commands.user as user
 import commands.humble as humble
 
 from discord.utils import get
 from dotenv import load_dotenv
 from commands.helper import today, dailyLuck, dailyFortune, getName, fetchContentList, getIcon
-from commands.stats import getStat, getStar, getDarkStar, getReforger, stats
+from commands.manager import pushBlock, pushWish
+from commands.stats import getStat, stats
 from commands.user import getServerBonus
 
 filler = ['<', '>', '!', '@', '&']
+status_check = [
+        '**Fortune favors you**,',
+        '***The currents of Causality bends for you***,',
+        'You  are  the  **biggest**  *bird*.'
+]
 
 load_dotenv()
 HUMBLE = int(os.getenv('HUMBLE_ID'))
@@ -41,7 +47,7 @@ async def daily (ctx, client, BLOCKCHAIN):
     stat_bonus = int((fortune)*(0.10*vitality - pow(vitality, 0.008*vitality) + 1))
 
     """Generate new Block"""
-    new_block = block.Block(
+    daily_block = block.Block(
         user = id,
         name = name,
         timestamp = today(),
@@ -58,14 +64,8 @@ async def daily (ctx, client, BLOCKCHAIN):
     )
     
     """Update Blockchain"""
-    if BLOCKCHAIN.isChainValid() == False:
-        print('The current Blockchain is not valid, performing rollback.')
-        BLOCKCHAIN = blockchain.Blockchain()
- 
-    BLOCKCHAIN.addBlock(new_block)
-    BLOCKCHAIN.addBlock(fortune_block)
-    if BLOCKCHAIN.isChainValid():
-        BLOCKCHAIN.storeChain()           
+    pushBlock(daily_block, BLOCKCHAIN)
+    pushBlock(fortune_block, BLOCKCHAIN)         
 
     orb_url = 'https://assets.dicebreaker.com/pondering-my-orb-header-art.png/BROK/resize/844%3E/format/jpg/quality/80/pondering-my-orb-header-art.png'
     if random.random() < 0.50:
@@ -98,10 +98,14 @@ async def daily (ctx, client, BLOCKCHAIN):
     embed.set_image(url=orb_url)
     await ctx.send(embed=embed)
 
-    if status == '**Fortune favors you**,' or status == '***The currents of Causality bends for you***,' or status == 'You  are  the  **biggest**  *bird*.': 
+    """Give Two Wishes """
+    pushWish(id, name, BLOCKCHAIN) 
+    pushWish(id, name, BLOCKCHAIN) 
+
+    """Check Humble Love"""
+    if status in status_check: 
         await humble.chaos(ctx, client, BLOCKCHAIN)
 
-    
 """Allow users to check out much uwuCreds they have accumulated"""
 async def wallet (ctx, BLOCKCHAIN):
     """1. Users can view the total amount of uwuCreds they have
@@ -174,7 +178,7 @@ async def give (ctx, reciever, client, BLOCKCHAIN):
         return
 
     """Generate new Blocks"""
-    new_block1 = block.Block(
+    giving_block = block.Block(
         user = giver_id,
         name = ctx.author.name,
         timestamp = today(),
@@ -182,7 +186,7 @@ async def give (ctx, reciever, client, BLOCKCHAIN):
         data = -500
     )
 
-    new_block2 = block.Block(
+    recieving_block = block.Block(
         user = reciever_id,
         name = reciever_name,
         timestamp = today(),
@@ -191,14 +195,8 @@ async def give (ctx, reciever, client, BLOCKCHAIN):
     )
     
     """Update Blockchain"""
-    if BLOCKCHAIN.isChainValid() == False:
-        print('The current Blockchain is not valid, performing rollback.')
-        BLOCKCHAIN = blockchain.Blockchain()
- 
-    BLOCKCHAIN.addBlock(new_block1)
-    BLOCKCHAIN.addBlock(new_block2)
-    if BLOCKCHAIN.isChainValid():
-        BLOCKCHAIN.storeChain()           
+    pushBlock(giving_block, BLOCKCHAIN)
+    pushBlock(recieving_block, BLOCKCHAIN)          
     
     """Return Message"""
     embed = discord.Embed(
@@ -208,6 +206,9 @@ async def give (ctx, reciever, client, BLOCKCHAIN):
     ).set_image(url='https://2.bp.blogspot.com/-UMkbGppX02A/UwoAVpunIMI/AAAAAAAAGxo/W9a0M4njhOQ/s1600/4363+-+animated_gif+k-on+k-on!+k-on!!+moe+nakano_azusa.gif')
     embed.set_footer(text='@~ powered by UwUntu')
     await ctx.send(embed=embed)
+
+    """Give One Wish"""
+    pushWish(id, ctx.author.name, BLOCKCHAIN) 
     
 """Allow moderators to generate specified amount of uwuCreds to another user"""
 async def handout(ctx, reciever, amount, client, BLOCKCHAIN):
@@ -231,7 +232,7 @@ async def handout(ctx, reciever, amount, client, BLOCKCHAIN):
     if role.id in [y.id for y in ctx.author.roles]:
         
         """Generate new Block"""
-        new_block = block.Block(
+        recieving_block = block.Block(
             user = reciever_id,
             name = await getName(reciever_id, client),
             timestamp = today(),
@@ -240,13 +241,7 @@ async def handout(ctx, reciever, amount, client, BLOCKCHAIN):
         )
         
         """Update Blockchain"""
-        if BLOCKCHAIN.isChainValid() == False:
-            print('The current Blockchain is not valid, performing rollback.')
-            BLOCKCHAIN = blockchain.Blockchain()
-    
-        BLOCKCHAIN.addBlock(new_block)
-        if BLOCKCHAIN.isChainValid():
-            BLOCKCHAIN.storeChain()           
+        pushBlock(recieving_block, BLOCKCHAIN)      
         
         """Return Message"""
         embed = discord.Embed(
@@ -287,7 +282,7 @@ async def take(ctx, reciever, amount, client, BLOCKCHAIN):
     if role.id in [y.id for y in ctx.author.roles]:
         
         """Generate new Block"""
-        new_block = block.Block(
+        recieving_block = block.Block(
             user = reciever_id,
             name = await getName(reciever_id, client),
             timestamp = today(),
@@ -296,13 +291,7 @@ async def take(ctx, reciever, amount, client, BLOCKCHAIN):
         )
         
         """Update Blockchain"""
-        if BLOCKCHAIN.isChainValid() == False:
-            print('The current Blockchain is not valid, performing rollback.')
-            BLOCKCHAIN = blockchain.Blockchain()
-    
-        BLOCKCHAIN.addBlock(new_block)
-        if BLOCKCHAIN.isChainValid():
-            BLOCKCHAIN.storeChain()           
+        pushBlock(recieving_block, BLOCKCHAIN)           
         
         """Return Message"""
         embed = discord.Embed(

@@ -3,6 +3,7 @@ import commands.user as user
 
 from discord.utils import get
 from commands.helper import today, getName
+from commands.manager import pushBlock, pushWish
 from commands.stats import getStat, stats
 
 filler = ['<', '>', '!', '@']
@@ -36,7 +37,7 @@ async def buy_ticket(ctx, amount, BLOCKCHAIN):
     if user_creds - total_cost > 0:
         
         """Generate new Block"""
-        new_block1 = block.Block(
+        purchase_block = block.Block(
             user = id,
             name = name,
             timestamp = today(),
@@ -44,7 +45,7 @@ async def buy_ticket(ctx, amount, BLOCKCHAIN):
             data = -total_cost
         )
         
-        new_block2 = block.Block(
+        ticket_block = block.Block(
             user = id,
             name = name,
             timestamp = today(),
@@ -53,14 +54,8 @@ async def buy_ticket(ctx, amount, BLOCKCHAIN):
         )
         
         """Update Blockchain"""
-        if BLOCKCHAIN.isChainValid() == False:
-            print('The current Blockchain is not valid, performing rollback.')
-            BLOCKCHAIN = blockchain.Blockchain()
-    
-        BLOCKCHAIN.addBlock(new_block1)
-        BLOCKCHAIN.addBlock(new_block2)
-        if BLOCKCHAIN.isChainValid():
-            BLOCKCHAIN.storeChain()           
+        pushBlock(purchase_block, BLOCKCHAIN)
+        pushBlock(ticket_block, BLOCKCHAIN)
     
         """Return Message"""
         embed = discord.Embed(
@@ -79,6 +74,9 @@ async def buy_ticket(ctx, amount, BLOCKCHAIN):
         ).set_thumbnail(url='https://66.media.tumblr.com/2d52e78a64b9cc97fac0cb00a48fe676/tumblr_inline_pamkf7AfPf1s2a9fg_500.gif')
         embed.set_footer(text='@~ powered by UwUntu')
         await ctx.send(embed=embed)
+
+    """Give One Wish"""
+    pushWish(id, name, BLOCKCHAIN)
         
 """Allow moderators to generate one additional submit to a user"""
 async def bonusSubmit(ctx, reciever, client, BLOCKCHAIN):
@@ -95,7 +93,7 @@ async def bonusSubmit(ctx, reciever, client, BLOCKCHAIN):
     if role.id in [y.id for y in ctx.author.roles]:
         
         """Generate new Block"""
-        new_block = block.Block(
+        submit_block = block.Block(
             user = reciever_id,
             name = await getName(reciever_id, client),
             timestamp = today(),
@@ -104,13 +102,7 @@ async def bonusSubmit(ctx, reciever, client, BLOCKCHAIN):
         )
         
         """Update Blockchain"""
-        if BLOCKCHAIN.isChainValid() == False:
-            print('The current Blockchain is not valid, performing rollback.')
-            BLOCKCHAIN = blockchain.Blockchain()
-    
-        BLOCKCHAIN.addBlock(new_block)
-        if BLOCKCHAIN.isChainValid():
-            BLOCKCHAIN.storeChain()           
+        pushBlock(submit_block, BLOCKCHAIN)          
         
         """Return Message"""
         embed = discord.Embed(
@@ -200,7 +192,7 @@ async def claimBonus (ctx, BLOCKCHAIN):
     stat_bonus = int((bonus_creds)*(0.14*dexterity))
     
     """Generate new Block"""
-    new_block = block.Block(
+    bonus_block = block.Block(
         user = id,
         name = name,
         timestamp = today(),
@@ -209,13 +201,7 @@ async def claimBonus (ctx, BLOCKCHAIN):
     )
         
     """Update Blockchain"""
-    if BLOCKCHAIN.isChainValid() == False:
-        print('The current Blockchain is not valid, performing rollback.')
-        BLOCKCHAIN = blockchain.Blockchain()
-    
-    BLOCKCHAIN.addBlock(new_block)
-    if BLOCKCHAIN.isChainValid():
-        BLOCKCHAIN.storeChain()           
+    pushBlock(bonus_block, BLOCKCHAIN)         
     
     desc = f'Congratulations on your submits!\n'
     desc += f'From **+{bonus} Bonus Stacks** *and* **Strength {strength}**, you claimed **+{bonus_creds}** creds!\n'
@@ -230,6 +216,9 @@ async def claimBonus (ctx, BLOCKCHAIN):
     ).set_image(url='https://i.pinimg.com/originals/de/6b/5d/de6b5df29abaf7124387b9c86ca46a29.gif')
     embed.set_footer(text='@~ powered by UwUntu')
     await ctx.send(embed=embed)
+
+    """Give One Wish"""
+    pushWish(id, name, BLOCKCHAIN)
 
 """Allow users to see the list of raffle participants"""
 async def rafflelist (ctx, BLOCKCHAIN):

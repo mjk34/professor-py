@@ -37,6 +37,8 @@ def getTotalStars(user_id, BLOCKCHAIN):
 
     return count
 
-leaderboard = star_count(BLOCKCHAIN)
-for i in leaderboard:
-    print(i)
+# leaderboard = star_count(BLOCKCHAIN)
+# for i in leaderboard:
+#     print(i)
+
+print(len(BLOCKCHAIN.chain))
