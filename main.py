@@ -6,6 +6,7 @@ from discord.ext.commands import Bot
 from discord_slash import SlashCommand, SlashContext
 from discord_slash.utils.manage_commands import create_option
 
+from commands.activity import messageXP
 from commands.cmd import ping, anime, pong
 from commands.creds import daily, wallet, give, handout, take, snoop
 from commands.games import submitClip, review
@@ -21,8 +22,13 @@ load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')
 GUILD = os.getenv('DISCORD_GUILD')
 GUILD_ID = int(os.getenv('GUILD_ID'))
+
 CHANNEL = int(os.getenv('BOT_CMD'))
 GENERAL = int(os.getenv('GENERAL'))
+SUBMIT = int(os.getenv('SUBMIT'))
+DEVELOPER = int(os.getenv('DEVELOPER'))
+PAWGERZ = int(os.getenv('PAWGERZ'))
+
 CMD_DESC = fetchContentList('command.txt')
 
 client = Bot(command_prefix='!', intents=discord.Intents.all())
@@ -33,7 +39,8 @@ keywords = ['ping', 'anime', 'uwu', 'wallet', 'give', 'handout', 'take', 'buy_ti
             'review']
 
 """Either imports existing blockchain or initiates with a new genesis block"""
-BLOCKCHAIN = blockchain.Blockchain()
+BLOCKCHAIN = blockchain.Blockchain('.Blockchain')
+ACTIVCHAIN = blockchain.Blockchain('.Activchain')
 
 """Start up bot status message on boot"""
 @client.event
@@ -45,6 +52,12 @@ async def on_message(message):
     if message.author.name in ['Assistant', 'Professor', 'humble', 'valuwu', 'RoleBot']: return
     if message.author == client.user: return                # checks if professor  
     if message.content.split(' ')[0] in keywords: return    # checks for keywords (commands)
+
+    if message.channel.id in [CHANNEL, GENERAL, SUBMIT, DEVELOPER, PAWGERZ]:
+        if random.random() < 0.80: 
+            xp_embed =  messageXP(message.author.id, message.author.name, ACTIVCHAIN, BLOCKCHAIN)
+            xp_embed.set_thumbnail(url=message.author.avatar_url)
+            await message.reply(embed=xp_embed)
 
     content = message.content
     temp_msg = ['Typing...', 'Ummm...', 'Hmmm...', 'Thinking...']

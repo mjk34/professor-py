@@ -132,7 +132,7 @@ async def wish(ctx, mode, BLOCKCHAIN):
         data = scrap_sum
     )
 
-    pushBlock(scrap_sum, BLOCKCHAIN)
+    pushBlock(scrap_block, BLOCKCHAIN)
 
     inventory = getInventory(items_pulled)
     desc = f'You reached for the Stars... and got {inventory}. (also {scrap_sum} creds)'
@@ -149,7 +149,7 @@ async def wish(ctx, mode, BLOCKCHAIN):
 
 def getInventory(item_list) -> str:
     inventory = ''
-    items = ['Creds', 'Torn Ticket', 'Submit Count', 'Reforger', 'Star', 'Dark Star']
+    items = ['Creds', 'Torn Ticket', 'Bonus Submit', 'Reforger', 'Star', 'Dark Star']
 
     for i in items:
         item_count = 0
@@ -168,7 +168,7 @@ def getInventory(item_list) -> str:
 def text2Emoji(item):
     if item == 'Creds': return '💰'
     if item == 'Torn Ticket': return '🎫'
-    if item == 'Submit Count': return '🎞️'
+    if item == 'Bonus Submit': return '🎞️'
     if item == 'Reforger': return '🔨'
     if item == 'Star': return '⭐'
     if item == 'Dark Star': return '💥'
@@ -184,7 +184,7 @@ def getHighestRarity(item_list) -> str:
     else: return '0*'
 
 def randomItem() -> str:
-    items = ['Creds', 'Torn Ticket', 'Submit Count', 'Reforger']
+    items = ['Creds', 'Torn Ticket', 'Bonus Submit', 'Reforger']
     index = random.randint(0, len(items)-1)
 
     return items[index]

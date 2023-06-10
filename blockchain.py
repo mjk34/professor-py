@@ -2,10 +2,12 @@ from commands.helper import today
 from block import *
 
 import pickle, os
-save_path = '.Blockchain'
 
 class Blockchain:
-    def __init__ (self):
+    saved_path = ''
+
+    def __init__ (self, save_path):
+        self.saved_path = save_path
         if os.path.exists(save_path):
             file = open(save_path, 'rb')
             self.chain = pickle.load(file)
@@ -50,5 +52,5 @@ class Blockchain:
             print()
     
     def storeChain(self):
-        with open(save_path, 'wb') as output:
+        with open(self.saved_path, 'wb') as output:
             pickle.dump(self.chain, output)
