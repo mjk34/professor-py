@@ -4,10 +4,5 @@
     - shields last until the end of the week
     - shields also protect against humble chaos
     - both token values scale with based on server bonus level
-    - invest token for 100 at another player at 1% return
-
-
-[ ] add activity level to user wallet
-[ ] add token count to user wallet
-[ ] add torn ticket count to user wallet
-[ ] add 
+[ ] add function to coin tokens to deploy shield or steal creds
+[ ] add shield count to wallet

@@ -1,4 +1,4 @@
-import discord, block, blockchain, random, os
+import discord, block, random, os
 import commands.user as user
 
 from dotenv import load_dotenv
@@ -54,7 +54,7 @@ async def profile (ctx, BLOCKCHAIN):
     dex_str += f' \u3000  \u3000  \u3000 **+{24*dexterity}%** *bonus from weekly CLAIM bounty*'
 
     ego = getStat(id, stats[4], BLOCKCHAIN)
-    ego_str = f' \u3000  \u3000  \u3000 **+{14*ego}%** *probability of winning the consume*'
+    ego_str = f'**+{14*ego}%** *probability of winning the consume*'
 
     desc = f'Below lists your current student stats and benefits:\n\n'
     desc += f'**VIT {vitality}**\u3000{vit_str}\n'
@@ -73,14 +73,14 @@ async def profile (ctx, BLOCKCHAIN):
     if dexterity < 5: desc += f' \u3000  \u3000  \u3000 (NEXT: {1200 + 400*(dexterity)})\n\n'
     else: desc += ' \u3000  \u3000  \u3000 (MAX Level)\n\n'
 
-    desc += f'**EGO {ego} **\u2000 {ego_str}\n'
+    desc += f'**EGO {ego}**\u3000{ego_str}\n'
     if ego < 5: desc += f' \u3000  \u3000  \u3000 (NEXT: {2000})\n\n'
     else: desc += ' \u3000  \u3000  \u3000 (MAX Level)\n\n'
 
     desc += f'You have **{star} Stars**, bring them to the Starforger with `/forge` to upgrade a core stat. \n\n'
     desc += f'You have **{reforger} Reforgers**, you can use `/reforge` to turn **Dark Stars** into **Stars**. \n\n'
     desc += f'You have **{dark_star} Dark Stars**, **Dark Stars** must be purified to be used. \n\n'
-    desc += f'Check out the Full Stat Sheet Here: https://discord.com/channels/859993171156140061/938853545992667176/1086749743193018513\n\n'
+    desc += f'Check out the Full Stat Sheet Here: https://discord.com/channels/859993171156140061/938853545992667176/1116810982946242691\n\n'
 
     """Return Message"""
     embed = discord.Embed(

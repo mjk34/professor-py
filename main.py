@@ -10,12 +10,12 @@ from commands.activity import messageXP
 from commands.cmd import ping, anime, pong
 from commands.creds import daily, wallet, give, handout, take, snoop
 from commands.games import submitClip, review
-from commands.god import hand_all, take_level, give_level
+from commands.god import hand_all, take_level, give_level, take_tickets
 from commands.gpt import gpt_string
 from commands.helper import fetchContentList
 from commands.humble import humble_powa
 from commands.stats import profile, upgrade, forge, bless, reforge, consume
-from commands.submit import buy_ticket, bonusSubmit, leaderboard, claimBonus, rafflelist
+from commands.submit import buy_ticket, bonusSubmit, leaderboard, claimBonus, rafflelist, stitch_ticket
 from commands.wish import wish
 
 load_dotenv()
@@ -55,9 +55,10 @@ async def on_message(message):
 
     if message.channel.id in [CHANNEL, GENERAL, SUBMIT, DEVELOPER, PAWGERZ]:
         if random.random() < 0.80: 
-            xp_embed =  messageXP(message.author.id, message.author.name, ACTIVCHAIN, BLOCKCHAIN)
-            xp_embed.set_thumbnail(url=message.author.avatar_url)
-            await message.reply(embed=xp_embed)
+            leveled, xp_embed = messageXP(message.author.id, message.author.name, ACTIVCHAIN, BLOCKCHAIN)
+            if leveled:
+                xp_embed.set_thumbnail(url=message.author.avatar_url)
+                await message.reply(embed=xp_embed)
 
     content = message.content
     temp_msg = ['Typing...', 'Ummm...', 'Hmmm...', 'Thinking...']
@@ -66,42 +67,39 @@ async def on_message(message):
     ping = '<@787353505132183592>'
     token = 'hey professor'
     if ping in content:
-            print(f'Pinged Professor: \"{content}\"')
+            # print(f'Pinged Professor: \"{content}\"')
             reply = await message.reply(f'{temp_msg[msg]}')
             gpt_str = await gpt_string('', content[len(token):])
             await reply.edit(content=gpt_str)
             return
     
-    print('\ncheck 1')
     try:
-        print('check 2')
         m_id = message.reference.message_id
         m_cid = message.reference.channel_id
         r_message = await client.get_channel(m_cid).fetch_message(m_id)
 
         m_aname = r_message.author.name
         m_context = r_message.content
-        print(m_aname)
+
         if m_aname == 'Professor':
-            print(f'Replying to Professor: \"{content}\"')
+            # print(f'Replying to Professor: \"{content}\"')
             reply = await message.reply(f'{temp_msg[msg]}')
             gpt_str = await gpt_string(m_context, content)
             await reply.edit(content=gpt_str)
             return
     except:
-        print('check 3')
         return
 
     if message.channel.id == GENERAL:
         if token in content.lower():
-            print(f'Hey Professor: \"{content}\"')
+            # print(f'Hey Professor: \"{content}\"')
             reply = await message.reply(f'{temp_msg[msg]}')
             gpt_str = await gpt_string('', content[len(token):])
             await reply.edit(content=gpt_str)
             return
         
         if random.random() < 0.75 and '?' in content:
-            print(f'Random Professor: \"{content}\"')
+            # print(f'Random Professor: \"{content}\"')
             gpt_str = await gpt_string('', content[len(token):])
             await client.get_channel(GENERAL).send(gpt_str)
             return
@@ -122,13 +120,17 @@ async def _(ctx:SlashContext): await anime(ctx)
 async def _(ctx:SlashContext, amount: int): 
     await buy_ticket(ctx, amount, BLOCKCHAIN)
 
+@slash.slash(name='stitch_ticket', description=CMD_DESC[3], guild_ids=[GUILD_ID])
+async def _(ctx:SlashContext): 
+    await stitch_ticket(ctx, BLOCKCHAIN)
+
 @slash.slash(name='uwu', description=CMD_DESC[5], guild_ids=[GUILD_ID])
 async def _(ctx:SlashContext): 
     await daily (ctx, client, BLOCKCHAIN)
     await humble_powa (ctx, client, BLOCKCHAIN)
 
 @slash.slash(name='wallet', description=CMD_DESC[6], guild_ids=[GUILD_ID])
-async def _(ctx:SlashContext): await wallet(ctx, BLOCKCHAIN)
+async def _(ctx:SlashContext): await wallet(ctx, BLOCKCHAIN, ACTIVCHAIN)
 
 @slash.slash(name='donate', description=CMD_DESC[7], guild_ids=[GUILD_ID],
     options=[create_option(name='receiver', description=CMD_DESC[8], option_type=3, required=True)])
@@ -136,20 +138,18 @@ async def _(ctx:SlashContext, receiver: str):
     await give(ctx, receiver, client, BLOCKCHAIN)
 
 @slash.slash(name='handout', description=CMD_DESC[9], guild_ids=[GUILD_ID],
-    options=[create_option(name='receiver', description=CMD_DESC[8], option_type=3, required=True),
+    options=[create_option(name='reciever', description=CMD_DESC[8], option_type=3, required=True),
              create_option(name='amount', description=CMD_DESC[10], option_type=4, required=True)])
-async def _(ctx:SlashContext, receiver: str, amount: int): 
-    await handout(ctx, receiver, amount, client, BLOCKCHAIN)
-
-# create handoutmulti for multiple users
+async def _(ctx:SlashContext, reciever: str, amount: int):
+    reciever_list = reciever.split(',')
+    for user in reciever_list:
+        await handout(ctx, user, amount, client, BLOCKCHAIN)
 
 @slash.slash(name='take', description=CMD_DESC[11], guild_ids=[GUILD_ID],
     options=[create_option(name='victim', description=CMD_DESC[8], option_type=3, required=True),
              create_option(name='amount', description=CMD_DESC[10], option_type=4, required=True)])
 async def _(ctx:SlashContext, victim: str, amount: int):
     await take(ctx, victim, amount, client, BLOCKCHAIN)
-
-# create takemulti for multiple users
 
 @slash.slash(name='submit_clip', description=CMD_DESC[12], guild_ids=[GUILD_ID],
     options=[create_option(name='title', description=CMD_DESC[13], option_type=3, required=True),
@@ -189,7 +189,7 @@ async def _(ctx:SlashCommand, stat: str):
     await upgrade(ctx, stat, BLOCKCHAIN)
 
 @slash.slash(name='wish', description=CMD_DESC[23], guild_ids=[GUILD_ID],
-    options=[create_option(name='mode', description=CMD_DESC[34])])
+    options=[create_option(name='mode', description=CMD_DESC[34], option_type=3, required=True)])
 async def _(ctx:SlashCommand, mode:str):
     await wish(ctx, mode, BLOCKCHAIN)
 
@@ -235,5 +235,11 @@ async def _(ctx:SlashCommand, target:str, stat:str):
              create_option(name='stat', description=CMD_DESC[22], option_type=3, required=True)])
 async def _(ctx:SlashCommand, target:str, stat:str):
     await give_level(ctx, target, stat, client, BLOCKCHAIN)
+
+@slash.slash(name='take_ticket', description=CMD_DESC[32], guild_ids=[GUILD_ID],
+    options=[create_option(name='target', description=CMD_DESC[8], option_type=3, required=True),
+             create_option(name='amount', description=CMD_DESC[22], option_type=4, required=True)])
+async def _(ctx:SlashCommand, target:str, amount:int):
+    await take_tickets(ctx, target, amount, client, BLOCKCHAIN)
 
 client.run(TOKEN)

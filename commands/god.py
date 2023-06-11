@@ -180,3 +180,52 @@ async def give_level (ctx, reciever, stat_name, client, BLOCKCHAIN):
     embed.set_footer(text='@~ powered by UwUntu')
     await ctx.send(embed=embed)
     return
+
+async def take_tickets (ctx, reciever, amount, client, BLOCKCHAIN):
+    id, name = ctx.author.id, ctx.author.name
+    if id != ADMIN:
+       embed = discord.Embed(
+            title = f'Hand All',
+            description = f'Insufficient power, you are not *god*!',
+            color = 6053215    
+        ).set_thumbnail(url='https://c.tenor.com/hal0bUXw_mYAAAAC/giyuu-tomioka-demon-slayer.gif')
+       embed.set_footer(text='@~ powered by UwUntu')
+       await ctx.send(embed=embed)
+       return
+    
+    """Parses Reciever id from <@id>"""
+    reciever_id = reciever
+    filler = ['<', '>', '!', '@', '&']
+
+    for ch in filler: reciever_id = reciever_id.replace(ch, '')
+    reciever_id = int(reciever_id)
+
+    reciever_name = await getName(reciever_id, client)
+    new_block = block.Block(
+        user = reciever_id,
+        name = reciever_name,
+        timestamp = today(),
+        description = 'Ticket',
+        data = -amount
+    )
+
+    """Update Blockchain"""
+    if BLOCKCHAIN.isChainValid() == False:
+        print('The current Blockchain is not valid, performing rollback.')
+        BLOCKCHAIN = blockchain.Blockchain()
+    
+    BLOCKCHAIN.addBlock(new_block)
+    if BLOCKCHAIN.isChainValid():
+        BLOCKCHAIN.storeChain()
+
+    desc = f'{amount} Tickets were taken from <@{reciever_id}>'
+
+    """Return Message"""
+    embed = discord.Embed(
+        title = f'Take Tickets',
+        description = desc,
+        color = 2352682,
+    ).set_thumbnail(url=ctx.author.avatar_url)
+    embed.set_footer(text='@~ powered by UwUntu')
+    await ctx.send(embed=embed)
+    return

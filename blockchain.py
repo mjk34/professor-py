@@ -48,8 +48,7 @@ class Blockchain:
                   \ndesc: {block.description}\
                   \ndata: {block.data}\
                   \nprev: {block.previousHash}\
-                  \nhash: {block.hash}')
-            print()
+                  \nhash: {block.hash}\n')
     
     def storeChain(self):
         with open(self.saved_path, 'wb') as output:

@@ -4,7 +4,7 @@ from commands.helper import fetchContentList, fetchContent
 """Checks uwuBot's response to see if it is available"""
 async def ping(ctx):
     images = fetchContentList('pong.txt')
-    num = random.randint(0, 22)
+    num = random.randint(0, len(images)-1)
     embed = discord.Embed(
         title = f'Pong!',
         color = 16251130

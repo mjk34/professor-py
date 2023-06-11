@@ -1,4 +1,4 @@
-import discord, block, blockchain, os
+import discord, block, os
 import commands.user as user
 import random
 

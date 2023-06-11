@@ -9,6 +9,7 @@ level_wish = [0, 1, 2, 3, 5, 5, 5, 10, 10, 10, 10, 10, 10, 20, 20, 20]
 def messageXP(id, name, ACTIVCHAIN, BLOCKCHAIN):
     current_xp = getLevelXP(id, ACTIVCHAIN)
     next_level = getLevel(id, ACTIVCHAIN) + 1
+    embed_message = None
     
     """Generate XP Block"""
     xp_block = block.Block(
@@ -49,14 +50,14 @@ def messageXP(id, name, ACTIVCHAIN, BLOCKCHAIN):
             pushBlock(wish_block, BLOCKCHAIN)
 
         """Return Message"""
-        embed = discord.Embed(
+        embed_message = discord.Embed(
             title = 'Activity',
-            description = f'GG <@{id}>, your participation level just advanced to **{next_level}**! (+{level_wish[next_level]} Wish(s))',
+            description = f'GG <@{id}>, your participation Level just advanced to **Level {next_level}**! (+{level_wish[next_level]} Wish)',
             color = 16777215    
         )
-        embed.set_footer(text='@~ powered by UwUntu')
+        embed_message.set_footer(text='@~ powered by UwUntu')
 
-    return embed
+    return levelUp(current_xp, next_level), embed_message
 
 
 def levelUp(current_xp, next_level) -> bool:

@@ -4,16 +4,18 @@ import commands.humble as humble
 
 from discord.utils import get
 from dotenv import load_dotenv
+
+from commands.activity import getLevel, getLevelXP, level_xp
 from commands.helper import today, dailyLuck, dailyFortune, getName, fetchContentList, getIcon
 from commands.manager import pushBlock, pushWish
-from commands.stats import getStat, stats
+from commands.stats import getStat, stats, getStar, getDarkStar, getReforger
 from commands.user import getServerBonus
+from commands.wish import getStarPity ,guarenteed
 
 filler = ['<', '>', '!', '@', '&']
 status_check = [
-        '**Fortune favors you**,',
-        '***The currents of Causality bends for you***,',
-        'You  are  the  **biggest**  *bird*.'
+        '*Congrats, you are cursed*.',
+        '*A honest sum, nothing more*.'
 ]
 
 load_dotenv()
@@ -28,15 +30,15 @@ async def daily (ctx, client, BLOCKCHAIN):
        
     id, name = ctx.author.id, ctx.author.name
     """Check if the user has already done their daily"""
-    if user.hasDaily(id, BLOCKCHAIN) == False:
-        embed = discord.Embed(
-            title = f'Daily',
-            description = f'You next **/uwu** is tomorrow.',
-            color = 6053215    
-        ).set_thumbnail(url=ctx.author.avatar_url)
-        embed.set_footer(text='@~ powered by UwUntu')
-        await ctx.send(embed=embed)
-        return
+    # if user.hasDaily(id, BLOCKCHAIN) == False:
+    #     embed = discord.Embed(
+    #         title = f'Daily',
+    #         description = f'You next **/uwu** is tomorrow.',
+    #         color = 6053215    
+    #     ).set_thumbnail(url=ctx.author.avatar_url)
+    #     embed.set_footer(text='@~ powered by UwUntu')
+    #     await ctx.send(embed=embed)
+    #     return
         
     bonus = int(user.getDailyCount(id, BLOCKCHAIN) / 7)
     server_bonus = getServerBonus(BLOCKCHAIN)
@@ -103,11 +105,11 @@ async def daily (ctx, client, BLOCKCHAIN):
     pushWish(id, name, BLOCKCHAIN) 
 
     """Check Humble Love"""
-    if status in status_check: 
+    if status not in status_check: 
         await humble.chaos(ctx, client, BLOCKCHAIN)
 
 """Allow users to check out much uwuCreds they have accumulated"""
-async def wallet (ctx, BLOCKCHAIN):
+async def wallet (ctx, BLOCKCHAIN, ACTIVCHAIN):
     """1. Users can view the total amount of uwuCreds they have
        2. Users can view the total amount of tickets they have
        3. Users can view daily counters for /uwu and submissions"""
@@ -115,25 +117,48 @@ async def wallet (ctx, BLOCKCHAIN):
     """Read Blockchain and return user total"""  
     id = ctx.author.id
     user_creds = user.totalCreds(id, BLOCKCHAIN)
-    user_tickets = user.totalTickets(id, BLOCKCHAIN)
+    user_tickets = user.totalTickets(id, BLOCKCHAIN) + user.totalStitchedTickets(id, BLOCKCHAIN)
+
+    user_level = getLevel(id, ACTIVCHAIN)
+    user_xp = getLevelXP(id, ACTIVCHAIN)
+    level_up_xp = level_xp[user_level+1]
+
+    user_tokens = user.totalTokens(id, BLOCKCHAIN)
+    user_torn = user.totalTornTickets(id, BLOCKCHAIN)
+    user_stars = getStar(id, BLOCKCHAIN)
+    user_dstars = getDarkStar(id, BLOCKCHAIN)
+    user_reforger = getReforger(id, BLOCKCHAIN)
+
+    user_wish = user.wishCount(id, BLOCKCHAIN)
+    user_pity = getStarPity(id, BLOCKCHAIN)
+    user_guarenteed = guarenteed(id, BLOCKCHAIN)
 
     user_subs = user.totalSubsWeek(id, BLOCKCHAIN)
     user_claim = user.claimedCount(id, BLOCKCHAIN)
-    user_wish = user.wishCount(id, BLOCKCHAIN)
-
+    
     stamina = getStat(id, stats[1], BLOCKCHAIN)
 
-    bonus = int(user.getDailyCount(id, BLOCKCHAIN) / 7)
     daily = {True:'Available', False:'Not Available'}[user.hasDaily(id, BLOCKCHAIN)]
+    claim = {True:'Available', False:'Not Available'}[user_claim == 0]
     desc = ''
+
+    desc += f'**LEVEL {user_level}**\nNext Level:\u2000{user_xp}/{level_up_xp} XP\n\n'
     
     if stamina == 0:
-        desc += f'Daily UwU:\u3000\u3000**{daily}**\nWish:\u3000\u3000**{user_wish}**\n\nClaim Bonus: \u3000**{1 - user_claim}/{1}**\nSubmissions: \u3000**{(2) - user_subs}/{2}** \n'
+        desc += f'Daily UwU:\u3000\u3000**{daily}**\nClaim Bonus: \u3000**{claim}**\nSubmissions: \u3000**{(2) - user_subs}/{2}**\n\n'
     else:
-        desc += f'Daily UwU:\u3000\u3000**{daily}**\nWish:\u3000\u3000**{user_wish}**\n\nClaim Bonus: \u3000**{1 - user_claim}/{1}**\nSubmissions: \u3000**{(2 + int(stamina/2)) - user_subs}/{2 + int(stamina/2)}** \n'
+        desc += f'Daily UwU:\u3000\u3000**{daily}**\nClaim Bonus: \u3000**{claim}**\nSubmissions: \u3000**{(2 + int(stamina/2)) - user_subs}/{2 + int(stamina/2)}** \n\n'
 
-    desc += f'Bonus Stack:\u3000** {bonus}**\n\n'
-    desc += f'Total Creds:\u3000**{user_creds}**\u3000 Total Tickets: \u2000**{user_tickets}**\n\n'
+    desc += f'Wishes:\u2000**{user_wish}**\u3000Pity:\u2000**{user_pity}**\u3000'
+    if user_guarenteed:
+        desc += 'Guarenteed:\u2000**Yes**\n\n'
+    else: 
+        desc += 'Guarenteed:\u2000**No**\n\n'
+
+    desc += f'Tokens:\u2000**{user_tokens}**\u3000 Torn Tickets:\u2000**{user_torn}**\n'
+    desc += f'Stars:\u2000**{user_stars}**\u3000 Dark Stars:\u2000**{user_dstars}**\u3000Reforgers:\u2000**{user_reforger}**\n\n'
+
+    desc += f'Total Creds:\u3000 **{user_creds}**\u3000 Total Tickets: \u2000**{user_tickets}**\n'
 
     """Return Message"""
     embed = discord.Embed(
@@ -215,10 +240,10 @@ async def handout(ctx, reciever, amount, client, BLOCKCHAIN):
     """1. User will be checked for Moderator status
        2. Blockchain will be validated, new blocks will be added to the end of Blockchain"""
     
-    if amount > 10000:
-        text = f'Oi! This is not a charity, did you really try to give {amount} uwuCreds'
-        await ctx.send(f'```CSS\n[{text}]\n```')
-        return
+    # if amount > 10000:
+    #     text = f'Oi! This is not a charity, did you really try to give {amount} uwuCreds'
+    #     await ctx.send(f'```CSS\n[{text}]\n```')
+    #     return
     
     """Parses Reciever id from <@id>"""
     reciever_id = reciever

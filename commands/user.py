@@ -102,6 +102,20 @@ def totalTickets(user_id, BLOCKCHAIN) -> int:
 
 """Evaluate Blockchain:
         1. run through each block belonging to user_id
+        2. for each block, add up all stitched tickets"""
+def totalStitchedTickets(user_id, BLOCKCHAIN) -> int:
+    if len(BLOCKCHAIN.chain) == 1: return 0
+    
+    desc, total = 'Stitched Ticket', 0 
+    for block in BLOCKCHAIN.chain[1:]:
+        if block.getUser() == user_id:
+            if block.getDesc() == desc:
+                total += 1
+    
+    return int(total)
+
+"""Evaluate Blockchain:
+        1. run through each block belonging to user_id
         2. for each block, add up all submissions dated today"""
 def totalSubsWeek(user_id, BLOCKCHAIN) -> int:
     if len(BLOCKCHAIN.chain) == 1: return 0
@@ -234,10 +248,11 @@ def getRaffle(BLOCKCHAIN) -> list:
     for user_id in unique_ids:
         user_name = findRecentName(user_id, BLOCKCHAIN)
         user_tickets = totalTickets(user_id, BLOCKCHAIN)
+        user_stitched = totalStitchedTickets(user_id, BLOCKCHAIN)
 
-        if user_tickets == 0: continue
+        if user_tickets + user_stitched == 0: continue
         
-        raffle.append([user_name, user_tickets])   
+        raffle.append([user_name, user_tickets + user_stitched])   
     raffle.sort(key = lambda x: x[1], reverse=True)  
     return raffle
 
@@ -272,7 +287,31 @@ def getServerBonus(BLOCKCHAIN) -> int:
         leaderboard.append([user_id, user_bonus + user_dex])
         
     leaderboard.sort(key = lambda x: x[1], reverse=True)
-    print(leaderboard[:10])
-    print(f'Highest bonus stack is: {leaderboard[0][1]}')
+    # print(leaderboard[:10])
+    # print(f'Highest bonus stack is: {leaderboard[0][1]}')
 
     return leaderboard[0][1]
+
+def totalTokens(user_id, BLOCKCHAIN)-> int:
+    if len(BLOCKCHAIN.chain) == 1: return 0
+
+    desc, desc1, count = 'Token', '-Token', 0
+    for block in BLOCKCHAIN.chain[1:]:
+        if block.getUser() == user_id:
+            if block.getDesc() == desc:
+                count += 1
+            if block.getDesc() == desc1:
+                count -= 1
+    return count
+
+def totalTornTickets(user_id, BLOCKCHAIN)-> int:
+    if len(BLOCKCHAIN.chain) == 1: return 0
+
+    desc, desc1, count = 'Torn Ticket', '-Torn Ticket', 0
+    for block in BLOCKCHAIN.chain[1:]:
+        if block.getUser() == user_id:
+            if block.getDesc() == desc:
+                count += 1
+            if block.getDesc() == desc1:
+                count -= 1
+    return count

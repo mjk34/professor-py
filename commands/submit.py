@@ -1,4 +1,4 @@
-import discord, block, blockchain
+import discord, block
 import commands.user as user
 
 from discord.utils import get
@@ -70,6 +70,58 @@ async def buy_ticket(ctx, amount, BLOCKCHAIN):
         embed = discord.Embed(
             title = f'Buy Ticket',
             description = f'Insufficient funds, you require **{total_cost}** uwuCreds!',
+            color = 6053215    
+        ).set_thumbnail(url='https://66.media.tumblr.com/2d52e78a64b9cc97fac0cb00a48fe676/tumblr_inline_pamkf7AfPf1s2a9fg_500.gif')
+        embed.set_footer(text='@~ powered by UwUntu')
+        await ctx.send(embed=embed)
+
+    """Give One Wish"""
+    pushWish(id, name, BLOCKCHAIN)
+
+async def stitch_ticket(ctx, BLOCKCHAIN):   
+    """Read Blockchain and return user total"""
+    id, name = ctx.author.id, ctx.author.name
+    user_torn_tickets = user.totalTornTickets(id, BLOCKCHAIN)
+            
+    """Check if User has sufficient amount of torn tickets"""
+    if user_torn_tickets >= 3:
+        
+        """Generate new Block"""   
+        stitched_block = block.Block(
+            user = id,
+            name = name,
+            timestamp = today(),
+            description = 'Stitched Ticket',
+            data = 0
+        )
+
+        torn_block = block.Block(
+            user = id,
+            name = name,
+            timestamp = today(),
+            description = '-Torn Ticket',
+            data = 0
+        )
+        
+        """Update Blockchain"""
+        pushBlock(stitched_block, BLOCKCHAIN)
+        pushBlock(torn_block, BLOCKCHAIN)
+        pushBlock(torn_block, BLOCKCHAIN)
+        pushBlock(torn_block, BLOCKCHAIN)
+    
+        """Return Message"""
+        embed = discord.Embed(
+            title = f'Stitch Ticket',
+            description = f'Poggerz! **+1** ticket was added to your *Wallet*!',
+            color = 15697464    
+        ).set_thumbnail(url=ctx.author.avatar_url)
+        embed.set_footer(text='@~ powered by UwUntu')
+        await ctx.send(embed=embed)
+        
+    else:
+        embed = discord.Embed(
+            title = f'Stitch Ticket',
+            description = f'Insufficient Torn Tickets, you require at least 3 to make a full Ticket!',
             color = 6053215    
         ).set_thumbnail(url='https://66.media.tumblr.com/2d52e78a64b9cc97fac0cb00a48fe676/tumblr_inline_pamkf7AfPf1s2a9fg_500.gif')
         embed.set_footer(text='@~ powered by UwUntu')
@@ -240,7 +292,7 @@ async def rafflelist (ctx, BLOCKCHAIN):
             count_tickets += 1
         else: break
     
-    desc = 'Here lists the participating rafflers, the next drawing is Saturday (6/10) at 6pm EST!\n\n'
+    desc = 'Here lists the participating rafflers, the next drawing is Saturday (8/12) at 7pm EST!\n\n'
 
     desc += '\u3000\u3000\u3000\u3000\u2000 # \u3000 Name\n'
     count = 1

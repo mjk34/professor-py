@@ -1,5 +1,5 @@
-import discord, block, blockchain, random, os
-from commands.helper import today, getName
+import block, blockchain
+from commands.helper import today
 
 def pushBlock(block, BLOCKCHAIN):
     """Update Blockchain"""
