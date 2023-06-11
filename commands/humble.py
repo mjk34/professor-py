@@ -74,6 +74,23 @@ async def chaos(ctx, client, BLOCKCHAIN):
     userId1, userName1 = candidates[0][0], candidates[0][1] # the hated one
     userId2, userName2 = candidates[1][0], candidates[1][1] # the favored one
 
+    """Check if User 1 has a shield"""
+    shield = 0
+    if user.getShieldCount(userId1, BLOCKCHAIN) > 0:
+        server_bonus = user.getServerBonus(BLOCKCHAIN)
+        shield = 200 * (int(server_bonus/3) + 1)
+
+        """Consume One Shield"""
+        shield_block = block.Block(
+            user = userId1,
+            name = userName1,
+            timestamp = today(),
+            description = f'-Shield',
+            data = 0
+        )
+
+        pushBlock(shield_block, BLOCKCHAIN)
+
     if luck >= 0 and luck < 0.15:
         """Humble gives his own creds to the user"""
         print(f"Humble gives {creds} to {userId2}")
@@ -112,19 +129,28 @@ async def chaos(ctx, client, BLOCKCHAIN):
         print(f"Humble moves {creds} from {userId1} to {userId2}")
 
         """Generate new Blocks"""
+        data1 = 0
+        if -creds + shield >= 0: data1 = 0
+        else: data1 = -creds + shield
+
         new_block1 = block.Block(
             user = userId1,
             name = userName1,
             timestamp = today(),
             description = f'~Taken by Humble',
-            data = -creds
+            data = data1
         )
+
+        data2 = 0
+        if creds - shield <= 0: data2 = 0
+        else: data2 = -creds + shield
+
         new_block2 = block.Block(
             user = userId2,
             name = userName2,
             timestamp = today(),
             description = f'~Given by Humble',
-            data = creds
+            data = data2
         )
 
         """Update Blockchain"""
@@ -144,25 +170,43 @@ async def chaos(ctx, client, BLOCKCHAIN):
         ).set_image(url='https://c.tenor.com/JHsVtTnvQ48AAAAC/tenor.gif')
         embed.set_footer(text='@~ powered by UwUntu')
         await ctx.send(embed=embed)
+            
+        if shield > 0:
+            embed2 = discord.Embed(
+                title = f'Shield Cracked',
+                description = f'<@{userId1}>\'s Shield safeguarded {shield} Creds from Humble.',
+                color = 16711680   
+            ).set_image(url='https://31.media.tumblr.com/85b421f4184e976268a22e64ca90481b/tumblr_inline_noz3mbubgC1rh9lcd_500.gif')
+            embed2.set_footer(text='@~ powered by UwUntu')
+            await ctx.send(embed=embed2)
 
     if luck >= 0.80 and luck < 1.0: 
         """Humble takes a random user's creds"""
         print(f"Humble takes {creds} from {userId1}")
 
         """Generate new Blocks"""
+        data1 = 0
+        if creds - shield <= 0: data1 = 0
+        else: data1 = creds - shield
+
         new_block1 = block.Block(
             user = HUMBLE,
             name = humble_name,
             timestamp = today(),
             description = f'~Taken from {userName1}',
-            data = creds
+            data = data1
         )
+
+        data2 = 0
+        if -creds + shield >= 0: data2 = 0
+        else: data2 = -creds + shield
+        
         new_block2 = block.Block(
             user = userId1,
             name = userName1,
             timestamp = today(),
             description = f'~Lost to Humble',
-            data = -creds
+            data = data2
         )
 
         """Update Blockchain"""
@@ -177,3 +221,12 @@ async def chaos(ctx, client, BLOCKCHAIN):
         ).set_image(url='https://pa1.narvii.com/6306/e69ecf1e4912220c77f1dd9b0e710dedb26639b0_hq.gif')
         embed.set_footer(text='@~ powered by UwUntu')
         await ctx.send(embed=embed) 
+    
+        if shield > 0:
+            embed2 = discord.Embed(
+                title = f'Shield Cracked',
+                description = f'<@{userId1}>\'s Shield safeguarded {shield} Creds from Humble.',
+                color = 16711680   
+            ).set_image(url='https://31.media.tumblr.com/85b421f4184e976268a22e64ca90481b/tumblr_inline_noz3mbubgC1rh9lcd_500.gif')
+            embed2.set_footer(text='@~ powered by UwUntu')
+            await ctx.send(embed=embed2)

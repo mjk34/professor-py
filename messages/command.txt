@@ -34,3 +34,5 @@ Total rating from all clips
 !! GOD COMMAND: GIVE A USER A STAT LEVEL !!
 Input "Single" for 1 pull and "Multi" for 10 pulls
 Combine 3 Torn Tickets into 1 full Ticket
+Use 1 Token to deploy a shield
+Use 1 Token to hire an attack on someone

@@ -8,7 +8,7 @@ from discord_slash.utils.manage_commands import create_option
 
 from commands.activity import messageXP
 from commands.cmd import ping, anime, pong
-from commands.creds import daily, wallet, give, handout, take, snoop
+from commands.creds import daily, wallet, give, handout, take, snoop, deploy_shield, deploy_attack
 from commands.games import submitClip, review
 from commands.god import hand_all, take_level, give_level, take_tickets
 from commands.gpt import gpt_string
@@ -212,6 +212,15 @@ async def _(ctx:SlashCommand, amount:int):
              create_option(name='rating', description=CMD_DESC[29], option_type=4, required=True)])
 async def _(ctx:SlashCommand, reciever: str, rating: int):
     await review(ctx, reciever, rating, client, BLOCKCHAIN)
+
+@slash.slash(name='shield', description=CMD_DESC[36], guild_ids=[GUILD_ID])
+async def _(ctx:SlashCommand):
+    await deploy_shield(ctx, BLOCKCHAIN)
+
+@slash.slash(name='attack', description=CMD_DESC[37], guild_ids=[GUILD_ID],
+    options=[create_option(name='target', description=CMD_DESC[8], option_type=3, required=True)])
+async def _(ctx:SlashCommand, target: str):
+    await deploy_attack(ctx, target, client, BLOCKCHAIN)
 
 """Special Case Commands"""
 @slash.slash(name='bless', description=CMD_DESC[30], guild_ids=[GUILD_ID],

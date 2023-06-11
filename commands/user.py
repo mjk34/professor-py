@@ -214,7 +214,7 @@ def getTopIds(creds, HUMBLE, BLOCKCHAIN) -> list:
     leaderboard.sort(key = lambda x: x[2], reverse=True) 
 
     user1 = random.randint(0, len(leaderboard[:10]) - 1)
-    user2 = random.randint(user1 + 1, len(leaderboard[:11]) - 1)
+    user2 = random.randint(user1 + 1, len(leaderboard[:10]) - 1)
 
     return [leaderboard[user1], leaderboard[user2]]
 
@@ -287,12 +287,10 @@ def getServerBonus(BLOCKCHAIN) -> int:
         leaderboard.append([user_id, user_bonus + user_dex])
         
     leaderboard.sort(key = lambda x: x[1], reverse=True)
-    # print(leaderboard[:10])
-    # print(f'Highest bonus stack is: {leaderboard[0][1]}')
 
     return leaderboard[0][1]
 
-def totalTokens(user_id, BLOCKCHAIN)-> int:
+def totalTokens(user_id, BLOCKCHAIN) -> int:
     if len(BLOCKCHAIN.chain) == 1: return 0
 
     desc, desc1, count = 'Token', '-Token', 0
@@ -304,11 +302,24 @@ def totalTokens(user_id, BLOCKCHAIN)-> int:
                 count -= 1
     return count
 
-def totalTornTickets(user_id, BLOCKCHAIN)-> int:
+def totalTornTickets(user_id, BLOCKCHAIN) -> int:
     if len(BLOCKCHAIN.chain) == 1: return 0
 
     desc, desc1, count = 'Torn Ticket', '-Torn Ticket', 0
     for block in BLOCKCHAIN.chain[1:]:
+        if block.getUser() == user_id:
+            if block.getDesc() == desc:
+                count += 1
+            if block.getDesc() == desc1:
+                count -= 1
+    return count
+
+def getShieldCount(user_id, BLOCKCHAIN) -> int:
+    if len(BLOCKCHAIN.chain) == 1: return 0
+
+    desc, desc1, count = 'Shield', '-Shield', 0
+    for block in BLOCKCHAIN.chain[1:]:
+        if checkMonday(block.getTime()) == False: continue
         if block.getUser() == user_id:
             if block.getDesc() == desc:
                 count += 1

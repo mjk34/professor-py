@@ -26,7 +26,10 @@ HBOT = 904417820899700756
 async def daily (ctx, client, BLOCKCHAIN):
     """1. Users can generate uwuCreds based on rng
        2. Usage is checked to function once per day
-       3. Blockchain will be validated, new block will be added to end of Blockchain"""
+       3. rng will scale based on server_bonus level
+       4. Blockchain will be validated, new block will be added to end of Blockchain
+       5. Users will be given 2 WISHes
+       6. Humble Love will be checked"""
        
     id, name = ctx.author.id, ctx.author.name
     """Check if the user has already done their daily"""
@@ -77,7 +80,8 @@ async def daily (ctx, client, BLOCKCHAIN):
 
     read = ''
     read += dailyFortune()
-    
+
+    """Generate Description"""
     desc = f'{status} **+{fortune}** creds were added to your *Wallet*!\n'
     if bonus > 0:
         desc += f'From **+{bonus}** *Bonus*, you get an additional **+{bonus*multiplier}** creds!\n'
@@ -110,9 +114,12 @@ async def daily (ctx, client, BLOCKCHAIN):
 
 """Allow users to check out much uwuCreds they have accumulated"""
 async def wallet (ctx, BLOCKCHAIN, ACTIVCHAIN):
-    """1. Users can view the total amount of uwuCreds they have
-       2. Users can view the total amount of tickets they have
-       3. Users can view daily counters for /uwu and submissions"""
+    """1. Users can view the total amount of CREDs they have
+       2. Users can view the total amount of TICKETs they have
+       3. Users can view DAILY counters for /uwu, SUBMITs and TOKENs
+       4. Users can view Activity Level and next level XP
+       5. Users can view WISH count, Pity and if they are Guarenteed
+       6. Users can view counters for STARs, DARK STARs, and REFORGERs"""
      
     """Read Blockchain and return user total"""  
     id = ctx.author.id
@@ -135,6 +142,7 @@ async def wallet (ctx, BLOCKCHAIN, ACTIVCHAIN):
 
     user_subs = user.totalSubsWeek(id, BLOCKCHAIN)
     user_claim = user.claimedCount(id, BLOCKCHAIN)
+    user_shield = user.getShieldCount(id, BLOCKCHAIN)
     
     stamina = getStat(id, stats[1], BLOCKCHAIN)
 
@@ -155,7 +163,7 @@ async def wallet (ctx, BLOCKCHAIN, ACTIVCHAIN):
     else: 
         desc += 'Guarenteed:\u2000**No**\n\n'
 
-    desc += f'Tokens:\u2000**{user_tokens}**\u3000 Torn Tickets:\u2000**{user_torn}**\n'
+    desc += f'Tokens:\u2000**{user_tokens}**\u3000Shields:\u2000**{user_shield}**\u3000Torn Tickets:\u2000**{user_torn}**\n'
     desc += f'Stars:\u2000**{user_stars}**\u3000 Dark Stars:\u2000**{user_dstars}**\u3000Reforgers:\u2000**{user_reforger}**\n\n'
 
     desc += f'Total Creds:\u3000 **{user_creds}**\u3000 Total Tickets: \u2000**{user_tickets}**\n'
@@ -169,8 +177,155 @@ async def wallet (ctx, BLOCKCHAIN, ACTIVCHAIN):
     embed.set_footer(text='@~ powered by UwUntu')
     await ctx.send(embed=embed)
    
+"""Allow users to deploy a shield that insures against humble and steals"""
+async def deploy_shield(ctx, BLOCKCHAIN):
+    """1. Blockchain will be evaluated, user tokens is checked
+       2. Blockchain will be validated, new blocks will be added to the end of Blockchain"""
+    
+    id, name = ctx.author.id, ctx.author.name
+
+    """Check if user has at least one TOKEN to deploy"""
+    if user.totalTokens(id, BLOCKCHAIN) < 1:
+        embed = discord.Embed(
+            title = f'Deploy Shield',
+            description = f'You need at least one Token to Deploy a Shield!',
+            color = 6053215    
+        ).set_thumbnail(url=ctx.author.avatar_url)
+        embed.set_footer(text='@~ powered by UwUntu')
+        await ctx.send(embed=embed)
+        return
+
+    """Generate new Block"""
+    shield_block = block.Block(
+        user = id,
+        name = name,
+        timestamp = today(),
+        description = 'Shield',
+        data = 0
+    )
+
+    token_block = block.Block(
+        user = id,
+        name = name,
+        timestamp = today(),
+        description = '-Token',
+        data = 0
+    ) 
+
+    pushBlock(shield_block, BLOCKCHAIN)
+    pushBlock(token_block, BLOCKCHAIN)
+
+    """Return Message"""
+    embed = discord.Embed(
+        title = f'Deploy Shield',
+        description = f'Token Accepted, Shield is Active. \n\nNOTE: *Shields will last until Monday. 1 Shield will automatically protect against 1 Humble Love or Player Steal*',
+        color = 2352682    
+    ).set_image(url='https://pa1.narvii.com/7085/63929295629e463986e22d6976b74ba1c350d073r1-500-281_hq.gif')
+    embed.set_footer(text='@~ powered by UwUntu')
+    await ctx.send(embed=embed)
+
+"""Allow users to deploy an attack that steals another players creds"""
+async def deploy_attack(ctx, target, client, BLOCKCHAIN):
+    id, name = ctx.author.id, ctx.author.name
+    server_bonus = user.getServerBonus(BLOCKCHAIN)
+
+    """Check if user has at least one TOKEN to deploy"""
+    if user.totalTokens(id, BLOCKCHAIN) < 1:
+        embed = discord.Embed(
+            title = f'Deploy Shield',
+            description = f'You need at least one Token to Deploy a Shield!',
+            color = 6053215    
+        ).set_thumbnail(url=ctx.author.avatar_url)
+        embed.set_footer(text='@~ powered by UwUntu')
+        await ctx.send(embed=embed)
+        return
+
+    """Parse the Target id from <@id>"""
+    target_id = target
+    for ch in filler: target_id = target_id.replace(ch, '')
+    target_id = int(target_id)
+
+    target_name = await getName(target_id, client)
+
+    """Check if target has a shield"""
+    shield = 0
+    if user.getShieldCount(target_id, BLOCKCHAIN) > 0:
+        server_bonus = user.getServerBonus(BLOCKCHAIN)
+        shield = 200 * (int(server_bonus/3) + 1)
+
+        """Consume One Shield"""
+        shield_block = block.Block(
+            user = target_id,
+            name = target_name,
+            timestamp = today(),
+            description = f'-Shield',
+            data = 0
+        )
+
+        pushBlock(shield_block, BLOCKCHAIN)
+
+    """Calculate attack power"""
+    attack = 275 * (int(server_bonus/3) + 1)
+
+
+    """Generate new Blocks"""
+    data1 = 0
+    if attack - shield <= 0: data1 = 0
+    else: data1 = attack - shield
+
+    attack_block = block.Block(
+        user = id,
+        name = name,
+        timestamp = today(),
+        description = f'Attack',
+        data = data1
+    )
+
+    data2 = 0
+    if shield - attack >= 0: data2 = 0
+    else: data2 = shield - attack
+
+    target_block = block.Block(
+        user = target_id,
+        name = target_name,
+        timestamp = today(),
+        description = f'Attack by {name}',
+        data = data2
+    )
+
+    token_block = block.Block(
+        user = id,
+        name = name,
+        timestamp = today(),
+        description = '-Token',
+        data = 0
+    )
+
+    """Update Blockchain"""
+    pushBlock(attack_block, BLOCKCHAIN)
+    pushBlock(target_block, BLOCKCHAIN)
+    pushBlock(token_block, BLOCKCHAIN)
+
+    """Return Message"""
+    embed = discord.Embed(
+        title = f'Deploy Attack',
+        description = f'Token Accepted, You hired an attack against <@{target_id}>. \n\nYour goons siphoned {data1} Creds!',
+        color = 2352682    
+    ).set_image(url='https://c.tenor.com/LeKYlO4APnwAAAAC/tenor.gif')
+    embed.set_footer(text='@~ powered by UwUntu')
+    await ctx.send(embed=embed)
+
+    if shield > 0:
+        embed2 = discord.Embed(
+            title = f'Shield Cracked',
+            description = f'<@{target_id}>\'s Shield safeguarded {shield} Creds from Humble.',
+            color = 16711680   
+        ).set_image(url='https://31.media.tumblr.com/85b421f4184e976268a22e64ca90481b/tumblr_inline_noz3mbubgC1rh9lcd_500.gif')
+        embed2.set_footer(text='@~ powered by UwUntu')
+        await ctx.send(embed=embed2)
+
 """Allow users to give their uwuCreds to another user""" 
-async def give (ctx, reciever, client, BLOCKCHAIN):
+async def give(ctx, reciever, client, BLOCKCHAIN):
     """1. Blockchain will be evaluated, user total is checked
        2. Blockchain will be validated, new blocks will be added to the end of Blockchain"""
 
