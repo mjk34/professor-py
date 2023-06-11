@@ -7,7 +7,7 @@ from discord_slash import SlashCommand, SlashContext
 from discord_slash.utils.manage_commands import create_option
 
 from commands.activity import messageXP
-from commands.cmd import ping, anime, pong
+from commands.cmd import ping, anime, pong, help
 from commands.creds import daily, wallet, give, handout, take, snoop, deploy_shield, deploy_attack
 from commands.games import submitClip, review
 from commands.god import hand_all, take_level, give_level, take_tickets
@@ -113,6 +113,9 @@ async def _(ctx:SlashContext): await pong(ctx)
 
 @slash.slash(name='anime', description=CMD_DESC[2], guild_ids=[GUILD_ID])
 async def _(ctx:SlashContext): await anime(ctx)
+
+@slash.slash(name='help', description=CMD_DESC[38], guild_ids=[GUILD_ID])
+async def _(ctx:SlashContext): await help(ctx)
 
 """Blockchin dependent commands"""
 @slash.slash(name='buy_ticket', description=CMD_DESC[3], guild_ids=[GUILD_ID],

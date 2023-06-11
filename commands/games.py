@@ -124,7 +124,7 @@ async def review(ctx, reciever, rating, client, BLOCKCHAIN):
             color = 16749300    
         ).set_image(url='https://3.bp.blogspot.com/-SmBYkUqPhOE/Vjq6UpF5StI/AAAAAAAAYsI/b1iXLlfx3ys/s640/food%2Bwars%2B1.gif')
         embed.set_footer(text='@~ powered by UwUntu')
-        await ctx.send(embed=embed)
+        await ctx.send(f'<@{reciever_id}>', embed=embed)
     else: 
         embed = discord.Embed(
             title = f'Handout',

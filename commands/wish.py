@@ -10,45 +10,32 @@ async def wish(ctx, mode, BLOCKCHAIN):
     """Check for wish mode"""
     wish_count = user.wishCount(id, BLOCKCHAIN)
     max_iteration = 0
-    # if mode.lower() == 'single':
-    #     """Check if user has at least 1 wish"""
-    #     if wish_count < 1: 
-    #         embed = discord.Embed(
-    #             title = f'Wish',
-    #             description = f'Insufficient wishes. Require at least 1 wish for a Single Pull. (wish count: {wish_count}).',
-    #             color = 6053215    
-    #         ).set_thumbnail(url=ctx.author.avatar_url)
-    #         embed.set_footer(text='@~ powered by UwUntu')
-    #         await ctx.send(embed=embed)
-    #         return
-    #     else: max_iteration = 1
-
-    # elif mode.lower() == 'multi':
-    #     """Check if user has at least 10 wish"""
-    #     if wish_count < 10: 
-    #         embed = discord.Embed(
-    #             title = f'Wish',
-    #             description = f'Insufficient wishes. Require at least 10 wishes for a Multi Pull. (wish count: {wish_count}).',
-    #             color = 6053215    
-    #         ).set_thumbnail(url=ctx.author.avatar_url)
-    #         embed.set_footer(text='@~ powered by UwUntu')
-    #         await ctx.send(embed=embed)
-    #         return
-    #     else: max_iteration = 10
-
-    # else:
-    #     embed = discord.Embed(
-    #         title = f'Wish',
-    #         description = f'Please use \'Single\' for 1 pull and \'Multi\' for 10 pulls...',
-    #         color = 6053215    
-    #     ).set_thumbnail(url=ctx.author.avatar_url)
-    #     embed.set_footer(text='@~ powered by UwUntu')
-    #     await ctx.send(embed=embed)
-    #     return
     if mode.lower() == 'single':
-        max_iteration = 1
+        """Check if user has at least 1 wish"""
+        if wish_count < 1: 
+            embed = discord.Embed(
+                title = f'Wish',
+                description = f'Insufficient wishes. Require at least 1 wish for a Single Pull. (wish count: {wish_count}).',
+                color = 6053215    
+            ).set_thumbnail(url=ctx.author.avatar_url)
+            embed.set_footer(text='@~ powered by UwUntu')
+            await ctx.send(embed=embed)
+            return
+        else: max_iteration = 1
+
     elif mode.lower() == 'multi':
-        max_iteration = 10
+        """Check if user has at least 10 wish"""
+        if wish_count < 10: 
+            embed = discord.Embed(
+                title = f'Wish',
+                description = f'Insufficient wishes. Require at least 10 wishes for a Multi Pull. (wish count: {wish_count}).',
+                color = 6053215    
+            ).set_thumbnail(url=ctx.author.avatar_url)
+            embed.set_footer(text='@~ powered by UwUntu')
+            await ctx.send(embed=embed)
+            return
+        else: max_iteration = 10
+
     else:
         embed = discord.Embed(
             title = f'Wish',
@@ -188,7 +175,7 @@ def pull(total_pity, pity, guarenteed) -> list:
     
     # 5* probability check -------------------------------------
     item = None
-    if total_pity < 74:
+    if total_pity < 73:
         if random.random() < 0.006:
             # Hit the 5*, WOOOT
             if guarenteed:
@@ -198,8 +185,9 @@ def pull(total_pity, pity, guarenteed) -> list:
             else:
                 item = ['Pull', '5*', 'Dark Star']
         
-    if total_pity >= 74:
-        if random.random() < 0.06:
+    if total_pity >= 73 and total_pity < 89:
+        probability = 0.006 + 0.06*(total_pity - 72)
+        if random.random() < probability:
             # Hit the 5*, less WOOOT
             if guarenteed:
                 item = ['Pull', '5*', 'Star'] 

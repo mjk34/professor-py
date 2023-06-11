@@ -26,7 +26,7 @@ async def pong(ctx):
     await ctx.send(embed=embed)
 
 """Requests for a link to Anichart to see the in season running anime"""
-async def anime (ctx):
+async def anime(ctx):
     content, f = fetchContent('anichart.txt')
     embed = discord.Embed(
         title = f'Current Anime',
@@ -38,3 +38,24 @@ async def anime (ctx):
 
     await ctx.send(embed=embed)
     f.close()
+
+"""Display the list of Authorized Commands to users"""
+async def help(ctx):
+    commands = fetchContentList('help.txt')
+
+    desc = f'**General Commands**: \n---------------------------------\n'
+    for cmd in commands[:len(commands) - 4]:
+        desc += f'{cmd}\n'
+    
+    desc += '\n**Moderator Commands**: \n---------------------------------\n'
+    for cmd in commands[len(commands) - 4:]:
+        desc += f'{cmd}\n'
+
+    embed = discord.Embed(
+        title = f'Help',
+        description = desc,
+        color = 6943230
+    ).set_thumbnail(url=ctx.guild.icon_url)
+    embed.set_footer(text='@~ powered by UwUntu')
+    
+    await ctx.send(embed=embed)

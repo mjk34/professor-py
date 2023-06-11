@@ -122,7 +122,7 @@ async def chaos(ctx, client, BLOCKCHAIN):
             color = 16700447    
         ).set_image(url='https://c.tenor.com/ieCcnZCXV_QAAAAC/tenor.gif')
         embed.set_footer(text='@~ powered by UwUntu')
-        await ctx.send(embed=embed)
+        await ctx.send(f'<@{userId2}>', embed=embed)
 
     if luck >= 0.15 and luck < 0.80:
         """Humble takes one random user's creds and gives it to another random user"""
@@ -169,7 +169,7 @@ async def chaos(ctx, client, BLOCKCHAIN):
             color = 16700447    
         ).set_image(url='https://c.tenor.com/JHsVtTnvQ48AAAAC/tenor.gif')
         embed.set_footer(text='@~ powered by UwUntu')
-        await ctx.send(embed=embed)
+        await ctx.send(f'<@{userId1}><@{userId2}>', embed=embed)
             
         if shield > 0:
             embed2 = discord.Embed(
@@ -178,7 +178,7 @@ async def chaos(ctx, client, BLOCKCHAIN):
                 color = 16711680   
             ).set_image(url='https://31.media.tumblr.com/85b421f4184e976268a22e64ca90481b/tumblr_inline_noz3mbubgC1rh9lcd_500.gif')
             embed2.set_footer(text='@~ powered by UwUntu')
-            await ctx.send(embed=embed2)
+            await ctx.send(f'<@{userId1}>', embed=embed2)
 
     if luck >= 0.80 and luck < 1.0: 
         """Humble takes a random user's creds"""
@@ -220,7 +220,7 @@ async def chaos(ctx, client, BLOCKCHAIN):
             color = 16700447    
         ).set_image(url='https://pa1.narvii.com/6306/e69ecf1e4912220c77f1dd9b0e710dedb26639b0_hq.gif')
         embed.set_footer(text='@~ powered by UwUntu')
-        await ctx.send(embed=embed) 
+        await ctx.send(f'<@{userId1}>', embed=embed) 
     
         if shield > 0:
             embed2 = discord.Embed(
@@ -229,4 +229,4 @@ async def chaos(ctx, client, BLOCKCHAIN):
                 color = 16711680   
             ).set_image(url='https://31.media.tumblr.com/85b421f4184e976268a22e64ca90481b/tumblr_inline_noz3mbubgC1rh9lcd_500.gif')
             embed2.set_footer(text='@~ powered by UwUntu')
-            await ctx.send(embed=embed2)
+            await ctx.send(f'<@{userId1}>', embed=embed2)

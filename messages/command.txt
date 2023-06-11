@@ -1,11 +1,11 @@
 Ping Professor to see if it's online
 Pong Professor to see if it's online
-Check the current running anime season and when the next episode comes out!
+Check the current running anime season on AniList!
 Buy tickets for /raffle, check /raffle for price or how many you can buy
 How many tickets would you like? (Input -1 to buy max)
-Claim your daily and recieve your wishes (Once a day)
+Claim your daily and recieve two wishes (Once a day)
 Check how many creds, wishes, stars or submits you have
-Give someone 500 creds, max 1 donation per person
+Give someone 500 of your creds, max 1 donation per person
 @username | example: @uwuntu
 MOD COMMAND: GIVE NEW CREDS TO A USER [MAX 10,000]
 Amount of creds
@@ -14,19 +14,19 @@ Submit a game clip for clip night (First saturday of every month!)
 The name of your clip
 The link to your clip, either to medal or youtube etc
 Show the top wealthiest users in the server
-MOD COMMAND: GIVE A SUBMIT COUNT TO A USER (MAX 1)
+MOD COMMAND: GIVE A SUBMIT COUNT TO A USER
 After submitting 2 clips, claim a bonus amount of creds (Once a week)
 Check the current raffle cycle and who bought tickets!
 Sneakpeak at someone else's creds, not 100% accurate
 Check your stat levels and benefits
-Buy a stat level with creds
+Buy a stat level with creds, cost is listed in /profile
 Name of the stat: VIT, STA, STR, DEX, EGO
-FUCK IT WE BALLLLL
+FUCK IT WE BALLLLL! Wish for STARS and ITEMS
 Forge a "STAR" for a free stat upgrade, not limited by level cap
 Purify a "DARK STAR" into a "STAR", once used, the reforger breaks
 Devour STARS to wager a percent of your total creds based on EGO
 Number of STARS you want to consume, each star is worth 20%
-Give a user the total review from this clip night
+MOD COMMAND: GIVE A USER THE TOTAL REVIEW FROM THIS CLIP NIGHT
 Total rating from all clips
 !! GOD COMMAND: BESTOW A USER THE POWER OF THE STAR !!
 !! GOD COMMAND: GIVE ALL USERS IN THE BLOCKCHAIN CREDS !!
@@ -34,5 +34,6 @@ Total rating from all clips
 !! GOD COMMAND: GIVE A USER A STAT LEVEL !!
 Input "Single" for 1 pull and "Multi" for 10 pulls
 Combine 3 Torn Tickets into 1 full Ticket
-Use 1 Token to deploy a shield
-Use 1 Token to hire an attack on someone
+Use a token to deploy a shield to protect your creds from attacks.
+Use a token to hire an attack to steal someone elses creds.
+Show all of Professor's commands

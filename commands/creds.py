@@ -33,15 +33,15 @@ async def daily (ctx, client, BLOCKCHAIN):
        
     id, name = ctx.author.id, ctx.author.name
     """Check if the user has already done their daily"""
-    # if user.hasDaily(id, BLOCKCHAIN) == False:
-    #     embed = discord.Embed(
-    #         title = f'Daily',
-    #         description = f'You next **/uwu** is tomorrow.',
-    #         color = 6053215    
-    #     ).set_thumbnail(url=ctx.author.avatar_url)
-    #     embed.set_footer(text='@~ powered by UwUntu')
-    #     await ctx.send(embed=embed)
-    #     return
+    if user.hasDaily(id, BLOCKCHAIN) == False:
+        embed = discord.Embed(
+            title = f'Daily',
+            description = f'You next **/uwu** is tomorrow.',
+            color = 6053215    
+        ).set_thumbnail(url=ctx.author.avatar_url)
+        embed.set_footer(text='@~ powered by UwUntu')
+        await ctx.send(embed=embed)
+        return
         
     bonus = int(user.getDailyCount(id, BLOCKCHAIN) / 7)
     server_bonus = getServerBonus(BLOCKCHAIN)
@@ -232,8 +232,8 @@ async def deploy_attack(ctx, target, client, BLOCKCHAIN):
     """Check if user has at least one TOKEN to deploy"""
     if user.totalTokens(id, BLOCKCHAIN) < 1:
         embed = discord.Embed(
-            title = f'Deploy Shield',
-            description = f'You need at least one Token to Deploy a Shield!',
+            title = f'Deploy Attack',
+            description = f'You need at least one Token to Deploy an Attack!',
             color = 6053215    
         ).set_thumbnail(url=ctx.author.avatar_url)
         embed.set_footer(text='@~ powered by UwUntu')
@@ -322,7 +322,7 @@ async def deploy_attack(ctx, target, client, BLOCKCHAIN):
             color = 16711680   
         ).set_image(url='https://31.media.tumblr.com/85b421f4184e976268a22e64ca90481b/tumblr_inline_noz3mbubgC1rh9lcd_500.gif')
         embed2.set_footer(text='@~ powered by UwUntu')
-        await ctx.send(embed=embed2)
+        await ctx.send(f'<@{target_id}>', embed=embed2)
 
 """Allow users to give their uwuCreds to another user""" 
 async def give(ctx, reciever, client, BLOCKCHAIN):
@@ -385,7 +385,7 @@ async def give(ctx, reciever, client, BLOCKCHAIN):
         color = 16700447    
     ).set_image(url='https://2.bp.blogspot.com/-UMkbGppX02A/UwoAVpunIMI/AAAAAAAAGxo/W9a0M4njhOQ/s1600/4363+-+animated_gif+k-on+k-on!+k-on!!+moe+nakano_azusa.gif')
     embed.set_footer(text='@~ powered by UwUntu')
-    await ctx.send(embed=embed)
+    await ctx.send(f'<@{reciever_id}>', embed=embed)
 
     """Give One Wish"""
     pushWish(id, ctx.author.name, BLOCKCHAIN) 
@@ -430,7 +430,7 @@ async def handout(ctx, reciever, amount, client, BLOCKCHAIN):
             color = 16749300    
         ).set_image(url='https://i.imgur.com/zVdLFbp.gif')
         embed.set_footer(text='@~ powered by UwUntu')
-        await ctx.send(embed=embed)
+        await ctx.send(f'<@{reciever_id}>', embed=embed)
     else: 
         embed = discord.Embed(
             title = f'Handout',
@@ -480,7 +480,7 @@ async def take(ctx, reciever, amount, client, BLOCKCHAIN):
             color = 16749300    
         ).set_image(url='https://i.gifer.com/7Z7b.gif')
         embed.set_footer(text='@~ powered by UwUntu')
-        await ctx.send(embed=embed)
+        await ctx.send(f'<@{reciever_id}>', embed=embed)
     else: 
         embed = discord.Embed(
             title = f'Take',
@@ -520,4 +520,4 @@ async def snoop (ctx, target, client, BLOCKCHAIN):
     ).set_thumbnail(url=target_icon)
     embed.set_footer(text='@~ powered by UwUntu')
     embed.set_image(url='https://c.tenor.com/LBkGAkraDxQAAAAC/vtuber-hololive.gif')
-    await ctx.send(embed=embed)
+    await ctx.send(f'<@{target_id}>', embed=embed)
