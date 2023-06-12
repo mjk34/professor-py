@@ -29,11 +29,14 @@ async def profile (ctx, BLOCKCHAIN):
     reforger = getReforger(id, BLOCKCHAIN)
     dark_star = getDarkStar(id, BLOCKCHAIN)
 
+    tokens = user.totalTokens(id, BLOCKCHAIN)
+    torn_tickets = user.totalTornTickets(id, BLOCKCHAIN)
+
     vitality = getStat(id, stats[0], BLOCKCHAIN)
     vit_scale = 0.1*vitality - pow(vitality, (0.008*vitality)) + 1
 
-    vit_str = f' **+{int(100*vit_scale)}%** *bonus from DAILY fortunes (ignores bonus stacks)*\n' 
-    vit_str += f' \u3000  \u3000  \u3000 **+{25*vitality}** *per BONUS stack, improves DAILY and CLAIM*'
+    vit_str = f' **+{int(100*vit_scale)}%** *bonus from DAILY fortunes*\n' 
+    vit_str += f' \u3000  \u3000  \u3000 **+{25*vitality}** *per BONUS stack, improves DAILY & CLAIM*'
 
     stamina = getStat(id, stats[1], BLOCKCHAIN)
     if stamina == 0: 
@@ -80,6 +83,8 @@ async def profile (ctx, BLOCKCHAIN):
     desc += f'You have **{star} Stars**, bring them to the Starforger with `/forge` to upgrade a core stat. \n\n'
     desc += f'You have **{reforger} Reforgers**, you can use `/reforge` to turn **Dark Stars** into **Stars**. \n\n'
     desc += f'You have **{dark_star} Dark Stars**, **Dark Stars** must be purified to be used. \n\n'
+    desc += f'You have **{torn_tickets} Torn Tickets**, you can use `/stitch_ticket` to combine 3 of them into a full ticket. Stitched tickets won\'t increase your next ticket cost.\n\n'
+    desc += f'You have **{tokens} Tokens**, you can `/attack` other users to steal their creds, or `/shield` to protect your own, shields last until the week resets or when they break.\n\n'
     desc += f'Check out the Full Stat Sheet Here: https://discord.com/channels/859993171156140061/938853545992667176/1116810982946242691\n\n'
 
     """Return Message"""
