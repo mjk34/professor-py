@@ -2,7 +2,6 @@ import openai
 import discord, block, blockchain, random, os
 
 from dotenv import load_dotenv
-from commands.helper import today, getIcon
 
 load_dotenv()
 GPT_KEY = os.getenv('API_KEY')

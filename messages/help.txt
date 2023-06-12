@@ -1,0 +1,32 @@
+**ping**: Ping Professor to see if it's online.
+**anime**: Check the current anime season on AniList!
+**help**: Show all of Professor's commands.
+
+**uwu**: Claim your daily and recieve two wishes.
+**wallet**: Check how much creds and items you have.
+**donate**: Give someone 500 of your creds.
+**snoop**: Sneakpeak at someone else's creds.
+
+**submit_clip**: Submit a game clip for Clip Night!
+**claim_bonus**: After 2 submits, claim a weekly bonus.
+
+**profile**: Check your stat levels and benefits.
+**upgrade**: Buy a stat level with creds, see `/profile`.
+
+**consume**: Devour STARS to gamble on your EGO.
+**forge**: Forge a "STAR" for a free stat upgrade.
+**reforge**: Purify a "DARK STAR", requires a reforger.
+
+**wish**: Wish for STARS and ITEMS.
+**attack**: Use a token to hire an attack to steal creds.
+**shield**: Use a token to deploy a shield to protect your creds.
+
+**leaderboard**: Show the biggest birds in the server.
+**raffle**: Check the next Battle Pass Raffle!
+**buy_ticket**: Buy tickets for BP Raffles, see `/raffle`.
+**stitch_ticket**: Combine 3 Torn Tickets into 1 Ticket.
+
+**give_submit**: Give one submit count for the week.
+**handout**: Generate and give new creds
+**review**: Give a clip night review.
+**take**: Take creds from someone

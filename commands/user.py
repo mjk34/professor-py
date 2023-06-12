@@ -18,17 +18,19 @@ def hasDaily(user_id, BLOCKCHAIN) -> bool:
     if date == '': return True
     return {True:False, False:True}[date == today()]
 
-def hasWish(user_id, BLOCKCHAIN) -> int:
+def wishCount(user_id, BLOCKCHAIN) -> int:
     if len(BLOCKCHAIN.chain) == 1: return 0
 
-    desc, count = 'Wish', 0
+    desc, desc1, count = 'Wish', '-Wish', 0
     for block in BLOCKCHAIN.chain[1:]:
         if block.getUser() == user_id:
             if block.getDesc() == desc:
-                if block.getTime() == today():
-                    count += 1
+                count += 1
+            if block.getDesc() == desc1:
+                count -= 1
     return count
 
+# implement this into wallet
 def getAvgDaily(user_id, BLOCKCHAIN) -> float:
     if len(BLOCKCHAIN.chain) == 1: return -1.0
     
@@ -45,7 +47,7 @@ def getAvgDaily(user_id, BLOCKCHAIN) -> float:
 """Evaluated Blockchain:
         1. find the most recent claim based on user_id
         2. check if the date difference is greater than 0"""
-def hasClaim(user_id, BLOCKCHAIN) -> int: 
+def claimedCount(user_id, BLOCKCHAIN) -> int: 
     if len(BLOCKCHAIN.chain) == 1: return 0
     
     desc, count = 'Claim Bonus', 0
@@ -86,22 +88,6 @@ def totalCreds(user_id, BLOCKCHAIN) -> int:
 
 """Evaluate Blockchain:
         1. run through each block belonging to user_id
-        2. for each block, add up all cred transactions"""
-def totalCredScore(user_id, BLOCKCHAIN) -> int:
-    if len(BLOCKCHAIN.chain) == 1: return 0
-    
-    desc, total = 'Ticket', 0
-    stats = ['Vitality', 'Stamina', 'Dexterity', 'Strength', 'Fortune', 'Star']
-    for block in BLOCKCHAIN.chain[1:]:
-        if block.getUser() == user_id:
-            if block.getDesc() == desc: continue
-            if block.getDesc() in stats: continue
-            total += block.getData()
-    
-    return int(total)
-
-"""Evaluate Blockchain:
-        1. run through each block belonging to user_id
         2. for each block, add up all ticket transactions"""
 def totalTickets(user_id, BLOCKCHAIN) -> int:
     if len(BLOCKCHAIN.chain) == 1: return 0
@@ -111,6 +97,20 @@ def totalTickets(user_id, BLOCKCHAIN) -> int:
         if block.getUser() == user_id:
             if block.getDesc() == desc:
                 total += block.getData()
+    
+    return int(total)
+
+"""Evaluate Blockchain:
+        1. run through each block belonging to user_id
+        2. for each block, add up all stitched tickets"""
+def totalStitchedTickets(user_id, BLOCKCHAIN) -> int:
+    if len(BLOCKCHAIN.chain) == 1: return 0
+    
+    desc, total = 'Stitched Ticket', 0 
+    for block in BLOCKCHAIN.chain[1:]:
+        if block.getUser() == user_id:
+            if block.getDesc() == desc:
+                total += 1
     
     return int(total)
 
@@ -133,43 +133,17 @@ def totalSubsWeek(user_id, BLOCKCHAIN) -> int:
 
 """Evaluate Blockchain:
         1. run through each block belonging to user_id
-        2. for each block, add up all submissions"""
-def totalSubs(user_id, game, BLOCKCHAIN) -> int:
+        2. for each block, add up all submissions for a user"""
+def totalSubsCount(user_id, BLOCKCHAIN) -> int:
     if len(BLOCKCHAIN.chain) == 1: return 0
     
-    desc, total = f'Submission {game}', 0
+    desc, total = f'Clip', 0
     for block in BLOCKCHAIN.chain[1:]:
         if block.getUser() == user_id:
             if block.getDesc() == desc:
                 total += 1
     
     return int(total)
-
-"""Evaluate Blockchain:
-        1. run through each block belonging to user_id
-        2. for each block, average the most recent 10 submissions
-        3. average requires a minimum of 3 submissions"""
-def averageScore(user_id, game, BLOCKCHAIN) -> float:
-    if len(BLOCKCHAIN.chain) == 1: return -1
-    
-    desc, average, submissions = f'Submission {game}', 0, []
-    for block in BLOCKCHAIN.chain[1:]:
-        if block.getUser() == user_id:
-            if block.getDesc() == desc:
-                submissions.append(block.data)
-    
-    if len(submissions) < 3: return -1
-    elif len(submissions) < 10: 
-        for score in submissions:
-            average += score
-        average = average/len(submissions)
-    else:
-        i = len(submissions) - 10
-        for score in submissions[i:]:
-            average += score
-        average = average/10
-    
-    return float(average)
 
 """Evaluate Blockchain:
         1. run through each block belonging to user_id
@@ -207,44 +181,14 @@ def getTop(BLOCKCHAIN) -> list:
         if user_id == 69: continue
         user_name = findRecentName(user_id, BLOCKCHAIN)
         user_creds = totalCreds(user_id, BLOCKCHAIN)
-        # user_tickets = totalTickets(user_id, BLOCKCHAIN)
-        # total = totalValue(user_creds, user_tickets)
         
         user_stars = getStar(user_id, BLOCKCHAIN)
-        # print(f'{user_name} {user_creds} {user_tickets} {total}')
         
-        leaderboard.append([user_name, user_creds, user_stars])
-        
+        leaderboard.append([user_name, user_creds, user_stars])  
     leaderboard.sort(key = lambda x: x[1], reverse=True) 
 
     for i in leaderboard:
         print(i)   
-    return leaderboard[:10]
-
-"""Evaluate Blockchain:
-        1. find a list of all unique user ids
-        2. for each id, get the name and average
-        3. sort the final list and return the top 10 users"""
-def getAverage(BLOCKCHAIN) -> list:
-    if len(BLOCKCHAIN.chain) == 1: return []
-    
-    unique_ids = []
-    for block in BLOCKCHAIN.chain[1:]:
-        unique_ids.append(block.getUser())
-    unique_ids = list(set(unique_ids))
-    
-    leaderboard = []
-    for user_id in unique_ids:
-        user_name = findRecentName(user_id, BLOCKCHAIN)
-
-        user_avg_val = int(averageScore(user_id, 'V', BLOCKCHAIN))
-        user_subs_val = int(totalSubs(user_id, 'V', BLOCKCHAIN))
-
-        user_avg_ow = int(averageScore(user_id, 'O', BLOCKCHAIN))
-        user_subs_ow = int(totalSubs(user_id, 'O', BLOCKCHAIN))
-        leaderboard.append([user_name, user_avg_val, user_subs_val, user_avg_ow, user_subs_ow])
-        
-    leaderboard.sort(key = lambda x: x[1], reverse=True)
     return leaderboard[:10]
 
 """Evaluate Blockchain:
@@ -263,16 +207,14 @@ def getTopIds(creds, HUMBLE, BLOCKCHAIN) -> list:
         user_name = findRecentName(user_id, BLOCKCHAIN)
         user_creds = totalCreds(user_id, BLOCKCHAIN)
         user_tickets = totalTickets(user_id, BLOCKCHAIN)
-        total = totalValue(user_creds, user_tickets)
 
         # print(f'{user_name} {user_creds} {user_tickets} {total}')
         
         leaderboard.append([user_id, user_name, user_creds])
-        
     leaderboard.sort(key = lambda x: x[2], reverse=True) 
 
     user1 = random.randint(0, len(leaderboard[:10]) - 1)
-    user2 = random.randint(user1 + 1, len(leaderboard[:11]) - 1)
+    user2 = random.randint(user1 + 1, len(leaderboard[:10]) - 1)
 
     return [leaderboard[user1], leaderboard[user2]]
 
@@ -306,44 +248,13 @@ def getRaffle(BLOCKCHAIN) -> list:
     for user_id in unique_ids:
         user_name = findRecentName(user_id, BLOCKCHAIN)
         user_tickets = totalTickets(user_id, BLOCKCHAIN)
+        user_stitched = totalStitchedTickets(user_id, BLOCKCHAIN)
 
-        if user_tickets == 0: continue
+        if user_tickets + user_stitched == 0: continue
         
-        raffle.append([user_name, user_tickets])   
+        raffle.append([user_name, user_tickets + user_stitched])   
     raffle.sort(key = lambda x: x[1], reverse=True)  
     return raffle
-
-def getDailyCount(user_id, BLOCKCHAIN) -> int:
-    if len(BLOCKCHAIN.chain) == 1: return -1
-
-    desc, count = 'Daily', 0
-    for block in BLOCKCHAIN.chain[1:]:
-        if block.getUser() == user_id:
-            if block.getDesc() == desc:
-                count += 1
-
-    return count
-
-def getLuck (BLOCKCHAIN, HUMBLE) -> list:
-    if len(BLOCKCHAIN.chain) == 1: return []
-
-    unique_ids = []
-    for block in BLOCKCHAIN.chain[1:]:
-        if block.getUser() == HUMBLE: continue
-        unique_ids.append(block.getUser())
-    unique_ids = list(set(unique_ids))
-
-    luck = []
-    for user_id in unique_ids:
-        user_name = findRecentName(user_id, BLOCKCHAIN)
-        user_avg  = getAvgDaily(user_id, BLOCKCHAIN)
-        user_daily= getDailyCount(user_id, BLOCKCHAIN)
-        humble_love= getHumbleLove(user_id, BLOCKCHAIN)
-
-        if user_daily < 5: continue
-        luck.append([user_name, user_avg, user_daily, humble_love[0], humble_love[1]])
-    luck.sort(key = lambda x: x[1], reverse=True)
-    return luck
 
 def getHumbleLove(user_id, BLOCKCHAIN) -> float:
     if len(BLOCKCHAIN.chain) == 1: return -1.0\
@@ -376,7 +287,42 @@ def getServerBonus(BLOCKCHAIN) -> int:
         leaderboard.append([user_id, user_bonus + user_dex])
         
     leaderboard.sort(key = lambda x: x[1], reverse=True)
-    print(leaderboard[:10])
-    print(f'Highest bonus stack is: {leaderboard[0][1]}')
 
     return leaderboard[0][1]
+
+def totalTokens(user_id, BLOCKCHAIN) -> int:
+    if len(BLOCKCHAIN.chain) == 1: return 0
+
+    desc, desc1, count = 'Token', '-Token', 0
+    for block in BLOCKCHAIN.chain[1:]:
+        if block.getUser() == user_id:
+            if block.getDesc() == desc:
+                count += 1
+            if block.getDesc() == desc1:
+                count -= 1
+    return count
+
+def totalTornTickets(user_id, BLOCKCHAIN) -> int:
+    if len(BLOCKCHAIN.chain) == 1: return 0
+
+    desc, desc1, count = 'Torn Ticket', '-Torn Ticket', 0
+    for block in BLOCKCHAIN.chain[1:]:
+        if block.getUser() == user_id:
+            if block.getDesc() == desc:
+                count += 1
+            if block.getDesc() == desc1:
+                count -= 1
+    return count
+
+def getShieldCount(user_id, BLOCKCHAIN) -> int:
+    if len(BLOCKCHAIN.chain) == 1: return 0
+
+    desc, desc1, count = 'Shield', '-Shield', 0
+    for block in BLOCKCHAIN.chain[1:]:
+        if checkMonday(block.getTime()) == False: continue
+        if block.getUser() == user_id:
+            if block.getDesc() == desc:
+                count += 1
+            if block.getDesc() == desc1:
+                count -= 1
+    return count

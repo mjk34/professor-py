@@ -85,10 +85,10 @@ def dailyLuck (server_bonus) -> Iterable[Union[int, str]]:
         cred_amount = 2000
         cred_status = 'You  are  the  **biggest**  *bird*.'
 
-    if int(server_bonus/3) == 1: cred_amount *= 1.25
-    if int(server_bonus/3) == 2: cred_amount *= 1.50
-    if int(server_bonus/3) == 3: cred_amount *= 1.75
-    if int(server_bonus/3) >= 4: cred_amount *= 2.00
+    if int(server_bonus/3) == 1: cred_amount *= 1.33
+    if int(server_bonus/3) == 2: cred_amount *= 1.66
+    if int(server_bonus/3) == 3: cred_amount *= 1.99
+    if int(server_bonus/3) >= 4: cred_amount *= 2.33
     
     return int(cred_amount), cred_status
 

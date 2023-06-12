@@ -1,69 +1,39 @@
-Pitch a ping
-Get a list of my commands
-Show a list of music playlists
-Show Dat1Weeaboo\'s MyAnimeList
-Show Seasonal anime airing right now
-Show a list of rewards you can purchase using uwuCreds
-Set your birthday, wait and see what happens
-[MONTH DAY] | EXAMPLES: [JAN 1]   [01/01]   [01-01]
-Spend 500 uwuCreds to submit an emoji to add to the server
-Spend 1000 uwuCreds to get Tech/Valorant/Academic Support
-Spend 5000 uwuCreds for a custom profile icon
-Spend 7000 uwuCreds to initiate a server event
-Spend 12000 uwuCreds to apply for Moderator application
-Spend 20000 uwuCreds to request for freelance code/art project
-Collect your daily uwuCreds
-Check how many uwuCreds you have
-DANGEROUS, WILL SNAP EVERYTHING
-Feeling generous? Give your uwuCreds
-[@<user name>] | EXAMPLES: @Dat1Weeaboo   @GreenRobotPanda
-How many uwuCreds will you spare?
-Check the registered birthday date
-Reward an user with uwuCreds, new creds
-Peek at another memeber\'s uwuCred amount, kinda
-Take some creds from a specific misdemeanor
-Submit a gameplay clip and pin for future review
-Number of kills you got in the game
-Number of deaths you got in the game
-Number of assists you got in the game
-Average Combat Score you got in the game
-Whether you want to view or submit this game, input 'view' or 'submit'
-Number of total rounds played
-Check how many val-submits you have left
-Spend uwuCreds to buy (a) raffle ticket(s), input -1 to buy max  
-Check your tickets for the current BP raffle
-Show the top wealthiest people in the server
-Give an user another submission slot
-Number of tickets you want to buy
-Allowed 1 claim a day after using all 3 submits for that day
-Number of creeps you killed
-Length of the game, round to the nearest minute. | EXAMPLE: 23:34mins --> 34
-The total number of wards placed, control wards placed, and wards killed
-Get a fortune reading!
-Give humble his daily!
-View current raffle info and list of participants!
-Add a bit of chaos to the discord...ehe
-Show the top perfroming people in the server
-Get your total score thats used for the Leaderboard
-Show the top luckiest people in the server
-Calculate your Overwatch game score and earn uwuCreds
-The chosen role that you queued up
-The total damage you dealt in the game
-The total healing you provided in the game
-The total damage you mitigated
-The round up to the nearest whole minute ex. 5 for 4mins 30s
-Put either Valorant or Overwatch
-Clip title: [Character] [Play]
-Clip link: [Medal Link]
-View your current stats and benefits
-Level Up a stat to recieve benefits
-Vitality, Stamina, Strength, Dexterity, or Fortune
-Gamble uwuCreds to gamble for a Star
-Give a user the total review from this clip night
-provide the total rating the <user> recieved
-Reforge the star into a stat upgrade
-Either corrupt a Star or reforge a Dark Star
-Input 'Star' to get a Dark Star or Input 'Dark Star' to get a Star
-Consume a Dark Star to test your Ultimate luck!
-Ask Professor Bot Something
-Write a prompt [Max 60 Words]
+Ping Professor to see if it's online
+Pong Professor to see if it's online
+Check the current running anime season on AniList!
+Buy tickets for /raffle, check /raffle for price or how many you can buy
+How many tickets would you like? (Input -1 to buy max)
+Claim your daily and recieve two wishes (Once a day)
+Check how many creds, wishes, stars or submits you have
+Give someone 500 of your creds, max 1 donation per person
+@username | example: @uwuntu
+MOD COMMAND: GIVE NEW CREDS TO A USER [MAX 10,000]
+Amount of creds
+MOD COMMAND: TAKE CREDS FROM A USER [MAX 10,000]
+Submit a game clip for clip night (First saturday of every month!)
+The name of your clip
+The link to your clip, either to medal or youtube etc
+Show the top wealthiest users in the server
+MOD COMMAND: GIVE A SUBMIT COUNT TO A USER
+After submitting 2 clips, claim a bonus amount of creds (Once a week)
+Check the current raffle cycle and who bought tickets!
+Sneakpeak at someone else's creds, not 100% accurate
+Check your stat levels and benefits
+Buy a stat level with creds, cost is listed in /profile
+Name of the stat: VIT, STA, STR, DEX, EGO
+FUCK IT WE BALLLLL! Wish for STARS and ITEMS
+Forge a "STAR" for a free stat upgrade, not limited by level cap
+Purify a "DARK STAR" into a "STAR", once used, the reforger breaks
+Devour STARS to wager a percent of your total creds based on EGO
+Number of STARS you want to consume, each star is worth 20%
+MOD COMMAND: GIVE A USER THE TOTAL REVIEW FROM THIS CLIP NIGHT
+Total rating from all clips
+!! GOD COMMAND: BESTOW A USER THE POWER OF THE STAR !!
+!! GOD COMMAND: GIVE ALL USERS IN THE BLOCKCHAIN CREDS !!
+!! GOD COMMAND: TAKE A USERS STAT LEVEL !!
+!! GOD COMMAND: GIVE A USER A STAT LEVEL !!
+Input "Single" for 1 pull and "Multi" for 10 pulls
+Combine 3 Torn Tickets into 1 full Ticket
+Use a token to deploy a shield to protect your creds from attacks.
+Use a token to hire an attack to steal someone elses creds.
+Show all of Professor's commands

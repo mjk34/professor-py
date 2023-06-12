@@ -22,4 +22,4 @@ pip3 install -r requirements.txt
   - [x] slashcmd       # Upgrade Professor's features to slashcommands
   - [x] uwufy          # Implement message filtering to make user messages more "kawaii" 
   - [x] stat system    # Implement profile stats to allow users to purchase upgrades to scale rewards
-  - [x] stat update    # Follow up on stat2.0, rework stats to scale unlimited, nerf star stats
+  - [x] stat update    # Follow up on stat 2.0, rework stats to scale unlimited, nerf star stats
