@@ -105,7 +105,7 @@ async def daily (ctx, client, BLOCKCHAIN):
     await ctx.send(embed=embed)
 
     """Give Wishes """
-    stamina = getStat(id, stats[1], BLOCKCHAIN)
+    stamina, total_wish = getStat(id, stats[1], BLOCKCHAIN), 2
     if stamina == 1 or stamina == 2: total_wish = 3
     if stamina == 3 or stamina == 4: total_wish = 4
     if stamina == 5 or stamina == 6: total_wish = 5
