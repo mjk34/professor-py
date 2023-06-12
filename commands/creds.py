@@ -236,6 +236,13 @@ async def deploy_attack(ctx, target, client, BLOCKCHAIN):
     id, name = ctx.author.id, ctx.author.name
     server_bonus = user.getServerBonus(BLOCKCHAIN)
 
+    """Parse the Target id from <@id>"""
+    target_id = target
+    for ch in filler: target_id = target_id.replace(ch, '')
+    target_id = int(target_id)
+
+    target_name = await getName(target_id, client)
+
     """Check if user has at least one TOKEN to deploy"""
     if user.totalTokens(id, BLOCKCHAIN) < 1:
         embed = discord.Embed(
@@ -246,13 +253,18 @@ async def deploy_attack(ctx, target, client, BLOCKCHAIN):
         embed.set_footer(text='@~ powered by UwUntu')
         await ctx.send(embed=embed)
         return
-
-    """Parse the Target id from <@id>"""
-    target_id = target
-    for ch in filler: target_id = target_id.replace(ch, '')
-    target_id = int(target_id)
-
-    target_name = await getName(target_id, client)
+    
+    """Check if the Giver has sufficient uwuCreds"""
+    target_creds = user.totalCreds(target_id, BLOCKCHAIN)
+    if target_creds < 500:
+        embed = discord.Embed(
+            title = f'Deploy Attack',
+            description = f'<@{target_id}> does not have enough creds, don\'t bully the poor!',
+            color = 6053215    
+        ).set_image(url='https://external-content.duckduckgo.com/iu/?u=http%3A%2F%2Fimg0.joyreactor.com%2Fpics%2Fpost%2Fanime-anime-gif-Noragami-2516998.gif')
+        embed.set_footer(text='@~ powered by UwUntu')
+        await ctx.send(embed=embed)
+        return
 
     """Check if target has a shield"""
     shield = 0
