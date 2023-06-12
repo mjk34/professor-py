@@ -104,9 +104,16 @@ async def daily (ctx, client, BLOCKCHAIN):
     embed.set_image(url=orb_url)
     await ctx.send(embed=embed)
 
-    """Give Two Wishes """
-    pushWish(id, name, BLOCKCHAIN) 
-    pushWish(id, name, BLOCKCHAIN) 
+    """Give Wishes """
+    stamina = getStat(id, stats[1], BLOCKCHAIN)
+    if stamina == 1 or stamina == 2: total_wish = 3
+    if stamina == 3 or stamina == 4: total_wish = 4
+    if stamina == 5 or stamina == 6: total_wish = 5
+    if stamina == 7 or stamina == 8: total_wish = 6
+    if stamina == 9 or stamina == 10: total_wish = 7
+    
+    for i in range(total_wish):
+        pushWish(id, name, BLOCKCHAIN) 
 
     """Check Humble Love"""
     if status not in status_check: 
@@ -333,6 +340,16 @@ async def give(ctx, reciever, client, BLOCKCHAIN):
     giver_id, reciever_id = ctx.author.id, reciever
     for ch in filler: reciever_id = reciever_id.replace(ch, '')
     reciever_id = int(reciever_id)
+
+    """Check if the Giver is the reciever"""
+    if giver_id == reciever_id:
+        embed = discord.Embed(
+            title = f'Donate',
+            description = f'You cannot donate to yourself!',
+            color = 6053215    
+        ).set_footer(text='@~ powered by UwUntu')
+        await ctx.send(embed=embed)
+        return
     
     """Check if the Giver has sufficient uwuCreds"""
     giver_creds = user.totalCreds(giver_id, BLOCKCHAIN)

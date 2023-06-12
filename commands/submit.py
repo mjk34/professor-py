@@ -19,7 +19,7 @@ async def buy_ticket(ctx, amount, BLOCKCHAIN):
     
     """Check if User requested -1 to purchase all tickets"""
     total_cost = 0
-    if amount < 1:
+    if amount < 0:
         count = 0 
         while True:
             cost = 1000 + 300*(user_tickets + count)
@@ -29,6 +29,14 @@ async def buy_ticket(ctx, amount, BLOCKCHAIN):
             else: 
                 amount = count
                 break
+    elif amount == 0:
+        embed = discord.Embed(
+            title = f'Buy Ticket',
+            description = f'You cannot buy 0 ticket(s)!',
+            color = 6053215    
+        ).set_footer(text='@~ powered by UwUntu')
+        await ctx.send(embed=embed)
+        return
     else:
         for i in range(amount):
             total_cost += 1000 + 300*(user_tickets + i)
@@ -65,6 +73,9 @@ async def buy_ticket(ctx, amount, BLOCKCHAIN):
         ).set_thumbnail(url=ctx.author.avatar_url)
         embed.set_footer(text='@~ powered by UwUntu')
         await ctx.send(embed=embed)
+
+        """Give One Wish"""
+        pushWish(id, name, BLOCKCHAIN)
         
     else:
         embed = discord.Embed(
@@ -74,9 +85,6 @@ async def buy_ticket(ctx, amount, BLOCKCHAIN):
         ).set_thumbnail(url='https://66.media.tumblr.com/2d52e78a64b9cc97fac0cb00a48fe676/tumblr_inline_pamkf7AfPf1s2a9fg_500.gif')
         embed.set_footer(text='@~ powered by UwUntu')
         await ctx.send(embed=embed)
-
-    """Give One Wish"""
-    pushWish(id, name, BLOCKCHAIN)
 
 async def stitch_ticket(ctx, BLOCKCHAIN):   
     """Read Blockchain and return user total"""
@@ -117,6 +125,9 @@ async def stitch_ticket(ctx, BLOCKCHAIN):
         ).set_thumbnail(url=ctx.author.avatar_url)
         embed.set_footer(text='@~ powered by UwUntu')
         await ctx.send(embed=embed)
+
+        """Give One Wish"""
+        pushWish(id, name, BLOCKCHAIN)
         
     else:
         embed = discord.Embed(
@@ -126,9 +137,6 @@ async def stitch_ticket(ctx, BLOCKCHAIN):
         ).set_thumbnail(url='https://66.media.tumblr.com/2d52e78a64b9cc97fac0cb00a48fe676/tumblr_inline_pamkf7AfPf1s2a9fg_500.gif')
         embed.set_footer(text='@~ powered by UwUntu')
         await ctx.send(embed=embed)
-
-    """Give One Wish"""
-    pushWish(id, name, BLOCKCHAIN)
         
 """Allow moderators to generate one additional submit to a user"""
 async def bonusSubmit(ctx, reciever, client, BLOCKCHAIN):
