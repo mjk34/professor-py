@@ -170,9 +170,10 @@ async def _(ctx:SlashContext, reciever: str):
     await bonusSubmit(ctx, reciever, client, BLOCKCHAIN)
 
 @slash.slash(name='give_wish', description=CMD_DESC[39], guild_ids=[GUILD_ID],
-    options=[create_option(name='reciever', description=CMD_DESC[8], option_type=3, required=True)])
-async def _(ctx:SlashContext, reciever: str): 
-    await give_wish(ctx, reciever, client, BLOCKCHAIN)
+    options=[create_option(name='reciever', description=CMD_DESC[8], option_type=3, required=True),
+             create_option(name='amount', description=CMD_DESC[10], option_type=4, required=True)])
+async def _(ctx:SlashContext, reciever: str, amount: int): 
+    await give_wish(ctx, reciever, amount, client, BLOCKCHAIN)
 
 @slash.slash(name='claim_bonus', description=CMD_DESC[17], guild_ids=[GUILD_ID])
 async def _(ctx:SlashCommand):
