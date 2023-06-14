@@ -1,8 +1,12 @@
 import random, discord, block
 import commands.user as user
 
-from commands.helper import today
-from commands.manager import pushBlock
+from discord.utils import get
+
+from commands.helper import today, getName
+from commands.manager import pushBlock, pushWish
+
+filler = ['<', '>', '!', '@', '&']
 
 async def wish(ctx, mode, BLOCKCHAIN):
     id, name = ctx.author.id, ctx.author.name
@@ -10,7 +14,7 @@ async def wish(ctx, mode, BLOCKCHAIN):
     """Check for wish mode"""
     wish_count = user.wishCount(id, BLOCKCHAIN)
     max_iteration = 0
-    if mode.lower() == 'single':
+    if mode.lower() == 'single' or mode.lower() == 's' or mode.lower() == 'sin':
         """Check if user has at least 1 wish"""
         if wish_count < 1: 
             embed = discord.Embed(
@@ -23,7 +27,7 @@ async def wish(ctx, mode, BLOCKCHAIN):
             return
         else: max_iteration = 1
 
-    elif mode.lower() == 'multi':
+    elif mode.lower() == 'multi' or mode.lower() == 'm':
         """Check if user has at least 10 wish"""
         if wish_count < 10: 
             embed = discord.Embed(
@@ -237,7 +241,50 @@ def pull(total_pity, pity, guarenteed) -> list:
     else:
         return ['Pull', '0*', '']
 
-"""Pull Block Desc ---> Pull, 5*, Star """
+async def give_wish(ctx, reciever, amount, client, BLOCKCHAIN):
+
+    """Check of amount is less than 1"""
+    if amount < 1:
+        embed = discord.Embed(
+            title = f'Bonus Wish',
+            description = f'You cannot give {amount} wishes.',
+            color = 6053215    
+        ).set_thumbnail(url=ctx.author.avatar_url)
+        embed.set_footer(text='@~ powered by UwUntu')
+        await ctx.send(embed=embed)
+        return
+
+    """Parses Reciever id from <@id>"""
+    reciever_id = reciever
+    for ch in filler: reciever_id = reciever_id.replace(ch, '')
+    reciever_id = int(reciever_id)
+
+    reciever_name = await getName(reciever_id, client)
+
+    """Check if the Giver is a moderator"""
+    role = get(ctx.guild.roles, name='Moderator')
+    if role.id in [y.id for y in ctx.author.roles]:
+        
+        for i in range(amount):
+            pushWish(reciever_id, reciever_name, BLOCKCHAIN)
+        
+        """Return Message"""
+        embed = discord.Embed(
+            title = f'Bonus Wish',
+            description = f'**{amount}** Wishes were added to <@{reciever_id}>\'s *Wallet*!',
+            color = 16749300    
+        ).set_image(url='https://media.tenor.com/lfYGrPJlQLAAAAAC/oshi-no-ko-ruby.gif')
+        embed.set_footer(text='@~ powered by UwUntu')
+        await ctx.send(f'<@{reciever_id}>', embed=embed)
+    else: 
+        embed = discord.Embed(
+            title = f'Handout',
+            description = f'Insufficient power, you are not a moderator!',
+            color = 6053215    
+        ).set_thumbnail(url='https://media1.tenor.com/images/80662c4e35cf12354f65f1d6f7beada8/tenor.gif')
+        embed.set_footer(text='@~ powered by UwUntu')
+        await ctx.send(embed=embed)
+
 def getStarPity(user_id, BLOCKCHAIN) -> int:
     if len(BLOCKCHAIN.chain) == 1: return 0
 

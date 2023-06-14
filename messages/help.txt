@@ -27,6 +27,7 @@
 **stitch_ticket**: Combine 3 Torn Tickets into 1 Ticket.
 
 **give_submit**: Give one submit count for the week.
-**handout**: Generate and give new creds
+**give_wish**: Give a number of wishes to a someone.
+**handout**: Generate and give new creds.
 **review**: Give a clip night review.
 **take**: Take creds from someone

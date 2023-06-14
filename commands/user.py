@@ -206,7 +206,6 @@ def getTopIds(creds, HUMBLE, BLOCKCHAIN) -> list:
     for user_id in unique_ids:
         user_name = findRecentName(user_id, BLOCKCHAIN)
         user_creds = totalCreds(user_id, BLOCKCHAIN)
-        user_tickets = totalTickets(user_id, BLOCKCHAIN)
 
         # print(f'{user_name} {user_creds} {user_tickets} {total}')
         

@@ -37,3 +37,4 @@ Combine 3 Torn Tickets into 1 full Ticket
 Use a token to deploy a shield to protect your creds from attacks.
 Use a token to hire an attack to steal someone elses creds.
 Show all of Professor's commands
+MOD COMMAND: GIVE A NUMBER OF WISHES TO A USER

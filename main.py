@@ -16,7 +16,7 @@ from commands.helper import fetchContentList
 from commands.humble import humble_powa
 from commands.stats import profile, upgrade, forge, bless, reforge, consume
 from commands.submit import buy_ticket, bonusSubmit, leaderboard, claimBonus, rafflelist, stitch_ticket
-from commands.wish import wish
+from commands.wish import wish, give_wish
 
 load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')
@@ -168,6 +168,11 @@ async def _(ctx:SlashContext):
     options=[create_option(name='reciever', description=CMD_DESC[8], option_type=3, required=True)])
 async def _(ctx:SlashContext, reciever: str): 
     await bonusSubmit(ctx, reciever, client, BLOCKCHAIN)
+
+@slash.slash(name='give_wish', description=CMD_DESC[39], guild_ids=[GUILD_ID],
+    options=[create_option(name='reciever', description=CMD_DESC[8], option_type=3, required=True)])
+async def _(ctx:SlashContext, reciever: str): 
+    await give_wish(ctx, reciever, client, BLOCKCHAIN)
 
 @slash.slash(name='claim_bonus', description=CMD_DESC[17], guild_ids=[GUILD_ID])
 async def _(ctx:SlashCommand):

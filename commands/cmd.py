@@ -44,11 +44,11 @@ async def help(ctx):
     commands = fetchContentList('help.txt')
 
     desc = f'**General Commands**: \n---------------------------------\n'
-    for cmd in commands[:len(commands) - 4]:
+    for cmd in commands[:len(commands) - 5]:
         desc += f'{cmd}\n'
     
     desc += '\n**Moderator Commands**: \n---------------------------------\n'
-    for cmd in commands[len(commands) - 4:]:
+    for cmd in commands[len(commands) - 5:]:
         desc += f'{cmd}\n'
 
     embed = discord.Embed(
