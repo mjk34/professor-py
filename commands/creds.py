@@ -254,14 +254,17 @@ async def deploy_attack(ctx, target, client, BLOCKCHAIN):
         await ctx.send(embed=embed)
         return
     
+    """Calculate attack power"""
+    attack = 275 * (int(server_bonus/3) + 1)
+    
     """Check if the Giver has sufficient uwuCreds"""
     target_creds = user.totalCreds(target_id, BLOCKCHAIN)
-    if target_creds < 500:
+    if target_creds < attack:
         embed = discord.Embed(
             title = f'Deploy Attack',
             description = f'<@{target_id}> does not have enough creds, don\'t bully the poor!',
             color = 6053215    
-        ).set_image(url='https://external-content.duckduckgo.com/iu/?u=http%3A%2F%2Fimg0.joyreactor.com%2Fpics%2Fpost%2Fanime-anime-gif-Noragami-2516998.gif')
+        ).set_image(url='https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExcjQzcnU0b2NyNWgyOXUyajBnbG85d2U4Z254OHViOG9kbWZpeXF6MSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/eiqxzscsYDET6/giphy.gif')
         embed.set_footer(text='@~ powered by UwUntu')
         await ctx.send(embed=embed)
         return
@@ -282,10 +285,6 @@ async def deploy_attack(ctx, target, client, BLOCKCHAIN):
         )
 
         pushBlock(shield_block, BLOCKCHAIN)
-
-    """Calculate attack power"""
-    attack = 275 * (int(server_bonus/3) + 1)
-
 
     """Generate new Blocks"""
     data1 = 0
