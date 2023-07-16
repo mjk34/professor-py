@@ -231,7 +231,7 @@ async def _(ctx:SlashCommand):
 async def _(ctx:SlashCommand, target: str):
     await deploy_attack(ctx, target, client, BLOCKCHAIN)
 
-@slash.slash(name='void_submit', description=CMD_DESC[40], GUILD_ID=[GUILD_ID],
+@slash.slash(name='void_submit', description=CMD_DESC[40], guild_ids=[GUILD_ID],
     options=[create_option(name='user', description=CMD_DESC[8], option_type=3, required=True),
              create_option(name='amount', description=CMD_DESC[10], option_type=4, required=True),
              create_option(name='msg_id', description=CMD_DESC[41], option_type=4, required=True),
