@@ -158,9 +158,9 @@ async def chaos(ctx, client, BLOCKCHAIN):
         pushBlock(new_block2, BLOCKCHAIN)
 
         desc = ''
-        if userId1 == HUMBLE: desc = f'Humble donated **{creds}** uwuCreds to <@{userId2}>!'
-        elif userId2 == HUMBLE: desc = f'Humble charged **{creds}** uwuCreds from <@{userId1}>... for love of course!'
-        else: desc = f'Humble lovingly donated **{creds}** uwuCreds to <@{userId2}>! (stolen from <@{userId1}>)'
+        if userId1 == HUMBLE: desc = f'Humble donated **{creds - shield}** uwuCreds to <@{userId2}>!'
+        elif userId2 == HUMBLE: desc = f'Humble charged **{creds - shield}** uwuCreds from <@{userId1}>... for love of course!'
+        else: desc = f'Humble lovingly donated **{creds - shield}** uwuCreds to <@{userId2}>! (stolen from <@{userId1}>)'
         
         """Return Message"""
         embed = discord.Embed(
@@ -216,7 +216,7 @@ async def chaos(ctx, client, BLOCKCHAIN):
         """Return Message"""
         embed = discord.Embed(
             title = f'Humble Love',
-            description = f'Humble took **{creds}** uwuCreds from <@{userId1}>!',
+            description = f'Humble took **{creds - shield}** uwuCreds from <@{userId1}>!',
             color = 16700447    
         ).set_image(url='https://pa1.narvii.com/6306/e69ecf1e4912220c77f1dd9b0e710dedb26639b0_hq.gif')
         embed.set_footer(text='@~ powered by UwUntu')

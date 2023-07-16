@@ -31,6 +31,11 @@ async def submitClip(ctx, title, link, BLOCKCHAIN):
         return
 
     color = 6943230
+
+    total = 0
+    if link == 'NA' or link == 'N/A' or link == 'na':
+        total = int((200 + 50*strength)/2)
+    else: total = 200 + 50*strength
             
     """Generate new Block"""
     submit_block = block.Block(
@@ -38,7 +43,7 @@ async def submitClip(ctx, title, link, BLOCKCHAIN):
         name = name,
         timestamp = today(),
         description = 'Submission',
-        data = 200 + 50*strength
+        data = total
     )
 
     clip_block = block.Block(
@@ -55,10 +60,19 @@ async def submitClip(ctx, title, link, BLOCKCHAIN):
     """Return Message"""
     desc = f'Title: \u3000**{title}**\n'
     desc += f'Link: \u3000**{link}**\n'
-    desc2 = f'Thank you for submitting, **{200}** creds were added to your *Wallet*! If you submitted a clip, check the events tab to see when is the next Clip Night!\n'
+
+    desc2 = ''
+    if link == 'NA' or link == 'N/A' or link == 'na':
+        desc2 = f'Thank you for submitting, **{100}** creds were added to your *Wallet*!\n'
+    else:
+        desc2 = f'Thank you for submitting, **{200}** creds were added to your *Wallet*!\n'
     
     if strength > 0:
-        desc2 += f'\nFrom **Strength {strength}**, you get an additional **+{int(50*strength)}** creds!'
+        if link == 'NA' or link == 'N/A' or link == 'na':
+            desc2 += f'\nFrom **Strength {strength}**, you get an additional **+{int((50*strength)/2)}** creds!'
+        else:
+            desc2 += f'\nFrom **Strength {strength}**, you get an additional **+{int(50*strength)}** creds!'
+
     embed = discord.Embed(
         title = f'Submission',
         description = desc,

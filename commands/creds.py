@@ -83,10 +83,8 @@ async def daily (ctx, client, BLOCKCHAIN):
 
     """Generate Description"""
     desc = f'{status} **+{fortune}** creds were added to your *Wallet*!\n'
-    if bonus > 0:
-        desc += f'From **+{bonus}** *Bonus*, you get an additional **+{bonus*multiplier}** creds!\n'
-    if vitality > 0:
-        desc += f'\nFrom **Vitality {vitality}**, you get an additional **+{stat_bonus}** creds!\n' 
+
+    desc += f'From **Vitality {vitality}** and **{bonus}** *Bonus Stack(s)*, you get an additional **+{bonus*multiplier + stat_bonus}** creds!\n'
 
     desc += f'\nNet total: {fortune + bonus*multiplier + stat_bonus}'
     
@@ -331,7 +329,7 @@ async def deploy_attack(ctx, target, client, BLOCKCHAIN):
         color = 2352682    
     ).set_image(url='https://c.tenor.com/LeKYlO4APnwAAAAC/tenor.gif')
     embed.set_footer(text='@~ powered by UwUntu')
-    await ctx.send(embed=embed)
+    await ctx.send(f'<@{target_id}>', embed=embed)
 
     if shield > 0:
         embed2 = discord.Embed(
@@ -340,8 +338,7 @@ async def deploy_attack(ctx, target, client, BLOCKCHAIN):
             color = 16711680   
         ).set_image(url='https://31.media.tumblr.com/85b421f4184e976268a22e64ca90481b/tumblr_inline_noz3mbubgC1rh9lcd_500.gif')
         embed2.set_footer(text='@~ powered by UwUntu')
-    
-    await ctx.send(f'<@{target_id}>', embed=embed2)
+        await ctx.send(f'<@{target_id}>', embed=embed2)
 
 """Allow users to give their uwuCreds to another user""" 
 async def give(ctx, reciever, client, BLOCKCHAIN):
