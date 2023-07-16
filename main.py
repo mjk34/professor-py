@@ -234,7 +234,7 @@ async def _(ctx:SlashCommand, target: str):
 @slash.slash(name='void_submit', description=CMD_DESC[40], guild_ids=[GUILD_ID],
     options=[create_option(name='user', description=CMD_DESC[8], option_type=3, required=True),
              create_option(name='amount', description=CMD_DESC[10], option_type=4, required=True),
-             create_option(name='msg_id', description=CMD_DESC[41], option_type=3, required=True),
+             create_option(name='msgid', description=CMD_DESC[41], option_type=3, required=True),
              create_option(name='reason', description=CMD_DESC[42], option_type=3, required=True)])
 async def _(ctx:SlashCommand, user: str, amount: int, msgid: str, reason: str):
     await void_submit(ctx, user, amount, msgid, reason, client, BLOCKCHAIN)
