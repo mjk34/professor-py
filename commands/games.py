@@ -206,9 +206,9 @@ async def void_submit (ctx, user, amount, msgid, reason, client, BLOCKCHAIN):
         pushBlock(void_block, BLOCKCHAIN)      
         
         desc = f'TICKET ID #{ticket_number}\n\n'
-        desc += f'Moderator <@{id}> voided <@{target_id}>\'s submit_clip and revoked {amount} creds.\n\n'
-        desc += f'Reason: ```{reason}```\n'
-        desc += f'Submit Reference: {msgid}'
+        desc += f'<@{id}> voided <@{target_id}>\'s submit and revoked {amount} creds.\n\n'
+        desc += f'Reason: {reason}\n'
+        desc += f'Submit Reference: https://discord.com/channels/859993171156140061/1028107023377764352/{msgid}'
 
         """Return Message"""
         embed = discord.Embed(
