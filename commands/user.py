@@ -173,6 +173,7 @@ def getTop(BLOCKCHAIN) -> list:
     
     unique_ids = []
     for block in BLOCKCHAIN.chain[1:]:
+        if block.getName() == 'void_submit': continue
         unique_ids.append(block.getUser())
     unique_ids = list(set(unique_ids))
     
@@ -199,6 +200,7 @@ def getTopIds(creds, HUMBLE, BLOCKCHAIN) -> list:
     
     unique_ids = []
     for block in BLOCKCHAIN.chain[1:]:
+        if block.getName() == 'void_submit': continue
         unique_ids.append(block.getUser())
     unique_ids = list(set(unique_ids))
     

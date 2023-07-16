@@ -9,7 +9,7 @@ from discord_slash.utils.manage_commands import create_option
 from commands.activity import messageXP
 from commands.cmd import ping, anime, pong, help
 from commands.creds import daily, wallet, give, handout, take, snoop, deploy_shield, deploy_attack
-from commands.games import submitClip, review
+from commands.games import submitClip, review, void_submit
 from commands.god import hand_all, take_level, give_level, take_tickets
 from commands.gpt import gpt_string
 from commands.helper import fetchContentList
@@ -230,6 +230,14 @@ async def _(ctx:SlashCommand):
     options=[create_option(name='target', description=CMD_DESC[8], option_type=3, required=True)])
 async def _(ctx:SlashCommand, target: str):
     await deploy_attack(ctx, target, client, BLOCKCHAIN)
+
+@slash.slash(name='void_submit', description=CMD_DESC[40], GUILD_ID=[GUILD_ID],
+    options=[create_option(name='user', description=CMD_DESC[8], option_type=3, required=True),
+             create_option(name='amount', description=CMD_DESC[10], option_type=4, required=True),
+             create_option(name='msg_id', description=CMD_DESC[41], option_type=4, required=True),
+             create_option(name='reason', description=CMD_DESC[42], option_type=3, required=True)])
+async def _(ctx:SlashCommand, user: str, amount: int, msgid: int, reason: str):
+    await void_submit(ctx, user, amount, msgid, reason, client, BLOCKCHAIN)
 
 """Special Case Commands"""
 @slash.slash(name='bless', description=CMD_DESC[30], guild_ids=[GUILD_ID],

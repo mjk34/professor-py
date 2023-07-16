@@ -1,4 +1,4 @@
-import discord, block, blockchain
+import discord, block, random
 import commands.user as user
 
 from discord.utils import get
@@ -148,3 +148,93 @@ async def review(ctx, reciever, rating, client, BLOCKCHAIN):
         embed.set_footer(text='@~ powered by UwUntu')
         await ctx.send(embed=embed)
     return
+
+async def void_submit (ctx, user, amount, msgid, reason, client, BLOCKCHAIN):
+    id = ctx.author.id
+
+    if amount > 600:
+        text = f'Oi! This doesn\' seem right'
+        await ctx.send(f'```CSS\n[{text}]\n```')
+        return
+    
+    """Parse the Target id from <@id>"""
+    target_id = user
+    for ch in filler: target_id = target_id.replace(ch, '')
+    target_id = int(target_id)
+
+    target_name = await getName(target_id, client)
+
+    """Check if the Giver is a moderator"""
+    role = get(ctx.guild.roles, name='Moderator')
+    if role.id in [y.id for y in ctx.author.roles]:
+
+        """Generate Ticket Number"""
+        ticket_number = -1
+        while True:
+            ticket_number = random.randint(100000, 999999)
+            if isNewTicket(ticket_number, BLOCKCHAIN) and ticket_number != -1:
+                break
+        
+        """Generate new Block"""
+        cred_block = block.Block(
+            user = target_id,
+            name = target_name,
+            timestamp = today(),
+            description = f'Void Submit',
+            data = -amount
+        )
+
+        submit_block = block.Block(
+            user = target_id,
+            name = target_name,
+            timestamp = today(),
+            description = f'Bonus Submit',
+            data = 0
+        )
+
+        void_block = block.Block(
+            user = ticket_number,
+            name = 'void_submit',
+            timestamp = today(),
+            description = 'VOID',
+            data = 0
+        )
+        
+        """Update Blockchain"""
+        pushBlock(cred_block, BLOCKCHAIN)      
+        pushBlock(submit_block, BLOCKCHAIN)      
+        pushBlock(void_block, BLOCKCHAIN)      
+        
+        desc = f'TICKET ID #{ticket_number}\n\n'
+        desc += f'Moderator <@{id}> voided <@{target_id}>\'s submit_clip and revoked {amount} creds.\n\n'
+        desc += f'Reason: ```{reason}```\n'
+        desc += f'Submit Reference: {msgid}'
+
+        """Return Message"""
+        embed = discord.Embed(
+            title = f'Void Submit',
+            description = desc,
+            color = 16749300    
+        )
+        
+        embed.set_footer(text='@~ powered by UwUntu')
+        await ctx.send(f'<@{target_id}>', embed=embed)
+    else: 
+        embed = discord.Embed(
+            title = f'Void Submit',
+            description = f'Insufficient power, you are not a moderator!',
+            color = 6053215    
+        ).set_thumbnail(url='https://media1.tenor.com/images/80662c4e35cf12354f65f1d6f7beada8/tenor.gif')
+        embed.set_footer(text='@~ powered by UwUntu')
+        await ctx.send(embed=embed)
+
+def isNewTicket(number, BLOCKCHAIN):
+    if len(BLOCKCHAIN.chain) == 1: return True
+
+    desc = 'VOID'
+    for block in BLOCKCHAIN.chain[1:]:
+        if block.getDesc() == desc:
+            if block.getUser() == number:
+                return False
+            
+    return True

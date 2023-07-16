@@ -421,10 +421,10 @@ async def handout(ctx, reciever, amount, client, BLOCKCHAIN):
     """1. User will be checked for Moderator status
        2. Blockchain will be validated, new blocks will be added to the end of Blockchain"""
     
-    # if amount > 10000:
-    #     text = f'Oi! This is not a charity, did you really try to give {amount} uwuCreds'
-    #     await ctx.send(f'```CSS\n[{text}]\n```')
-    #     return
+    if amount > 10000:
+        text = f'Oi! This is not a charity, did you really try to give {amount} uwuCreds'
+        await ctx.send(f'```CSS\n[{text}]\n```')
+        return
     
     """Parses Reciever id from <@id>"""
     reciever_id = reciever
@@ -525,11 +525,26 @@ async def snoop (ctx, target, client, BLOCKCHAIN):
     target_id = int(target_id)
 
     user_creds = user.totalCreds(target_id, BLOCKCHAIN)
+
+    threshold = 0.25
+    if user_creds < 1000:
+        threshold = 0.20
+    elif user_creds >= 1000 and user_creds < 5000:
+        threshold = 0.15
+    elif user_creds >= 5000 and user_creds < 10000:
+        threshold = 0.1
+    elif user_creds >= 10000 and user_creds < 30000:
+        threshold = 0.08
+    elif user_creds >= 30000 and user_creds < 50000:
+        threshold = 0.06
+    else:
+        threshold = 0.04
+
     while True:
         left = random.random()
         right = random.random()
         
-        if left < 0.15 and right < 0.15 and left != right:
+        if left < threshold and right < threshold and left != right:
             break
 
     upper = int((1 + left)*user_creds)
