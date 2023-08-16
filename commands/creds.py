@@ -103,13 +103,7 @@ async def daily (ctx, client, BLOCKCHAIN):
     await ctx.send(embed=embed)
 
     """Give Wishes """
-    stamina, total_wish = getStat(id, stats[1], BLOCKCHAIN), 2
-    if stamina == 1 or stamina == 2: total_wish = 3
-    if stamina == 3 or stamina == 4: total_wish = 4
-    if stamina == 5 or stamina == 6: total_wish = 5
-    if stamina == 7 or stamina == 8: total_wish = 6
-    if stamina == 9 or stamina == 10: total_wish = 7
-    
+    total_wish = getStat(id, stats[1], BLOCKCHAIN) + 2
     for i in range(total_wish):
         pushWish(id, name, BLOCKCHAIN) 
 
@@ -271,7 +265,7 @@ async def deploy_attack(ctx, target, client, BLOCKCHAIN):
     shield = 0
     if user.getShieldCount(target_id, BLOCKCHAIN) > 0:
         server_bonus = user.getServerBonus(BLOCKCHAIN)
-        shield = 200 * (int(server_bonus/3) + 1)
+        shield = 200 * (int(server_bonus/2) + 1)
 
         """Consume One Shield"""
         shield_block = block.Block(

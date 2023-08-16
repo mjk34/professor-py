@@ -39,21 +39,7 @@ async def profile (ctx, BLOCKCHAIN):
     vit_str += f' \u3000  \u3000  \u3000 **+{25*vitality}** *per BONUS stack, improves DAILY & CLAIM*'
 
     stamina = getStat(id, stats[1], BLOCKCHAIN)
-    if stamina == 0: 
-        sta_str = f'**+{0}** *additional daily WISH count*\n'
-    elif stamina == 1 or stamina == 2:
-        sta_str = f'**+{1}** *additional daily WISH count*\n'
-    elif stamina == 3 or stamina == 4:
-        sta_str = f'**+{2}** *additional daily WISH count*\n'
-    elif stamina == 5 or stamina == 6:
-        sta_str = f'**+{3}** *additional daily WISH count*\n'
-    elif stamina == 7 or stamina == 8:
-        sta_str = f'**+{4}** *additional daily WISH count*\n'
-    elif stamina == 9 or stamina == 10:
-        sta_str = f'**+{5}** *additional daily WISH count*\n'
-    else:
-        sta_str = f'**+{6}** *additional daily WISH count*\n'
-    
+    sta_str = f'**+{stamina}** *additional daily WISH count*\n'
     sta_str += f' \u3000  \u3000  \u3000 **+{int(stamina/2)}** *additional weekly SUBMIT count*' 
 
     strength = getStat(id, stats[2], BLOCKCHAIN)
@@ -359,7 +345,7 @@ async def consume (ctx, amount, BLOCKCHAIN):
     id, name = ctx.author.id, ctx.author.name
 
     star = getStar(id, BLOCKCHAIN)
-    if star >= amount:
+    if star > amount:
         desc = f'You do not possess enough **Star**s to Consume'
 
         """Return Message"""
