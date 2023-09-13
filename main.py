@@ -98,7 +98,7 @@ async def on_message(message):
             await reply.edit(content=gpt_str)
             return
         
-        if random.random() < 0.75 and '?' in content:
+        if random.random() < 0.05 and '?' in content:
             # print(f'Random Professor: \"{content}\"')
             gpt_str = await gpt_string('', content[len(token):])
             await client.get_channel(GENERAL).send(gpt_str)
