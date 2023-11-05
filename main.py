@@ -9,7 +9,7 @@ from discord_slash.utils.manage_commands import create_option
 from commands.activity import messageXP
 from commands.cmd import ping, anime, pong, help
 from commands.creds import daily, wallet, give, handout, take, snoop, deploy_shield, deploy_attack
-from commands.games import submitClip, review, void_submit
+from commands.games import submitClip, review, void_submit, superClip
 from commands.god import hand_all, take_level, give_level, take_tickets
 from commands.gpt import gpt_string
 from commands.helper import fetchContentList
@@ -159,6 +159,13 @@ async def _(ctx:SlashContext, victim: str, amount: int):
              create_option(name='link', description=CMD_DESC[14], option_type=3, required=True)])
 async def _(ctx:SlashContext, title: str, link: str):
     await submitClip(ctx, title, link, BLOCKCHAIN)
+
+@slash.slash(name='super_clip', description=CMD_DESC[12], guild_ids=[GUILD_ID],
+    options=[create_option(name='title', description=CMD_DESC[13], option_type=3, required=True),
+             create_option(name='link', description=CMD_DESC[14], option_type=3, required=True),
+             create_option(name='msgid', description=CMD_DESC[41], option_type=3, required=True)])
+async def _(ctx:SlashContext, title: str, link: str, msgid: str):
+    await superClip(ctx, title, link, msgid, BLOCKCHAIN)
     
 @slash.slash(name='leaderboard', description=CMD_DESC[15], guild_ids=[GUILD_ID])
 async def _(ctx:SlashContext):

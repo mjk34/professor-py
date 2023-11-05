@@ -3,8 +3,8 @@ import block, discord
 from commands.helper import today
 from commands.manager import pushBlock
 
-level_xp = [0, 5, 25, 75, 150, 300, 600, 1000, 1500, 2000, 2500, 3000, 3500, 4000, 4500, 5000]
-level_wish = [0, 1, 2, 3, 5, 5, 5, 10, 10, 10, 10, 10, 10, 20, 20, 20]
+level_xp = [0, 7, 29, 66, 144, 300, 600, 1000, 1500, 2000, 2500, 3000, 3500, 4000, 4500, 5000]
+level_wish = [0, 5, 5, 5, 10, 10, 10, 20, 20, 20, 40, 40, 40, 80, 80, 80]
 
 def messageXP(id, name, ACTIVCHAIN, BLOCKCHAIN):
     current_xp = getLevelXP(id, ACTIVCHAIN)

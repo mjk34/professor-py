@@ -8,7 +8,7 @@ from dotenv import load_dotenv
 from commands.activity import getLevel, getLevelXP, level_xp
 from commands.helper import today, dailyLuck, dailyFortune, getName, fetchContentList, getIcon
 from commands.manager import pushBlock, pushWish
-from commands.stats import getStat, stats, getStar, getDarkStar, getReforger
+from commands.stats import getStat, stats, getStar, getDarkStar
 from commands.user import getServerBonus
 from commands.wish import getStarPity ,guarenteed
 
@@ -73,8 +73,15 @@ async def daily (ctx, client, BLOCKCHAIN):
     pushBlock(fortune_block, BLOCKCHAIN)         
 
     orb_url = 'https://assets.dicebreaker.com/pondering-my-orb-header-art.png/BROK/resize/844%3E/format/jpg/quality/80/pondering-my-orb-header-art.png'
-    if random.random() < 0.50:
+    test = random.random()
+    if test <= 0.40:
+        orb_url = 'https://assets.dicebreaker.com/pondering-my-orb-header-art.png/BROK/resize/844%3E/format/jpg/quality/80/pondering-my-orb-header-art.png'
+    if test > 0.40 and test <= 0.8:
         PONDER_LIST = fetchContentList('ponder.txt')
+        index = random.randint(0, len(PONDER_LIST)-1)
+        orb_url = PONDER_LIST[index]
+    if test > 0.8:
+        PONDER_LIST = fetchContentList('meme.txt')
         index = random.randint(0, len(PONDER_LIST)-1)
         orb_url = PONDER_LIST[index]
 
@@ -83,9 +90,7 @@ async def daily (ctx, client, BLOCKCHAIN):
 
     """Generate Description"""
     desc = f'{status} **+{fortune}** creds were added to your *Wallet*!\n'
-
     desc += f'From **Vitality {vitality}** and **{bonus}** *Bonus Stack(s)*, you get an additional **+{bonus*multiplier + stat_bonus}** creds!\n'
-
     desc += f'\nNet total: {fortune + bonus*multiplier + stat_bonus}'
     
     """Return Message"""
@@ -132,8 +137,7 @@ async def wallet (ctx, BLOCKCHAIN, ACTIVCHAIN):
     user_tokens = user.totalTokens(id, BLOCKCHAIN)
     user_torn = user.totalTornTickets(id, BLOCKCHAIN)
     user_stars = getStar(id, BLOCKCHAIN)
-    user_dstars = getDarkStar(id, BLOCKCHAIN)
-    user_reforger = getReforger(id, BLOCKCHAIN)
+    user_dstar = getDarkStar(id, BLOCKCHAIN)
 
     user_wish = user.wishCount(id, BLOCKCHAIN)
     user_pity = getStarPity(id, BLOCKCHAIN)
@@ -146,15 +150,17 @@ async def wallet (ctx, BLOCKCHAIN, ACTIVCHAIN):
     stamina = getStat(id, stats[1], BLOCKCHAIN)
 
     daily = {True:'Available', False:'Not Available'}[user.hasDaily(id, BLOCKCHAIN)]
+    super = {True:'Available', False:'Not Available'}[user.hasSuperSubmit(id, BLOCKCHAIN)]
     claim = {True:'Available', False:'Not Available'}[user_claim == 0]
     desc = ''
 
     desc += f'**LEVEL {user_level}**\nNext Level:\u2000{user_xp}/{level_up_xp} XP\n\n'
-    
+    desc += f'Daily UwU: \u3000 \u2000 **{daily}**\nSuper Clip: \u2000 \u3000 **{super}**\nClaim Bonus: \u3000**{claim}**\n'
+
     if stamina == 0:
-        desc += f'Daily UwU:\u3000\u3000**{daily}**\nClaim Bonus: \u3000**{claim}**\nSubmissions: \u3000**{(2) - user_subs}/{2}**\n\n'
+        desc += f'Submissions: \u3000**{(2) - user_subs}/{2}**\n\n'
     else:
-        desc += f'Daily UwU:\u3000\u3000**{daily}**\nClaim Bonus: \u3000**{claim}**\nSubmissions: \u3000**{(2 + int(stamina/2)) - user_subs}/{2 + int(stamina/2)}** \n\n'
+        desc += f'Submissions: \u3000**{(2 + int(stamina/2)) - user_subs}/{2 + int(stamina/2)}** \n\n'
 
     desc += f'Wishes:\u2000**{user_wish}**\u3000Pity:\u2000**{user_pity}**\u3000'
     if user_guarenteed:
@@ -163,7 +169,7 @@ async def wallet (ctx, BLOCKCHAIN, ACTIVCHAIN):
         desc += 'Guarenteed:\u2000**No**\n\n'
 
     desc += f'Tokens:\u2000**{user_tokens}**\u3000Shields:\u2000**{user_shield}**\u3000Torn Tickets:\u2000**{user_torn}**\n'
-    desc += f'Stars:\u2000**{user_stars}**\u3000 Dark Stars:\u2000**{user_dstars}**\u3000Reforgers:\u2000**{user_reforger}**\n\n'
+    desc += f'Stars: \u2000 **{user_stars}**\u3000 Dark Stars:\u2000**{user_dstar}**\u3000\n\n'
 
     desc += f'Total Creds:\u3000 **{user_creds}**\u3000 Total Tickets: \u2000**{user_tickets}**\n'
 

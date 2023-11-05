@@ -26,7 +26,6 @@ async def profile (ctx, BLOCKCHAIN):
     id, name = ctx.author.id, ctx.author.name
 
     star = getStar(id, BLOCKCHAIN)
-    reforger = getReforger(id, BLOCKCHAIN)
     dark_star = getDarkStar(id, BLOCKCHAIN)
 
     tokens = user.totalTokens(id, BLOCKCHAIN)
@@ -47,11 +46,11 @@ async def profile (ctx, BLOCKCHAIN):
     str_str += f' \u3000  \u3000  \u3000 **+{50*strength}** *flat bonus to increase weekly CLAIM bounty*'
 
     dexterity = getStat(id, stats[3], BLOCKCHAIN)
-    dex_str = f'**+{60*dexterity}%** *bonus from clip night REVIEW bounty*\n'
+    dex_str = f'**+{45*dexterity}%** *bonus from clip night REVIEW bounty*\n'
     dex_str += f' \u3000  \u3000  \u3000 **+{24*dexterity}%** *bonus from weekly CLAIM bounty*'
 
     ego = getStat(id, stats[4], BLOCKCHAIN)
-    ego_str = f'**+{14*ego}%** *probability of winning the consume*'
+    ego_str = f'**+{11*ego}%** *probability of winning the consume*'
 
     desc = f'Below lists your current student stats and benefits:\n\n'
     desc += f'**VIT {vitality}**\u3000{vit_str}\n'
@@ -75,8 +74,7 @@ async def profile (ctx, BLOCKCHAIN):
     else: desc += ' \u3000  \u3000  \u3000 (MAX Level)\n\n'
 
     desc += f'You have **{star} Stars**, bring them to the Starforger with `/forge` to upgrade a core stat. \n\n'
-    desc += f'You have **{reforger} Reforgers**, you can use `/reforge` to turn **Dark Stars** into **Stars**. \n\n'
-    desc += f'You have **{dark_star} Dark Stars**, **Dark Stars** must be purified to be used. \n\n'
+    desc += f'You have **{dark_star} Dark Stars**, **Dark Stars** must be purified with `/reforge` to be used. \n\n'
     desc += f'You have **{torn_tickets} Torn Tickets**, you can use `/stitch_ticket` to combine 3 of them into a full ticket. Stitched tickets won\'t increase your next ticket cost.\n\n'
     desc += f'You have **{tokens} Tokens**, you can `/attack` other users to steal their creds, or `/shield` to protect your own, shields last until the week resets or when they break.\n\n'
     desc += f'Check out the Full Stat Sheet Here: https://discord.com/channels/859993171156140061/938853545992667176/1116810982946242691\n\n'
@@ -290,13 +288,15 @@ async def forge (ctx, stat_name, BLOCKCHAIN):
 async def reforge (ctx, BLOCKCHAIN):
     id, name = ctx.author.id, ctx.author.name
 
-    reforger = getReforger(id, BLOCKCHAIN)
-    if reforger <= 0:
-        desc = f'You do not possess a **Corrupted Reforger**.'
+    creds = user.totalCreds(id, BLOCKCHAIN)
+    server_bonus = user.getServerBonus(BLOCKCHAIN)
+    cost = 1200 * int(server_bonus/3)
+    if creds <= cost:
+        desc = f'You need {cost} creds for the purification ritual.'
 
         """Return Message"""
         embed = discord.Embed(
-            title = f'Reforger',
+            title = f'Reforge',
             description = desc,
             color = 6053215,
         ).set_thumbnail(url=ctx.author.avatar_url)
@@ -306,7 +306,6 @@ async def reforge (ctx, BLOCKCHAIN):
         return
 
     dark_star = getDarkStar(id, BLOCKCHAIN)
-
     if dark_star <= 0:
         desc = f'You do not possess a **Dark Star**.'
 
@@ -324,7 +323,16 @@ async def reforge (ctx, BLOCKCHAIN):
     """Update Blockchain"""
     pushItem(id, name, 'Star', BLOCKCHAIN)
     pushItem(id, name, '-Dark Star', BLOCKCHAIN)
-    pushItem(id, name, '-Reforger', BLOCKCHAIN)
+    
+    reforge_block = block.Block(
+        user = id,
+        name = name,
+        timestamp = today(),
+        description= "Reforged Dark Star",
+        data = -cost
+    )
+
+    pushBlock(reforge_block, BLOCKCHAIN)
 
     desc = f'Your **Dark Star** has reforged into a **Star**.'
 
@@ -345,7 +353,7 @@ async def consume (ctx, amount, BLOCKCHAIN):
     id, name = ctx.author.id, ctx.author.name
 
     star = getStar(id, BLOCKCHAIN)
-    if star > amount:
+    if star < amount:
         desc = f'You do not possess enough **Star**s to Consume'
 
         """Return Message"""
@@ -377,7 +385,7 @@ async def consume (ctx, amount, BLOCKCHAIN):
     ego = getStat(id, stats[4], BLOCKCHAIN)
     gamble = int(0.20*star*user_creds)
 
-    if random.random() < 0.14*ego:
+    if random.random() < 0.11*ego:
         gamble_block = block.Block(
             user = id,
             name = name,
@@ -503,18 +511,6 @@ def getDarkStar (user_id, BLOCKCHAIN)-> int:
     if len(BLOCKCHAIN.chain) == 1: return 0
 
     desc, desc1, level = 'Dark Star', '-Dark Star', 0
-    for block in BLOCKCHAIN.chain[1:]:
-        if block.getUser() == user_id:
-            if block.getDesc() == desc:
-                level += 1
-            if block.getDesc() == desc1:
-                level -= 1
-    return level
-
-def getReforger (user_id, BLOCKCHAIN)-> int:
-    if len(BLOCKCHAIN.chain) == 1: return 0
-
-    desc, desc1, level = 'Reforger', '-Reforger', 0
     for block in BLOCKCHAIN.chain[1:]:
         if block.getUser() == user_id:
             if block.getDesc() == desc:

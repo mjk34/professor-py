@@ -131,6 +131,18 @@ def totalSubsWeek(user_id, BLOCKCHAIN) -> int:
     
     return int(total)
 
+def hasSuperSubmit(user_id, BLOCKCHAIN) -> bool:
+    if len(BLOCKCHAIN.chain) == 1: return True
+    
+    desc = f'Super Submit'
+    for block in BLOCKCHAIN.chain[1:]:
+        if checkMonday(block.getTime()) == False: continue
+        if block.getUser() == user_id:
+            if block.getDesc() == desc:
+                return False
+    
+    return True
+
 """Evaluate Blockchain:
         1. run through each block belonging to user_id
         2. for each block, add up all submissions for a user"""
