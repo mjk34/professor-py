@@ -1,10 +1,7 @@
-import discord, block
+import discord, block, blockchain
 import commands.user as user
 
-from discord.utils import get
-from commands.helper import today, getName
-from commands.manager import pushBlock, pushWish
-from commands.stats import getStat, stats
+from commands.helper import today
 
 filler = ['<', '>', '!', '@']
 """Exchanges user uwuCreds for (a) raffle ticket(s)"""
@@ -60,10 +57,16 @@ async def buy_ticket(ctx, amount, BLOCKCHAIN):
             description = 'Ticket',
             data = amount
         )
-        
+
         """Update Blockchain"""
-        pushBlock(purchase_block, BLOCKCHAIN)
-        pushBlock(ticket_block, BLOCKCHAIN)
+        if BLOCKCHAIN.isChainValid() == False:
+            print('The current Blockchain is not valid, performing rollback.')
+            BLOCKCHAIN = blockchain.Blockchain()
+    
+        BLOCKCHAIN.addBlock(purchase_block)
+        BLOCKCHAIN.addBlock(ticket_block)
+        if BLOCKCHAIN.isChainValid():
+            BLOCKCHAIN.storeChain()
     
         """Return Message"""
         embed = discord.Embed(
@@ -73,9 +76,6 @@ async def buy_ticket(ctx, amount, BLOCKCHAIN):
         ).set_thumbnail(url=ctx.author.avatar_url)
         embed.set_footer(text='@~ powered by UwUntu')
         await ctx.send(embed=embed)
-
-        """Give One Wish"""
-        pushWish(id, name, BLOCKCHAIN)
         
     else:
         embed = discord.Embed(
@@ -86,101 +86,6 @@ async def buy_ticket(ctx, amount, BLOCKCHAIN):
         embed.set_footer(text='@~ powered by UwUntu')
         await ctx.send(embed=embed)
 
-async def stitch_ticket(ctx, BLOCKCHAIN):   
-    """Read Blockchain and return user total"""
-    id, name = ctx.author.id, ctx.author.name
-    user_torn_tickets = user.totalTornTickets(id, BLOCKCHAIN)
-            
-    """Check if User has sufficient amount of torn tickets"""
-    if user_torn_tickets >= 3:
-        
-        """Generate new Block"""   
-        stitched_block = block.Block(
-            user = id,
-            name = name,
-            timestamp = today(),
-            description = 'Stitched Ticket',
-            data = 0
-        )
-
-        torn_block = block.Block(
-            user = id,
-            name = name,
-            timestamp = today(),
-            description = '-Torn Ticket',
-            data = 0
-        )
-        
-        """Update Blockchain"""
-        pushBlock(stitched_block, BLOCKCHAIN)
-        pushBlock(torn_block, BLOCKCHAIN)
-        pushBlock(torn_block, BLOCKCHAIN)
-        pushBlock(torn_block, BLOCKCHAIN)
-    
-        """Return Message"""
-        embed = discord.Embed(
-            title = f'Stitch Ticket',
-            description = f'Poggerz! **+1** ticket was added to your *Wallet*!',
-            color = 15697464    
-        ).set_thumbnail(url=ctx.author.avatar_url)
-        embed.set_footer(text='@~ powered by UwUntu')
-        await ctx.send(embed=embed)
-
-        """Give One Wish"""
-        pushWish(id, name, BLOCKCHAIN)
-        
-    else:
-        embed = discord.Embed(
-            title = f'Stitch Ticket',
-            description = f'Insufficient Torn Tickets, you require at least 3 to make a full Ticket!',
-            color = 6053215    
-        ).set_thumbnail(url='https://66.media.tumblr.com/2d52e78a64b9cc97fac0cb00a48fe676/tumblr_inline_pamkf7AfPf1s2a9fg_500.gif')
-        embed.set_footer(text='@~ powered by UwUntu')
-        await ctx.send(embed=embed)
-        
-"""Allow moderators to generate one additional submit to a user"""
-async def bonusSubmit(ctx, reciever, client, BLOCKCHAIN):
-    """1. User will be checked for Moderator status
-       2. Blockchain will be validated, new block will be added to the end of Blockchain"""
-
-    """Parses Reciever id from <@id>"""
-    reciever_id = reciever
-    for ch in filler: reciever_id = reciever_id.replace(ch, '')
-    reciever_id = int(reciever_id)
-    
-    """Check if the Giver is a moderator"""
-    role = get(ctx.guild.roles, name='Moderator')
-    if role.id in [y.id for y in ctx.author.roles]:
-        
-        """Generate new Block"""
-        submit_block = block.Block(
-            user = reciever_id,
-            name = await getName(reciever_id, client),
-            timestamp = today(),
-            description = f'Bonus Submit',
-            data = 0
-        )
-        
-        """Update Blockchain"""
-        pushBlock(submit_block, BLOCKCHAIN)          
-        
-        """Return Message"""
-        embed = discord.Embed(
-            title = f'Bonus Submit',
-            description = f'Wubba Lubba Dub Dub!\u3000\u3000\u3000\u3000\n**+1** Submit was added to <@{reciever_id}>\'s *Wallet*!',
-            color = 16749300    
-        ).set_image(url='https://gifimage.net/wp-content/uploads/2017/09/anime-happy-dance-gif-10.gif')
-        embed.set_footer(text='@~ powered by UwUntu')
-        await ctx.send(embed=embed)
-    else: 
-        embed = discord.Embed(
-            title = f'Bonus Submit',
-            description = f'Insufficient power, you are not a moderator!',
-            color = 6053215    
-        ).set_thumbnail(url='https://media1.tenor.com/images/80662c4e35cf12354f65f1d6f7beada8/tenor.gif')
-        embed.set_footer(text='@~ powered by UwUntu')
-        await ctx.send(embed=embed)
-        
 """Allow users to view 10 top users, does not display their total uwuCreds"""
 async def leaderboard (ctx, BLOCKCHAIN):
     """1. Blockchain will be evaluated, User uwuCreds will be checked
@@ -220,12 +125,6 @@ async def claimBonus (ctx, BLOCKCHAIN):
     user_daily = user.getDailyCount(id, BLOCKCHAIN)
     user_submits = user.totalSubsWeek(id, BLOCKCHAIN)
 
-    vitality =  getStat(id, stats[0], BLOCKCHAIN)
-    dexterity = getStat(id, stats[3], BLOCKCHAIN)
-    strength =  getStat(id, stats[2], BLOCKCHAIN)
-
-    multiplier = 50 + int(30*vitality)
-
     """Check if User has used daily submits before claim"""
     if user_submits < 2:
         embed = discord.Embed(
@@ -248,8 +147,7 @@ async def claimBonus (ctx, BLOCKCHAIN):
         return
 
     bonus = int(user_daily / 7)
-    bonus_creds = 250 + 50*strength + bonus*multiplier
-    stat_bonus = int((bonus_creds)*(0.14*dexterity))
+    bonus_creds = 375 + bonus*0.25*375
     
     """Generate new Block"""
     bonus_block = block.Block(
@@ -257,16 +155,20 @@ async def claimBonus (ctx, BLOCKCHAIN):
         name = name,
         timestamp = today(),
         description = f'Claim Bonus',
-        data = bonus_creds + stat_bonus
+        data = bonus_creds
     )
         
     """Update Blockchain"""
-    pushBlock(bonus_block, BLOCKCHAIN)         
+    if BLOCKCHAIN.isChainValid() == False:
+        print('The current Blockchain is not valid, performing rollback.')
+        BLOCKCHAIN = blockchain.Blockchain()
+ 
+    BLOCKCHAIN.addBlock(bonus_block)
+    if BLOCKCHAIN.isChainValid():
+        BLOCKCHAIN.storeChain()      
     
     desc = f'Congratulations on your submits!\n'
-    desc += f'From **+{bonus} Bonus Stacks** *and* **Strength {strength}**, you claimed **+{bonus_creds}** creds!\n'
-    if strength > 0:
-        desc += f'\nFrom **Dexterity {dexterity}**, you get an additional **+{stat_bonus}** creds!'
+    desc += f'You claimed a bonus **+{bonus_creds}** creds!\n'
         
     """Return Message"""
     embed = discord.Embed(
@@ -276,9 +178,6 @@ async def claimBonus (ctx, BLOCKCHAIN):
     ).set_image(url='https://i.pinimg.com/originals/de/6b/5d/de6b5df29abaf7124387b9c86ca46a29.gif')
     embed.set_footer(text='@~ powered by UwUntu')
     await ctx.send(embed=embed)
-
-    """Give One Wish"""
-    pushWish(id, name, BLOCKCHAIN)
 
 """Allow users to see the list of raffle participants"""
 async def rafflelist (ctx, BLOCKCHAIN):
