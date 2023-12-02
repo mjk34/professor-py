@@ -122,7 +122,11 @@ async def superClip(ctx, title, link, msg_link, BLOCKCHAIN):
     """Return Message"""
     desc = f'Title: \u3000**{title}**\n'
     desc += f'Link: \u3000**{link}**\n'
-    desc += f'\nRef: https://discord.com/channels/859993171156140061/1028107023377764352/{msg_link}'
+
+    if 'https://discord.com/channels' in msg_link:
+        desc += f'\nRef: {msg_link}'
+    else:
+        desc += f'\nRef: https://discord.com/channels/859993171156140061/1028107023377764352/{msg_link}'
 
     desc2 = f'Thank you for submitting, this clip will be reviewed in the next Clip Night!\n**{500}** creds and **3** wishes were added to your *Wallet*!\n'
 

@@ -158,8 +158,6 @@ def text2Emoji(item):
     if item == 'Cred Bag': return '💰'
     if item == 'Token': return '🪙'
     if item == 'Torn Ticket': return '🎫'
-    if item == 'Bonus Submit': return '🎞️'
-    if item == 'Reforger': return '🔨'
     if item == 'Star': return '⭐'
     if item == 'Dark Star': return '💥'
 
@@ -170,7 +168,7 @@ def getHighestRarity(item_list) -> str:
     return '4*'
 
 def randomItem() -> str:
-    items = ['Cred Bag', 'Torn Ticket', 'Reforger']
+    items = ['Cred Bag', 'Torn Ticket']
     index = random.randint(0, len(items)-1)
 
     return items[index]
@@ -216,29 +214,23 @@ def pull(total_pity, pity, guarenteed) -> list:
     if pity < 8:
         if random.random() < 0.051:
             # Hit the 4*, WOOOT
-            if random.random() < 0.45:
+            if random.random() < 0.55:
                 item = ['Pull', '4*', 'Token']
-            elif random.random() >= 0.45 and random.random() < 0.5:
-                item = ['Pull', '4*', 'Bonus Submit']
             else:
                 item = ['Pull', '4*', randomItem()]
 
     if pity == 8:
         if random.random() < 0.561:
             # Hit the 4*, less WOOOT
-            if random.random() < 0.45:
+            if random.random() < 0.55:
                 item = ['Pull', '4*', 'Token']
-            elif random.random() >= 0.45 and random.random() < 0.5:
-                item = ['Pull', '4*', 'Bonus Submit']
             else:
                 item = ['Pull', '4*', randomItem()]
 
     if pity > 8:
         # Hit the 4*, fucking hell
-        if random.random() < 0.45:
+        if random.random() < 0.55:
             item = ['Pull', '4*', 'Token']
-        elif random.random() >= 0.45 and random.random() < 0.5:
-                item = ['Pull', '4*', 'Bonus Submit']
         else:
             item = ['Pull', '4*', randomItem()]
 
