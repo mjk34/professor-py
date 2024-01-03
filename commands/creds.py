@@ -3,8 +3,8 @@ import commands.user as user
 
 from discord.utils import get
 
+from commands.manager import pushBlock
 from commands.helper import today, dailyLuck, dailyFortune, getName, fetchContentList, getIcon
-from commands.user import claimedCount
 
 filler = ['<', '>', '!', '@', '&']
 
@@ -51,14 +51,8 @@ async def daily (ctx, BLOCKCHAIN):
     )
     
     """Update Blockchain"""
-    if BLOCKCHAIN.isChainValid() == False:
-        print('The current Blockchain is not valid, performing rollback.')
-        BLOCKCHAIN = blockchain.Blockchain()
- 
-    BLOCKCHAIN.addBlock(daily_block)
-    BLOCKCHAIN.addBlock(fortune_block)
-    if BLOCKCHAIN.isChainValid():
-        BLOCKCHAIN.storeChain()     
+    pushBlock(daily_block, BLOCKCHAIN)
+    pushBlock(fortune_block, BLOCKCHAIN)
 
     orb_url = 'https://assets.dicebreaker.com/pondering-my-orb-header-art.png/BROK/resize/844%3E/format/jpg/quality/80/pondering-my-orb-header-art.png'
     test = random.random()
@@ -98,16 +92,14 @@ async def wallet (ctx, BLOCKCHAIN):
     """1. Users can view the total amount of CREDs they have
        2. Users can view the total amount of TICKETs they have
        3. Users can view DAILY counters for /uwu, SUBMITs and TOKENs
-       4. Users can view Activity Level and next level XP
-       5. Users can view WISH count, Pity and if they are Guarenteed
-       6. Users can view counters for STARs, DARK STARs, and REFORGERs"""
+    """
      
     """Read Blockchain and return user total"""  
     id = ctx.author.id
     user_creds = user.totalCreds(id, BLOCKCHAIN)
     user_tickets = user.totalTickets(id, BLOCKCHAIN)
 
-    user_subs = user.totalSubsWeek(id, BLOCKCHAIN)
+    user_subs = user.totalSubmits(id, BLOCKCHAIN)
     user_claim = user.claimedCount(id, BLOCKCHAIN)
 
     daily = {True:'Available', False:'Not Available'}[user.hasDaily(id, BLOCKCHAIN)]
@@ -115,7 +107,7 @@ async def wallet (ctx, BLOCKCHAIN):
 
     desc = ''
     desc += f'Daily UwU: \u3000 \u2000 **{daily}**\nClaim Bonus: \u3000**{claim}**\n'
-    desc += f'Submissions: \u3000**{3 - user_subs}/{3}**\n\n'
+    desc += f'Submissions: \u3000**{user_subs}**\n\n'
     desc += f'Total Creds:\u3000 **{user_creds}**\u3000 Total Tickets: \u2000**{user_tickets}**\n'
 
     """Return Message"""

@@ -74,7 +74,7 @@ def totalTickets(user_id, BLOCKCHAIN) -> int:
 
 """Evaluate Blockchain:
         1. run through each block belonging to user_id
-        2. for each block, add up all submissions dated today"""
+        2. for each block, add up all submissions this week"""
 def totalSubsWeek(user_id, BLOCKCHAIN) -> int:
     if len(BLOCKCHAIN.chain) == 1: return 0
     
@@ -86,6 +86,20 @@ def totalSubsWeek(user_id, BLOCKCHAIN) -> int:
                 total += 1
             if block.getDesc() == desc3:
                 total -= 1
+    
+    return int(total)
+
+"""Evaluate Blockchain:
+        1. run through each block belonging to user_id
+        2. for each block, add up all submissions of the cycle"""
+def totalSubmits(user_id, BLOCKCHAIN) -> int:
+    if len(BLOCKCHAIN.chain) == 1: return 0
+    
+    desc, total = f'Submission', 0
+    for block in BLOCKCHAIN.chain[1:]:
+        if block.getUser() == user_id:
+            if block.getDesc() == desc:
+                total += 1
     
     return int(total)
 
