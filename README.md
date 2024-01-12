@@ -1,13 +1,11 @@
 # professorBot
 
 ## Summary:
-This is the coding behind Uwuversity's Professor bot for Discord.
+This is the python code behind Uwuversity's Professor bot.
 
-Professor bot is a developing agent that is currently used to reward community members based on in game achievements and daily participation. Members are currently able to submit Valorant game scores to earn uwuCreds, a community resource that can be used for trade, expression as well as participate in the ongoing raffles.
+Professor bot is an agent that is used to incentivise members with rewarding and interactive feature to improve participation. Members are currently able to accumulate creds daily, sumbit game clips for Clip Night, and buy tickets to participate in the ongoing raffles.
 
-Professor bot manages and evaluates resources through it's locally maintained centralized blockchain where each recorded action is a transaction block that can be used to result in something meaningful. Professor bot was first built with a MongoDB backend, but a personal interest in blockchain structure pushed me to rework it. 
-
-After reworking the available services around the centralized blockchain structure, I can say that it actually simplified the complexity of some of the services, and if anything, it was exciting to see the features in a new light.
+Python development for professor has halted, further developments will continue once the transition to rust is complete ... https://github.com/mjk34/professor-rs
 
 ## Install
 
